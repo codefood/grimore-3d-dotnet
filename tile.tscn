@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://ciulncpj4aa2k"]
+
+[ext_resource type="Script" path="res://Tile.cs" id="1_acylh"]
+[ext_resource type="PackedScene" uid="uid://ywxekoflmpov" path="res://assets/floortile.glb" id="2_h200c"]
+
+[node name="Tile" type="Node3D"]
+script = ExtResource("1_acylh")
+
+[node name="floortile" parent="." instance=ExtResource("2_h200c")]
