@@ -18,5 +18,17 @@ X   X
 X   
 XXXXX
 """;
+    
+    public const string Three = 
+        @"""
+XXXXXXXXXXXXX
+XXXXXXXXXXXXX
+XXXXXXXXXXXXX
+XXXXXXXXXX   
+XXXXXXXXXX   
+XXXXXXXXXXXXX
+XXXXXXXXXXXXX
+XXXXXXXXXXXXX
+""";
 	
 }
