@@ -1,4 +1,6 @@
-﻿public static class Levels
+﻿namespace grimore3ddotnet;
+
+public static class Levels
 {
     public const string One =
         @"""
