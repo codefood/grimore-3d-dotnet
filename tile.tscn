@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://ciulncpj4aa2k"]
 
-[ext_resource type="Script" path="res://Tile.cs" id="1_acylh"]
+[ext_resource type="Script" uid="uid://cn4vdc7bg3iqo" path="res://Tile.cs" id="1_acylh"]
 [ext_resource type="PackedScene" uid="uid://ywxekoflmpov" path="res://assets/floortile.glb" id="2_h200c"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cpanm"]

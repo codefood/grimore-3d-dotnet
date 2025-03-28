@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bu1nrqvd1xev1"]
 
-[ext_resource type="Script" path="res://Player.cs" id="1_b82nm"]
+[ext_resource type="Script" uid="uid://banquqisrwvsq" path="res://Player.cs" id="1_b82nm"]
 [ext_resource type="PackedScene" uid="uid://cn1y3q46hwmcl" path="res://assets/fooman.glb" id="2_8bqiu"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0hynd"]
