@@ -2,36 +2,17 @@
 
 public static class Levels
 {
-    public const string One =
-        @"""
-
-  XXX
-   XXX
-  X
-
-
-""";
-	
-    public const string Two = 
-        @"""
-XXXXX
-X   X
-X   X
-X   
-XXXXX
-""";
-    
-    public const string Three = 
+    public const string One = 
         @"""
 WWWWWWWWWWWWWW
-XXXXXXXXXXXXXW
-XXXXXXXWWXXXXW
-XXXXXXXXXXXXXW
-XXXWWXXXXX   W
-XXXXXXXXXX   W
-XXXXXXXXXXXXXW
-XXXXXXXXXXXXXW
-XXXXXXXXXXXXXW
+             W
+       WW    W
+             W
+   WW        W
+             W
+      xx     W
+      xx     W
+             W
 """;
 	
 }

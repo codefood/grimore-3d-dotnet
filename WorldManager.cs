@@ -12,7 +12,7 @@ public class WorldManager
     
     static readonly Dictionary<PackedScene, char[]> Things = new()
     {
-        { ResourceLoader.Load<PackedScene>("res://tile.tscn"), ['X', 'x', '.'] },
+        { ResourceLoader.Load<PackedScene>("res://tile.tscn"), [' '] },
         { ResourceLoader.Load<PackedScene>("res://wall.tscn"), ['W', 'w'] }
     };
 
