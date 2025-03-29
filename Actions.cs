@@ -9,6 +9,7 @@ public static class Actions
     private const string Up = "up";
     private const string Down = "down";
     private const string Left = "left";
+    
     public const string Act = "act";
     public const string Clear = "clear";
     

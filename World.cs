@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Godot;
 
@@ -7,11 +9,16 @@ public partial class World : Node3D
 {
 	[Export]
 	private PackedScene _tileScene = GD.Load<PackedScene>("res://tile.tscn");
+
+	[Export] 
+	private PackedScene _wallScene = GD.Load<PackedScene>("res://wall.tscn");
 	
-	private int _offsetRows;
-	private int _offsetCols;
+	private const float Speed = 10;
 	private const int TileSize = 2;
 
+	private int _offsetRows;
+	private int _offsetCols;
+	
 	private void Load(string level)
 	{
 		var levelLines = level.Split('\n');
@@ -23,24 +30,30 @@ public partial class World : Node3D
 		
 		for (var row = 0; row < height; row++)
 		for (var col = 0; col < width; col++)
-		{
-			if (char.IsLetter(levelLines[row].ElementAtOrDefault(col)))
-				AddTile(row, col);
-		}
+
+			switch (levelLines[row].ElementAtOrDefault(col))
+			{
+				case 'W' or 'w':
+					AddThing(row, col, _wallScene);
+					break;
+				case 'X' or 'x':
+					AddThing(row, col, _tileScene);
+					break;
+			};
 	}
 	
-	private void AddTile(int row, int col)
+	private void AddThing(int row, int col, PackedScene scene)
 	{
-		var tile = _tileScene.Instantiate() as Tile;
-		tile!.Position = new Vector3((col + _offsetCols) * TileSize, 0, (row + _offsetRows) * TileSize);
-		GD.Print($"instantiating tile at {tile.Position}");
-		AddChild(tile);
+		var thing = scene.Instantiate() as Node3D;
+		thing!.Position = new Vector3((col + _offsetCols) * TileSize, 0, (row + _offsetRows) * TileSize);
+		GD.Print($"instantiating {thing.Name} at {thing.Position}");
+		AddChild(thing);
 	}
 
-	private void ClearTiles()
+	private void ClearThings()
 	{
-		foreach (var tile in GetChildren().OfType<Tile>()) 
-			tile.QueueFree();
+		GetChildren().OfType<Tile>().ForEach(x => x.QueueFree());
+		GetChildren().OfType<Wall>().ForEach(x => x.QueueFree());
 	}
 	
 	public override void _Input(InputEvent ev)
@@ -63,7 +76,7 @@ public partial class World : Node3D
 
 		if (ev.IsActionPressed(Actions.Clear))
 		{
-			ClearTiles();
+			ClearThings();
 		}
 	}
 
@@ -74,18 +87,39 @@ public partial class World : Node3D
 			.First();
 
 		GD.Print(totalDirection.ToString());
-		player.SetPosition(player.Position + totalDirection);
+		player.SetVelocity(totalDirection * Speed);
+		if (!player.IsOnFloor())
+		{
+			GD.Print("Falling");
+		}
+		player.MoveAndSlide();
+		//player.SetPosition(player.Position + totalDirection);
 	}
+
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		ClearTiles();
+		ClearThings();
 		Load(Levels.Three);
 	}
 	
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+	}
+}
+
+public static class Fn
+{
+	public static IEnumerable<T> ForEach<T>(this IEnumerable<T> input, Action<T> action)
+	{
+		var enumerable = input as T[] ?? input.ToArray();
+		foreach (var element in enumerable)
+		{
+			action(element);
+		}
+
+		return enumerable;
 	}
 }
