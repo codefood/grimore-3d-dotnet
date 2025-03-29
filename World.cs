@@ -13,7 +13,7 @@ public partial class World : Node3D
 	[Export] 
 	private PackedScene _wallScene = GD.Load<PackedScene>("res://wall.tscn");
 	
-	private const float Speed = 10;
+	private const float Speed = 1;
 	private const int TileSize = 2;
 
 	private int _offsetRows;
@@ -58,17 +58,6 @@ public partial class World : Node3D
 	
 	public override void _Input(InputEvent ev)
 	{
-		var directionVectors = Actions.Directions.Select(action =>
-			ev.IsActionPressed(action.Key)
-				? action.Value
-				: Vector2.Zero)
-			.ToList();
-		var totalDirection = new Vector3(directionVectors.Sum(v => v.X) * TileSize, 0, directionVectors.Sum(v => v.Y) * TileSize);
-		if (totalDirection != Vector3.Zero)
-		{
-			MovePlayer(totalDirection);
-		}
-
 		if (ev.IsActionPressed(Actions.Act))
 		{
 			MovePlayer(Vector3.Up);
@@ -93,9 +82,7 @@ public partial class World : Node3D
 			GD.Print("Falling");
 		}
 		player.MoveAndSlide();
-		//player.SetPosition(player.Position + totalDirection);
 	}
-
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -107,6 +94,16 @@ public partial class World : Node3D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+		var directionVectors = Actions.Directions.Select(action =>
+				Input.IsActionPressed(action.Key)
+					? action.Value
+					: Vector2.Zero)
+			.ToList();
+		var totalDirection = new Vector3(directionVectors.Sum(v => v.X) * TileSize, 0, directionVectors.Sum(v => v.Y) * TileSize);
+		if (totalDirection != Vector3.Zero)
+		{
+			MovePlayer(totalDirection);
+		}
 	}
 }
 
