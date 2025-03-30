@@ -1,12 +1,18 @@
-[gd_scene load_steps=6 format=3 uid="uid://dup1nowopx1b"]
+[gd_scene load_steps=8 format=3 uid="uid://dup1nowopx1b"]
 
 [ext_resource type="Script" uid="uid://88kk4rie4drv" path="res://World.cs" id="1_whjl1"]
 [ext_resource type="PackedScene" uid="uid://ciulncpj4aa2k" path="res://tile.tscn" id="2_1hxm5"]
 [ext_resource type="PackedScene" uid="uid://bu1nrqvd1xev1" path="res://player.tscn" id="3_tvngf"]
 
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tlwt5"]
+
+[sub_resource type="Sky" id="Sky_aqk2v"]
+sky_material = SubResource("ProceduralSkyMaterial_tlwt5")
+
 [sub_resource type="Environment" id="Environment_ii8ta"]
-background_mode = 1
+background_mode = 2
 background_color = Color(0.141176, 0, 0.141176, 1)
+sky = SubResource("Sky_aqk2v")
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_vd5hd"]
 
@@ -30,5 +36,3 @@ transform = Transform3D(1, 0, 0, 0, 0.866026, 0.5, 0, -0.5, 0.866026, 0, 10, 10)
 [node name="Camera3D" type="Camera3D" parent="CameraHandle"]
 
 [node name="Player" parent="." instance=ExtResource("3_tvngf")]
-
-[node name="OmniLight3D" type="OmniLight3D" parent="."]

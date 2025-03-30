@@ -8,7 +8,7 @@ namespace grimore3ddotnet;
 public partial class World : Node3D
 {
 	private readonly WorldManager _manager = new();
-	private const float Speed = 1;
+	private const float Speed = 2;
 
 	public override void _Input(InputEvent ev)
 	{
