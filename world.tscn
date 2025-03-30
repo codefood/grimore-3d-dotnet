@@ -32,7 +32,6 @@ camera_attributes = SubResource("CameraAttributesPractical_vd5hd")
 
 [node name="CameraHandle" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.866026, 0.5, 0, -0.5, 0.866026, 0, 10, 10)
-
-[node name="Camera3D" type="Camera3D" parent="CameraHandle"]
+visible = false
 
 [node name="Player" parent="." instance=ExtResource("3_tvngf")]
