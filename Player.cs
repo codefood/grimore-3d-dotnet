@@ -14,18 +14,23 @@ public partial class Player : CharacterBody3D
 			.FirstOrDefault(d => d.Name == "CameraPivot");
 
 	const float MouseSensitivity = 0.01f;
-	private static readonly float TiltLimit = Mathf.DegToRad(180);
+	private static readonly float XLimit = Mathf.DegToRad(30);
+	private static readonly float YLimit = Mathf.DegToRad(90);
 	
 	public override void _UnhandledInput(InputEvent @event)
 	{
 		//nicked from https://docs.godotengine.org/en/stable/tutorials/3d/spring_arm.html
 		base._UnhandledInput(@event);
 		if (@event is not InputEventMouseMotion mouseMotion) return;
+		
 		var x = _cameraPivot.Rotation.X;
 		x -= mouseMotion.Relative.Y * MouseSensitivity;
-		x = Mathf.Clamp(x, -TiltLimit, TiltLimit);
+		x = Mathf.Clamp(x, -XLimit, XLimit);
+		
 		var y = _cameraPivot.Rotation.Y;
 		y += -mouseMotion.Relative.X * MouseSensitivity; 
+		y = Mathf.Clamp(y, -YLimit, YLimit);
+		
 		_cameraPivot.Rotation = new Vector3(x, y, _cameraPivot.Rotation.Z);
 	}
 
