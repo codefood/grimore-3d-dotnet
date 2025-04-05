@@ -6,6 +6,7 @@ namespace grimore3ddotnet;
 public partial class Player : CharacterBody3D
 {
 	private Node3D _cameraPivot;
+	private PackedScene _spellScene = ResourceLoader.Load<PackedScene>("res://spell.tscn"); 
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready() =>
@@ -16,7 +17,7 @@ public partial class Player : CharacterBody3D
 	const float MouseSensitivity = 0.01f;
 	private static readonly float XLimit = Mathf.DegToRad(30);
 	private static readonly float YLimit = Mathf.DegToRad(90);
-	
+
 	public override void _UnhandledInput(InputEvent @event)
 	{
 		//nicked from https://docs.godotengine.org/en/stable/tutorials/3d/spring_arm.html
@@ -37,5 +38,12 @@ public partial class Player : CharacterBody3D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+	}
+
+	public void CastSpell(World world)
+	{
+		var instance = (Spell)_spellScene.Instantiate();
+		instance.SetPosition(Position + Vector3.Forward + Vector3.Up / 2);
+		world.AddChild(instance);
 	}
 }

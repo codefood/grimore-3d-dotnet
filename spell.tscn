@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cmmrthiil3g43"]
+
+[ext_resource type="Script" uid="uid://dtndkrqkqjhes" path="res://Spell.cs" id="1_35i8j"]
+
+[node name="Spell" type="RigidBody3D"]
+script = ExtResource("1_35i8j")
