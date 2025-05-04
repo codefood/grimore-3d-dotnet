@@ -21,6 +21,7 @@ public class WorldManager
     public void LoadLevel(World world, string level)
     {
         ClearThingsFrom(world);
+        world.TurnManager.Enrol(world.Player);
         var levelLines = level.Split('\n');
 
         var width = levelLines.Max(l => l.Length);
@@ -42,20 +43,24 @@ public class WorldManager
             instance!.Position = new Vector3((col + _offsetCols) * TileSize, 0, (row + _offsetRows) * TileSize);
             world.AddChild(instance);
 
-            if (instance is Tile && GD.Randi() % 5 == 0)
+            if (instance is Tile && GD.Randi() % 20 == 0)
             {
                 var enemy = Enemy.Instantiate() as Enemy;
                 enemy!.Position = new Vector3((col + _offsetCols) * TileSize, 0.5f, (row + _offsetRows) * TileSize);
                 enemy.Name = $"Enemy {world.GetChildren().OfType<Enemy>().Count() + 1}";
                 world.AddChild(enemy);
+                world.TurnManager.Enrol(enemy);
             }
             
         }
+
+        world.TurnManager.StartNextTurn();
     }
 
     public void ClearThingsFrom(World world)
     {
         world.GetChildren().OfType<Tile>().ForEach(x => x.QueueFree());
         world.GetChildren().OfType<Wall>().ForEach(x => x.QueueFree());
+        world.TurnManager.Clear();
     }
 }
