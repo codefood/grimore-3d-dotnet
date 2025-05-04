@@ -15,6 +15,8 @@ public class WorldManager
         { ResourceLoader.Load<PackedScene>("res://tile.tscn"), [' '] },
         { ResourceLoader.Load<PackedScene>("res://wall.tscn"), ['W', 'w'] }
     };
+    
+    static readonly PackedScene Enemy = ResourceLoader.Load<PackedScene>("res://enemy.tscn");
 
     public void LoadLevel(World world, string level)
     {
@@ -39,6 +41,15 @@ public class WorldManager
             var instance = thing.Instantiate() as Node3D;
             instance!.Position = new Vector3((col + _offsetCols) * TileSize, 0, (row + _offsetRows) * TileSize);
             world.AddChild(instance);
+
+            if (instance is Tile && GD.Randi() % 5 == 0)
+            {
+                var enemy = Enemy.Instantiate() as Enemy;
+                enemy!.Position = new Vector3((col + _offsetCols) * TileSize, 0.5f, (row + _offsetRows) * TileSize);
+                enemy.Name = $"Enemy {world.GetChildren().OfType<Enemy>().Count() + 1}";
+                world.AddChild(enemy);
+            }
+            
         }
     }
 

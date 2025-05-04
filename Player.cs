@@ -3,7 +3,7 @@ using Godot;
 
 namespace grimore3ddotnet;
 
-public partial class Player : CharacterBody3D
+public partial class Player : CharacterBody3D, IActor
 {
 	private Node3D _cameraPivot;
 	private PackedScene _spellScene = ResourceLoader.Load<PackedScene>("res://spell.tscn"); 
@@ -44,6 +44,7 @@ public partial class Player : CharacterBody3D
 	{
 		var instance = (Spell)_spellScene.Instantiate();
 		instance.SetPosition(Position + Vector3.Forward + Vector3.Up / 2);
+		instance.Direction = Vector3.Forward;
 		world.AddChild(instance);
 	}
 }

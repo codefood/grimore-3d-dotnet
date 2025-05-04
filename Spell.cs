@@ -4,6 +4,10 @@ namespace grimore3ddotnet;
 
 public partial class Spell : RigidBody3D
 {
+    public Vector3 Direction { get; set; }
+
+    private const float Speed = 0.01f;
+    
     public override void _Ready()
     {
         var size = new Vector3(0.33f, 0.33f, 0.33f);
@@ -26,5 +30,19 @@ public partial class Spell : RigidBody3D
                 }
             }
         });
+    }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        base._PhysicsProcess(delta);
+        var collision = MoveAndCollide(new Vector3((float)((Direction.X * Speed) * delta), 0.1f, Direction.Z));
+        if (collision == null) return;
+        var node = collision.GetCollider();
+        if (node is Enemy enemy)
+        {
+            enemy.TakeDamage();
+        }
+
+        QueueFree();
     }
 }
