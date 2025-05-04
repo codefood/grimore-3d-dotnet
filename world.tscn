@@ -35,3 +35,20 @@ transform = Transform3D(1, 0, 0, 0, 0.866026, 0.5, 0, -0.5, 0.866026, 0, 10, 10)
 visible = false
 
 [node name="Player" parent="." instance=ExtResource("3_tvngf")]
+
+[node name="UI" type="Node2D" parent="."]
+
+[node name="Button" type="Button" parent="UI"]
+offset_left = 30.0
+offset_top = 583.0
+offset_right = 149.0
+offset_bottom = 614.0
+text = "Open Grimore
+"
+
+[node name="CurrentTurn" type="Label" parent="UI"]
+offset_left = 20.0
+offset_top = 24.0
+offset_right = 397.0
+offset_bottom = 107.0
+text = "Current Turn:"

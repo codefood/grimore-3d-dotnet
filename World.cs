@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Godot;
 
@@ -9,7 +10,8 @@ public partial class World : Node3D
 	public readonly TurnManager TurnManager = new();
 
 	public Player Player;
-	
+	private Node Interface => GetChildren().First(x => x.Name == "UI");
+
 	public override void _Input(InputEvent ev)
 	{
 		if (!TurnManager.IsCurrentTurn(Player)) return;
@@ -49,16 +51,24 @@ public partial class World : Node3D
 			Name = $"enemy {enemy.Name} timer",
 		};
 		timer.Timeout += ProcessTurn;
-		AddChild(timer);
+		AddChild(timer); //so how many of these do we end up with?
 		enemy.Position += new Vector3(0, 0, 1);
 	}
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		TurnManager.OnTurnStart += actor => 
+			Interface
+					.GetChildren()
+					.OfType<Label>()
+					.Single()
+					.Text = $"Current Turn: {actor.Name}";
+		
 		Player = GetChildren()
 			.OfType<Player>()
 			.First();
+		
 		_worldManager.LoadLevel(this, Levels.One);
 		
 	}

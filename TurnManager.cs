@@ -6,7 +6,9 @@ namespace grimore3ddotnet;
 public class TurnManager
 {
     private readonly Queue<IActor> _actors = new();
-    
+
+    public delegate void TurnStarted(IActor actor);
+    public event TurnStarted OnTurnStart;
     public void Enrol(IActor actor)
     {
         _actors.Enqueue(actor);    
@@ -19,6 +21,7 @@ public class TurnManager
     {
         GD.Print($"StartNextTurn, Current: {Current}, Queue of: {_actors.Count}");
         Current = _actors.Dequeue();
+        OnTurnStart.Invoke(Current);
         _actors.Enqueue(Current);
         return Current;
     }

@@ -35,7 +35,7 @@ public partial class Spell : RigidBody3D
     public override void _PhysicsProcess(double delta)
     {
         base._PhysicsProcess(delta);
-        var collision = MoveAndCollide(new Vector3((float)((Direction.X * Speed) * delta), 0.1f, Direction.Z));
+        var collision = MoveAndCollide(new Vector3(Direction.X, 0.1f, Direction.Z));
         if (collision == null) return;
         var node = collision.GetCollider();
         if (node is Enemy enemy)
