@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace grimore3ddotnet;
+namespace Grimore;
 
 public static class EnumerableExtensions
 {

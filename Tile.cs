@@ -1,6 +1,6 @@
 using Godot;
 
-namespace grimore3ddotnet;
+namespace Grimore;
 
 public partial class Tile : Node3D
 {

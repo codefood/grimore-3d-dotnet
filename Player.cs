@@ -1,7 +1,7 @@
 using System.Linq;
 using Godot;
 
-namespace grimore3ddotnet;
+namespace Grimore;
 
 public partial class Player : CharacterBody3D, IActor
 {

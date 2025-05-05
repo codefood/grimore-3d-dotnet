@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-namespace grimore3ddotnet;
+namespace Grimore;
 
 public interface IActor
 {

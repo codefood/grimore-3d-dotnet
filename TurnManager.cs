@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Godot;
 
-namespace grimore3ddotnet;
+namespace Grimore;
 
 public class TurnManager
 {

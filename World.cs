@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 
-namespace grimore3ddotnet;
+namespace Grimore;
 
 public partial class World : Node3D
 {

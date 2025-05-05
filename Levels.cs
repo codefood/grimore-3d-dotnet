@@ -1,4 +1,4 @@
-﻿namespace grimore3ddotnet;
+﻿namespace Grimore;
 
 public static class Levels
 {

@@ -1,5 +1,5 @@
 using Godot;
-using grimore3ddotnet;
+using Grimore;
 
 public partial class Enemy : AnimatableBody3D, IActor
 {
