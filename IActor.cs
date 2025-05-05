@@ -5,4 +5,5 @@ namespace Grimore;
 public interface IActor
 {
     StringName Name { get; }
+    void Move(Vector2 direction);
 }

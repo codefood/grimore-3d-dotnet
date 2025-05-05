@@ -10,6 +10,7 @@ public partial class World : Node3D
 	public readonly TurnManager TurnManager = new();
 
 	public Player Player;
+	private Timer _timer;
 	private Node Interface => GetChildren().First(x => x.Name == "UI");
 
 	public override void _Input(InputEvent ev)
@@ -23,7 +24,7 @@ public partial class World : Node3D
 		if (directionsPressed.Count != 0)
 		{
 			var direction = directionsPressed.First().Value;
-			Player.Position += new Vector3(direction.X, 0, direction.Y);
+			Player.Move(direction);
 			ProcessTurn();
 		}
 		if (ev.IsActionPressed(Actions.Act))
@@ -42,19 +43,21 @@ public partial class World : Node3D
 	private void ProcessTurn()
 	{
 		if (TurnManager.StartNextTurn() is not Enemy enemy) return;
-		
-		var timer = new Timer()
-		{
-			Autostart = true,
-			WaitTime = 0.5f,
-			OneShot = true,
-			Name = $"enemy {enemy.Name} timer",
-		};
-		timer.Timeout += ProcessTurn;
-		AddChild(timer); //so how many of these do we end up with?
-		enemy.Position += new Vector3(0, 0, 1);
+
+		var direction = Actions.Directions
+			.ElementAt(GD.RandRange(0, Actions.Directions.Count - 1))
+			.Value;
+
+		enemy.Move(direction);
+		_timer.Start();
 	}
 
+	private void EnemyTurnEnded()
+	{
+		_timer.Stop();
+		ProcessTurn();
+	}
+	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -70,6 +73,17 @@ public partial class World : Node3D
 			.First();
 		
 		_worldManager.LoadLevel(this, Levels.One);
+		
+		
+		_timer = new Timer()
+		{
+			Autostart = false,
+			WaitTime = 0.5f,
+			OneShot = false,
+			Name = $"enemy timer",
+		};
+		_timer.Timeout += EnemyTurnEnded;
+		AddChild(_timer);
 		
 	}
 

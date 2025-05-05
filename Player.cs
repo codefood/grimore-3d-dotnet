@@ -47,4 +47,7 @@ public partial class Player : CharacterBody3D, IActor
 		instance.Direction = Vector3.Forward;
 		world.AddChild(instance);
 	}
+	
+	public void Move(Vector2 direction) => 
+		Position += new Vector3(direction.X, 0, direction.Y);
 }
