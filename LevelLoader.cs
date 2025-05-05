@@ -4,9 +4,8 @@ using Godot;
 
 namespace Grimore;
 
-public class WorldManager
+public class LevelLoader
 {
-    public int TileSize => 2;
     private int _offsetRows;
     private int _offsetCols;
     
@@ -18,7 +17,7 @@ public class WorldManager
     
     static readonly PackedScene Enemy = ResourceLoader.Load<PackedScene>("res://enemy.tscn");
 
-    public void LoadLevel(World world, string level)
+    public void Load(World world, string level)
     {
         ClearThingsFrom(world);
         
@@ -44,13 +43,13 @@ public class WorldManager
             if (thing == null) continue;
             
             var instance = thing.Instantiate() as Node3D;
-            instance!.Position = new Vector3((col + _offsetCols) * TileSize, 0, (row + _offsetRows) * TileSize);
+            instance!.Position = new Vector3((col + _offsetCols) * World.TileSize, 0, (row + _offsetRows) * World.TileSize);
             world.AddChild(instance);
 
             if (instance is Tile && GD.Randi() % 20 == 0)
             {
                 var enemy = Enemy.Instantiate() as Enemy;
-                enemy!.Position = new Vector3((col + _offsetCols) * TileSize, 0.5f, (row + _offsetRows) * TileSize);
+                enemy!.Position = new Vector3((col + _offsetCols) * World.TileSize, 0.5f, (row + _offsetRows) * World.TileSize);
                 enemy.Name = $"Enemy {world.GetChildren().OfType<Enemy>().Count() + 1}";
                 world.AddChild(enemy);
                 world.TurnManager.Enrol(enemy);
@@ -61,7 +60,7 @@ public class WorldManager
         world.TurnManager.StartNextTurn();
     }
 
-    public void ClearThingsFrom(World world)
+    private void ClearThingsFrom(World world)
     {
         world.GetChildren().OfType<Tile>().ForEach(x => x.QueueFree());
         world.GetChildren().OfType<Wall>().ForEach(x => x.QueueFree());

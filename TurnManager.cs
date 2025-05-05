@@ -27,7 +27,7 @@ public class TurnManager(World world)
                 Enrol(spell.Instance);
                 break;
             case Move move:
-                action.Actor.Position += new Vector3(move.Direction.X * 2, 0, move.Direction.Y * 2);
+                action.Actor.Position += new Vector3(move.Direction.X * World.TileSize, 0, move.Direction.Y * World.TileSize);
                 break;
         }
 
@@ -46,7 +46,7 @@ public class TurnManager(World world)
         _actors.Enqueue(Current);
     }
 
-    public IActor Current { get; set; }
+    private IActor Current { get; set; }
 
 
     public void Clear() => 

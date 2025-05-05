@@ -5,7 +5,8 @@ namespace Grimore;
 
 public partial class World : Node3D
 {
-	private readonly WorldManager _worldManager = new();
+	public const int TileSize = 2;
+	private readonly LevelLoader _levelLoader = new();
 	public TurnManager TurnManager;
 	
 	private Timer _timer;
@@ -37,7 +38,7 @@ public partial class World : Node3D
 			button.ItemSelected += x => Player.SpellColor = button.GetItemText((int)x);
 		}
 		
-		_worldManager.LoadLevel(this, Levels.One);
+		_levelLoader.Load(this, Levels.One);
 	}
 
 

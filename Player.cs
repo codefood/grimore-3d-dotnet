@@ -65,7 +65,7 @@ public partial class Player : CharacterBody3D, IActor
 		if (ev.IsActionPressed(Actions.Act))
 		{
 			var instance = (Spell)_spellScene.Instantiate();
-			instance.SetPosition(Position + Vector3.Forward + Vector3.Up / 2);
+			instance.SetPosition(Position + (Vector3.Forward * World.TileSize) + Vector3.Up / 2);
 			instance.Name = "Spell";
 			instance.Setup(Color.FromString(SpellColor, Color.FromHtml("000000")));
 			
