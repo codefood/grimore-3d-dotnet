@@ -10,6 +10,7 @@ public partial class World : Node3D
 	
 	private Timer _timer;
 	private Node Interface => GetChildren().First(x => x.Name == "UI");
+	private Player Player => GetChildren().OfType<Player>().First();
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -22,6 +23,19 @@ public partial class World : Node3D
 					.OfType<Label>()
 					.Single()
 					.Text = $"Current Turn: {actor.Name}";
+
+		var openSpellEditorButton = Interface.GetChildren().OfType<Button>().First();
+		var spellEditor = Interface.GetChildren().OfType<BoxContainer>().First(c => c.Name == "SpellEditor");
+		openSpellEditorButton.Pressed += () =>
+		{
+			spellEditor.Visible = !spellEditor.Visible;
+			openSpellEditorButton.ReleaseFocus();
+		};
+
+		foreach (var button in spellEditor.GetChildren().OfType<OptionButton>())
+		{
+			button.ItemSelected += x => Player.SpellColor = button.GetItemText((int)x);
+		}
 		
 		_worldManager.LoadLevel(this, Levels.One);
 	}

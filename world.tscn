@@ -41,7 +41,7 @@ visible = false
 [node name="Button" type="Button" parent="UI"]
 offset_left = 30.0
 offset_top = 583.0
-offset_right = 149.0
+offset_right = 189.0
 offset_bottom = 614.0
 text = "Open Grimore
 "
@@ -52,3 +52,24 @@ offset_top = 24.0
 offset_right = 397.0
 offset_bottom = 107.0
 text = "Current Turn:"
+
+[node name="SpellEditor" type="BoxContainer" parent="UI"]
+visible = false
+offset_left = 188.0
+offset_top = 114.0
+offset_right = 995.0
+offset_bottom = 551.0
+vertical = true
+
+[node name="OptionButton" type="OptionButton" parent="UI/SpellEditor"]
+layout_mode = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "Red"
+popup/item_0/id = 0
+popup/item_1/text = "Blue"
+popup/item_1/id = 1
+popup/item_2/text = "Green"
+popup/item_2/id = 2
+
+[connection signal="pressed" from="UI/Button" to="." method="_on_button_pressed"]
