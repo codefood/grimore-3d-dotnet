@@ -21,7 +21,11 @@ public class WorldManager
     public void LoadLevel(World world, string level)
     {
         ClearThingsFrom(world);
-        world.TurnManager.Enrol(world.Player);
+        
+        world.TurnManager.Enrol(world.GetChildren()
+            .OfType<Player>()
+            .First());
+        
         var levelLines = level.Split('\n');
 
         var width = levelLines.Max(l => l.Length);

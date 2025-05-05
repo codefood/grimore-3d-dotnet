@@ -11,7 +11,6 @@ public static class Actions
     private const string Left = "left";
     
     public const string Act = "act";
-    public const string Clear = "clear";
     
     public static readonly Dictionary<string, Vector2> Directions = new()
     {

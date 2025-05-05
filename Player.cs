@@ -6,8 +6,15 @@ namespace Grimore;
 public partial class Player : CharacterBody3D, IActor
 {
 	private Node3D _cameraPivot;
-	private PackedScene _spellScene = ResourceLoader.Load<PackedScene>("res://spell.tscn"); 
-	
+	private PackedScene _spellScene = ResourceLoader.Load<PackedScene>("res://spell.tscn");
+	private bool _allowInput = false;
+	public event IActor.OnActing Acting;
+	public void StartTurn()
+	{
+		_allowInput = true;
+	}
+
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready() =>
 		_cameraPivot = GetChildren()
@@ -40,14 +47,29 @@ public partial class Player : CharacterBody3D, IActor
 	{
 	}
 
-	public void CastSpell(World world)
+	public override void _Input(InputEvent ev)
 	{
-		var instance = (Spell)_spellScene.Instantiate();
-		instance.SetPosition(Position + Vector3.Forward + Vector3.Up / 2);
-		instance.Direction = Vector3.Forward;
-		world.AddChild(instance);
+		if (!_allowInput) return;
+		
+		var directionsPressed = Actions.Directions
+			.Where(k => ev.IsActionPressed(k.Key))
+			.ToList();
+		
+		if (directionsPressed.Count != 0)
+		{
+			var direction = directionsPressed.First().Value;
+			Acting.Invoke(new Move(this, direction));
+			_allowInput = false;
+
+		}
+		if (ev.IsActionPressed(Actions.Act))
+		{
+			var instance = (Spell)_spellScene.Instantiate();
+			instance.SetPosition(Position + Vector3.Forward + Vector3.Up / 2);
+			instance.Name = "Spell";
+			Acting.Invoke(new Summon(this, instance));
+			_allowInput = false;
+		}
 	}
 	
-	public void Move(Vector2 direction) => 
-		Position += new Vector3(direction.X, 0, direction.Y);
 }

@@ -5,5 +5,8 @@ namespace Grimore;
 public interface IActor
 {
     StringName Name { get; }
-    void Move(Vector2 direction);
+    Vector3 Position { get; set; }
+    delegate void OnActing(Command action);
+    event OnActing Acting;
+    void StartTurn();
 }

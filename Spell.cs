@@ -2,12 +2,8 @@ using Godot;
 
 namespace Grimore;
 
-public partial class Spell : RigidBody3D
+public partial class Spell : AnimatableBody3D, IActor
 {
-    public Vector3 Direction { get; set; }
-
-    private const float Speed = 0.01f;
-    
     public override void _Ready()
     {
         var size = new Vector3(0.33f, 0.33f, 0.33f);
@@ -34,15 +30,21 @@ public partial class Spell : RigidBody3D
 
     public override void _PhysicsProcess(double delta)
     {
-        base._PhysicsProcess(delta);
-        var collision = MoveAndCollide(new Vector3(Direction.X, 0.1f, Direction.Z));
-        if (collision == null) return;
-        var node = collision.GetCollider();
-        if (node is Enemy enemy)
-        {
-            enemy.TakeDamage();
-        }
+        // base._PhysicsProcess(delta);
+        // var collision = MoveAndCollide(new Vector3(Direction.X, 0.1f, Direction.Z));
+        // if (collision == null) return;
+        // var node = collision.GetCollider();
+        // if (node is Enemy enemy)
+        // {
+        //     enemy.TakeDamage();
+        // }
+        //
+        // QueueFree();
+    }
 
-        QueueFree();
+    public event IActor.OnActing Acting;
+    public void StartTurn()
+    {
+        
     }
 }
