@@ -8,7 +8,12 @@ public partial class Player : CharacterBody3D, IActor
 	private Node3D _cameraPivot;
 	private PackedScene _spellScene = ResourceLoader.Load<PackedScene>("res://spell.tscn");
 	private bool _allowInput = false;
-	private bool _freeCamera = false;
+	private bool _cameraFree = false;
+	
+	const float MouseSensitivity = 0.01f;
+	private static readonly float XLimit = Mathf.DegToRad(30);
+	private static readonly float YLimit = Mathf.DegToRad(120);
+
 	public event IActor.OnActing Acting;
 	public void StartTurn()
 	{
@@ -21,12 +26,6 @@ public partial class Player : CharacterBody3D, IActor
 		_cameraPivot = GetChildren()
 			.OfType<Node3D>()
 			.FirstOrDefault(d => d.Name == "CameraPivot");
-
-	const float MouseSensitivity = 0.01f;
-	private static readonly float XLimit = Mathf.DegToRad(30);
-	private static readonly float YLimit = Mathf.DegToRad(120);
-
-	private bool _cameraFree = false;
 	
 	public override void _UnhandledInput(InputEvent ev)
 	{
@@ -83,9 +82,12 @@ public partial class Player : CharacterBody3D, IActor
 		if (ev.IsActionPressed(Actions.Act))
 		{
 			var instance = (Spell)_spellScene.Instantiate();
-			instance.SetPosition(Position + (Vector3.Forward * World.TileSize) + Vector3.Up / 2);
 			instance.Name = "Spell";
-			instance.Setup(Color.FromString(SpellColor, Color.FromHtml("000000")));
+			
+			instance.SetPosition(Position + (Vector3.Forward * World.TileSize) + Vector3.Up / 2);
+			
+			var spellColour = Color.FromString(SpellColor, Color.FromHtml("000000"));
+			instance.Setup(spellColour, 1, Vector2.Up);
 			
 			Acting.Invoke(new Summon(this, instance));
 			_allowInput = false;

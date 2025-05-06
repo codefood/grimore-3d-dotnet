@@ -46,7 +46,7 @@ public class LevelLoader
             instance!.Position = new Vector3((col + _offsetCols) * World.TileSize, 0, (row + _offsetRows) * World.TileSize);
             world.AddChild(instance);
 
-            if (instance is Tile && GD.Randi() % 20 == 0)
+            if (instance is Tile && GD.Randi() % 40 == 0)
             {
                 var enemy = Enemy.Instantiate() as Enemy;
                 enemy!.Position = new Vector3((col + _offsetCols) * World.TileSize, 0.5f, (row + _offsetRows) * World.TileSize);

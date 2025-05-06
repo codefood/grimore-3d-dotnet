@@ -4,7 +4,7 @@ namespace Grimore;
 
 public partial class Spell : AnimatableBody3D, IActor
 {
-    public void Setup(Color color)
+    public void Setup(Color color, int force, Vector2 direction)
     {
         var size = new Vector3(0.33f, 0.33f, 0.33f);
         
@@ -26,11 +26,18 @@ public partial class Spell : AnimatableBody3D, IActor
                 }
             }
         });
+        Force = force;
+        
+        Direction = direction;
     }
+
+    public Vector2 Direction { get; set; }
+
+    public int Force { get; set; }
 
     public event IActor.OnActing Acting;
     public void StartTurn()
     {
-        Acting.Invoke(new Move(this, Vector2.Zero));
+            Acting.Invoke(new Move(this, Direction * Force));
     }
 }
