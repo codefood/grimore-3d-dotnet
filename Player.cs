@@ -75,6 +75,12 @@ public partial class Player : CharacterBody3D, IActor
 		if (directionsPressed.Count != 0)
 		{
 			var direction = directionsPressed.First().Value;
+			
+			GetChildren()
+				.OfType<Node3D>()
+				.First(f => f.Name == "fooman")
+				.SetBasis(new Basis(new Vector3(0, 1, 0), direction.Angle() + Mathf.Pi / 2));
+	
 			Acting.Invoke(new Move(this, direction));
 			_allowInput = false;
 
