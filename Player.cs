@@ -23,15 +23,27 @@ public partial class Player : CharacterBody3D, IActor
 			.FirstOrDefault(d => d.Name == "CameraPivot");
 
 	const float MouseSensitivity = 0.01f;
-	private static readonly float XLimit = Mathf.DegToRad(30);
-	private static readonly float YLimit = Mathf.DegToRad(90);
+	private static readonly float XLimit = Mathf.DegToRad(120);
+	private static readonly float YLimit = Mathf.DegToRad(120);
 
+	private bool _cameraFree = false;
+	
 	public override void _UnhandledInput(InputEvent ev)
 	{
 		//nicked from https://docs.godotengine.org/en/stable/tutorials/3d/spring_arm.html
 		base._UnhandledInput(ev);
+		
+		if (ev.IsActionPressed(Actions.Modifier))
+		{
+			_cameraFree = true;
+		}
 
-		if (!ev.IsActionPressed(Actions.Modifier)) return;
+		if (ev.IsActionReleased(Actions.Modifier))
+		{
+			_cameraFree = false;
+		}
+
+		if (!_cameraFree) return;
 		
 		if (ev is not InputEventMouseMotion mouseMotion) return;
 		
@@ -54,8 +66,6 @@ public partial class Player : CharacterBody3D, IActor
 	public override void _Input(InputEvent ev)
 	{
 		base._Input(ev);
-		
-		GD.Print($"{_freeCamera}");
 		
 		if (!_allowInput) return;
 		
