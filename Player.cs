@@ -23,7 +23,7 @@ public partial class Player : CharacterBody3D, IActor
 			.FirstOrDefault(d => d.Name == "CameraPivot");
 
 	const float MouseSensitivity = 0.01f;
-	private static readonly float XLimit = Mathf.DegToRad(120);
+	private static readonly float XLimit = Mathf.DegToRad(30);
 	private static readonly float YLimit = Mathf.DegToRad(120);
 
 	private bool _cameraFree = false;
