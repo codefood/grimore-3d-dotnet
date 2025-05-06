@@ -29,16 +29,25 @@ public partial class World : Node3D
 		var spellEditor = Interface.GetChildren().OfType<BoxContainer>().First(c => c.Name == "SpellEditor");
 		openSpellEditorButton.Pressed += () =>
 		{
-			spellEditor.Visible = !spellEditor.Visible;
-			openSpellEditorButton.ReleaseFocus();
+			CloseSpellEditor(spellEditor, openSpellEditorButton);
 		};
 
 		foreach (var button in spellEditor.GetChildren().OfType<OptionButton>())
 		{
-			button.ItemSelected += x => Player.SpellColor = button.GetItemText((int)x);
+			button.ItemSelected += x =>
+			{
+				Player.SpellColor = button.GetItemText((int)x);
+				CloseSpellEditor(spellEditor, openSpellEditorButton);
+			};
 		}
 		
 		_levelLoader.Load(this, Levels.One);
+	}
+
+	private static void CloseSpellEditor(BoxContainer spellEditor, Button openSpellEditorButton)
+	{
+		spellEditor.Visible = !spellEditor.Visible;
+		openSpellEditorButton.ReleaseFocus();
 	}
 
 

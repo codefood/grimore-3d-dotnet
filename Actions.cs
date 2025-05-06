@@ -10,6 +10,7 @@ public static class Actions
     private const string Down = "down";
     private const string Left = "left";
     
+    public const string Modifier = "modifier";
     public const string Act = "act";
     
     public static readonly Dictionary<string, Vector2> Directions = new()

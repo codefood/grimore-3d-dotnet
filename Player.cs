@@ -8,6 +8,7 @@ public partial class Player : CharacterBody3D, IActor
 	private Node3D _cameraPivot;
 	private PackedScene _spellScene = ResourceLoader.Load<PackedScene>("res://spell.tscn");
 	private bool _allowInput = false;
+	private bool _freeCamera = false;
 	public event IActor.OnActing Acting;
 	public void StartTurn()
 	{
@@ -25,11 +26,14 @@ public partial class Player : CharacterBody3D, IActor
 	private static readonly float XLimit = Mathf.DegToRad(30);
 	private static readonly float YLimit = Mathf.DegToRad(90);
 
-	public override void _UnhandledInput(InputEvent @event)
+	public override void _UnhandledInput(InputEvent ev)
 	{
 		//nicked from https://docs.godotengine.org/en/stable/tutorials/3d/spring_arm.html
-		base._UnhandledInput(@event);
-		if (@event is not InputEventMouseMotion mouseMotion) return;
+		base._UnhandledInput(ev);
+
+		if (!ev.IsActionPressed(Actions.Modifier)) return;
+		
+		if (ev is not InputEventMouseMotion mouseMotion) return;
 		
 		var x = _cameraPivot.Rotation.X;
 		x -= mouseMotion.Relative.Y * MouseSensitivity;
@@ -49,6 +53,10 @@ public partial class Player : CharacterBody3D, IActor
 
 	public override void _Input(InputEvent ev)
 	{
+		base._Input(ev);
+		
+		GD.Print($"{_freeCamera}");
+		
 		if (!_allowInput) return;
 		
 		var directionsPressed = Actions.Directions
