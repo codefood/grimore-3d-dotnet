@@ -9,11 +9,10 @@ public partial class Enemy : AnimatableBody3D, IActor
 
     public override void _Ready()
     {
-        
         _timer = new Timer()
         {
             Autostart = false,
-            WaitTime = 0.5f,
+            WaitTime = 0.2f,
             OneShot = false,
             Name = $"enemy timer",
         };

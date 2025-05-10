@@ -41,7 +41,7 @@ public class TurnManager(World world)
     {
         Current = _actors.Dequeue();
         _actors.Enqueue(Current);
-        GD.Print($"StartNextTurn, Current: {((Node)Current).Name}, Queue of: {_actors.Count}");
+        //GD.Print($"StartNextTurn, Current: {((Node)Current).Name}, Queue of: {_actors.Count}");
         OnTurnStart.Invoke(Current);
         Current.StartTurn();
         
