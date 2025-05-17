@@ -38,6 +38,11 @@ public partial class Spell : AnimatableBody3D, IActor
     public event IActor.OnActing Acting;
     public void StartTurn()
     {
-            Acting.Invoke(new Move(this, Direction * Force));
+        Acting.Invoke(new Move(this, Direction * Force));
+    }
+
+    public void TakeDamage()
+    {
+        
     }
 }

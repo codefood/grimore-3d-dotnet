@@ -16,11 +16,15 @@ public partial class Ui : Node2D
 
     public delegate void OnToggleCamera();
     public event OnToggleCamera ToggleCamera;
+
+    public delegate void OnDamage();
+    public event OnDamage Damage;
     
     public override void _Ready()
     {
         var openSpellEditorButton = GetChildren().OfType<Button>().First(c => c.Name == "OpenGrimore");
         var changeCameraButton = GetChildren().OfType<Button>().First(c => c.Name == "ChangeCamera");
+        var ouchButton = GetChildren().OfType<Button>().First(c => c.Name == "OuchButton");
         var spellEditor = GetChildren().OfType<BoxContainer>().First(c => c.Name == "SpellEditor");
         openSpellEditorButton.Pressed += () =>
         {
@@ -29,6 +33,10 @@ public partial class Ui : Node2D
         changeCameraButton.Pressed += () =>
         {
             ToggleCamera?.Invoke();
+        };
+        ouchButton.Pressed += () =>
+        {
+            Damage!.Invoke();
         };
 
         foreach (var button in spellEditor.GetChildren().OfType<OptionButton>())

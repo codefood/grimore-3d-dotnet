@@ -9,4 +9,5 @@ public interface IActor
     delegate void OnActing(Command action);
     event OnActing Acting;
     void StartTurn();
+    void TakeDamage();
 }

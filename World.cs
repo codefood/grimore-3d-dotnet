@@ -24,8 +24,8 @@ public partial class World : Node3D
 	public override void _Ready()
 	{
 		TurnManager = new(this);
-
 		TurnManager.OnTurnStart += Interface.UpdateCurrentTurn;
+		
 		Interface.ChangeSpellColour += colour => Player.SpellColor = colour;
 		Interface.ToggleCamera += () =>
 		{
@@ -33,6 +33,11 @@ public partial class World : Node3D
 				? CameraMode.thirdPerson
 				: CameraMode.isometric);
 		};
+		Interface.Damage += () =>
+		{
+			Player.TakeDamage();
+		};
+		
 		_levelLoader.Load(this, Levels.One);
 
 		Player.SetCameraMode(CameraMode.isometric);

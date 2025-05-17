@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Linq;
 using Godot;
+using Godot.Collections;
 
 namespace Grimore;
 
@@ -7,6 +9,7 @@ public partial class Player : CharacterBody3D, IActor
 {
 	private Node3D _thirdPersonCameraPivot;
 	private PackedScene _spellScene = ResourceLoader.Load<PackedScene>("res://spell.tscn");
+	private Shader _damage = ResourceLoader.Load<Shader>("res://damage.gdshader");
 	private bool _allowInput = false;
 	private bool _cameraFree = false;
 	private Node3D _isometricCameraPivot;
@@ -18,6 +21,24 @@ public partial class Player : CharacterBody3D, IActor
 	public event IActor.OnActing Acting;
 	public void StartTurn() => 
 		_allowInput = true;
+
+	public void TakeDamage()
+	{
+		foreach (var mesh in GetChildren().First(f => f.Name == "fooman").GetChildren().OfType<MeshInstance3D>())
+		{
+			if (mesh.MaterialOverlay != null)
+			{
+				mesh.MaterialOverlay = null;
+			}
+			else
+			{
+				mesh.MaterialOverlay = new ShaderMaterial()
+				{
+					Shader = _damage,
+				};
+			}
+		}
+	}
 
 
 	// Called when the node enters the scene tree for the first time.
@@ -49,11 +70,6 @@ public partial class Player : CharacterBody3D, IActor
 		y = Mathf.Clamp(y, -YLimit, YLimit);
 		
 		_thirdPersonCameraPivot.Rotation = new Vector3(x, y, _thirdPersonCameraPivot.Rotation.Z);
-	}
-
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
 	}
 
 	public override void _Input(InputEvent ev)
