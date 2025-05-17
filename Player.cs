@@ -8,6 +8,7 @@ public partial class Player : CharacterBody3D, IActor
 	
 	private PackedScene _spellScene = ResourceLoader.Load<PackedScene>("res://spell.tscn");
 	private Shader _damage = ResourceLoader.Load<Shader>("res://damage.gdshader");
+	
 	private bool _allowInput;
 	
 	public event IActor.OnActing Acting;
@@ -17,23 +18,25 @@ public partial class Player : CharacterBody3D, IActor
 	public void TakeDamage()
 	{
 		var theFuckingModel = GetChildren().First(f => f.Name == "fooman");
+		var damageMaterial =  new ShaderMaterial()
+		{
+			Shader = _damage,
+		};
 		foreach (var mesh in theFuckingModel.GetChildren().OfType<MeshInstance3D>())
 		{
-			if (mesh.MaterialOverlay != null)
-			{
-				mesh.MaterialOverlay = null;
-			}
-			else
-			{
-				mesh.MaterialOverlay = new ShaderMaterial()
-				{
-					Shader = _damage,
-				};
-			}
+			ToggleMaterialOverlayOn(mesh, damageMaterial);
+			if (mesh.Mesh == null) continue;
+			for (var surf = 0; surf < mesh.Mesh.GetSurfaceCount(); surf++)
+				mesh.Mesh.SurfaceSetMaterial(surf, damageMaterial);
 		}
 	}
 
-	
+	private void ToggleMaterialOverlayOn(MeshInstance3D mesh, Material damageMaterial) =>
+		mesh.MaterialOverlay = mesh.MaterialOverlay != null 
+			? null 
+			: damageMaterial;
+
+
 	public override void _Input(InputEvent ev)
 	{
 		base._Input(ev);
