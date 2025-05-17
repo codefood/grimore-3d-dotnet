@@ -10,15 +10,9 @@ public partial class World : Node3D
 	public TurnManager TurnManager;
 	
 	private Timer _timer;
-	private Ui Interface => GetChildren().First(x => x.Name == "UI") as Ui;
+	private Ui Interface => FindChild("UI") as Ui;
 	private Player Player => GetChildren().OfType<Player>().First();
-	
-	
-	public enum CameraMode 
-	{
-		isometric,
-		thirdPerson,
-	}
+	private Camera Camera => FindChildren("Camera").OfType<Camera>().First();
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -29,9 +23,9 @@ public partial class World : Node3D
 		Interface.ChangeSpellColour += colour => Player.SpellColor = colour;
 		Interface.ToggleCamera += () =>
 		{
-			Player.SetCameraMode(Player.CameraMode == CameraMode.isometric
-				? CameraMode.thirdPerson
-				: CameraMode.isometric);
+			Camera.SetMode(Camera.CurrentMode == Camera.Mode.isometric
+				? Camera.Mode.thirdPerson
+				: Camera.Mode.isometric);
 		};
 		Interface.Damage += () =>
 		{
@@ -40,7 +34,7 @@ public partial class World : Node3D
 		
 		_levelLoader.Load(this, Levels.One);
 
-		Player.SetCameraMode(CameraMode.isometric);
+		Camera.SetMode(Camera.Mode.isometric);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

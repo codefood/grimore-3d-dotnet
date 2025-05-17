@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://bu1nrqvd1xev1"]
+[gd_scene load_steps=5 format=3 uid="uid://bu1nrqvd1xev1"]
 
 [ext_resource type="Script" uid="uid://banquqisrwvsq" path="res://Player.cs" id="1_b82nm"]
 [ext_resource type="PackedScene" uid="uid://cn1y3q46hwmcl" path="res://assets/fooman.glb" id="2_8bqiu"]
+[ext_resource type="PackedScene" uid="uid://bh03m0vcdehmu" path="res://camera.tscn" id="3_i3pqv"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0hynd"]
 size = Vector3(1, 2, 1)
@@ -15,16 +16,4 @@ script = ExtResource("1_b82nm")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("BoxShape3D_0hynd")
 
-[node name="ThirdPersonCameraPivot" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
-visible = false
-
-[node name="SpringArm3D" type="SpringArm3D" parent="ThirdPersonCameraPivot"]
-spring_length = 6.0
-
-[node name="Camera3D" type="Camera3D" parent="ThirdPersonCameraPivot/SpringArm3D"]
-
-[node name="IsometricCameraPivot" type="Node3D" parent="."]
-transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 5, 5, 5)
-
-[node name="Camera3D" type="Camera3D" parent="IsometricCameraPivot"]
+[node name="Camera" parent="." instance=ExtResource("3_i3pqv")]
