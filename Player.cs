@@ -24,18 +24,14 @@ public partial class Player : CharacterBody3D, IActor
 		};
 		foreach (var mesh in theFuckingModel.GetChildren().OfType<MeshInstance3D>())
 		{
-			ToggleMaterialOverlayOn(mesh, damageMaterial);
-			if (mesh.Mesh == null) continue;
+			mesh.MaterialOverlay = mesh.MaterialOverlay != null 
+				? null 
+				: damageMaterial;
+			
 			for (var surf = 0; surf < mesh.Mesh.GetSurfaceCount(); surf++)
 				mesh.Mesh.SurfaceSetMaterial(surf, damageMaterial);
 		}
 	}
-
-	private void ToggleMaterialOverlayOn(MeshInstance3D mesh, Material damageMaterial) =>
-		mesh.MaterialOverlay = mesh.MaterialOverlay != null 
-			? null 
-			: damageMaterial;
-
 
 	public override void _Input(InputEvent ev)
 	{
