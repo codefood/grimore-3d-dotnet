@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://bh03m0vcdehmu"]
+
+[ext_resource type="Script" uid="uid://bkuipts3ttoe2" path="res://Camera.cs" id="1_u5kg4"]
+
+[node name="Camera" type="Node"]
+script = ExtResource("1_u5kg4")
+
+[node name="ThirdPersonCameraPivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+visible = false
+
+[node name="SpringArm3D" type="SpringArm3D" parent="ThirdPersonCameraPivot"]
+spring_length = 6.0
+
+[node name="Camera3D" type="Camera3D" parent="ThirdPersonCameraPivot/SpringArm3D"]
+
+[node name="IsometricCameraPivot" type="Node3D" parent="."]
+transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 5, 5, 5)
+
+[node name="Camera3D" type="Camera3D" parent="IsometricCameraPivot"]
