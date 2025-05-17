@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://bu1nrqvd1xev1"]
 
 [ext_resource type="Script" uid="uid://banquqisrwvsq" path="res://Player.cs" id="1_b82nm"]
-[ext_resource type="PackedScene" uid="uid://cn1y3q46hwmcl" path="res://assets/fooman.glb" id="2_8bqiu"]
+[ext_resource type="PackedScene" uid="uid://cucwvqkt1t5nc" path="res://blender/player.glb" id="3_hqtel"]
 [ext_resource type="PackedScene" uid="uid://bh03m0vcdehmu" path="res://camera.tscn" id="3_i3pqv"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0hynd"]
@@ -10,10 +10,10 @@ size = Vector3(1, 2, 1)
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_b82nm")
 
-[node name="fooman" parent="." instance=ExtResource("2_8bqiu")]
-
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("BoxShape3D_0hynd")
 
 [node name="Camera" parent="." instance=ExtResource("3_i3pqv")]
+
+[node name="fooman" parent="." instance=ExtResource("3_hqtel")]

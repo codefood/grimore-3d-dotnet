@@ -1,5 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://hhwsx0lna6y2"]
-
-[ext_resource type="PackedScene" uid="uid://cn1y3q46hwmcl" path="res://assets/fooman.glb" id="1_4kdki"]
-
-[node name="fooman" instance=ExtResource("1_4kdki")]

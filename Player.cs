@@ -16,7 +16,8 @@ public partial class Player : CharacterBody3D, IActor
 
 	public void TakeDamage()
 	{
-		foreach (var mesh in GetChildren().First(f => f.Name == "fooman").GetChildren().OfType<MeshInstance3D>())
+		var theFuckingModel = GetChildren().First(f => f.Name == "fooman");
+		foreach (var mesh in theFuckingModel.GetChildren().OfType<MeshInstance3D>())
 		{
 			if (mesh.MaterialOverlay != null)
 			{
