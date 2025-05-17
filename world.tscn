@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://dup1nowopx1b"]
+[gd_scene load_steps=7 format=3 uid="uid://dup1nowopx1b"]
 
 [ext_resource type="Script" uid="uid://88kk4rie4drv" path="res://World.cs" id="1_whjl1"]
 [ext_resource type="PackedScene" uid="uid://ciulncpj4aa2k" path="res://tile.tscn" id="2_1hxm5"]
 [ext_resource type="PackedScene" uid="uid://bu1nrqvd1xev1" path="res://player.tscn" id="3_tvngf"]
+[ext_resource type="PackedScene" uid="uid://b4nwrh020u4yx" path="res://ui.tscn" id="4_aqk2v"]
 
 [sub_resource type="Environment" id="Environment_tlwt5"]
 
@@ -28,40 +29,4 @@ visible = false
 
 [node name="Player" parent="." instance=ExtResource("3_tvngf")]
 
-[node name="UI" type="Node2D" parent="."]
-
-[node name="Button" type="Button" parent="UI"]
-offset_left = 30.0
-offset_top = 583.0
-offset_right = 189.0
-offset_bottom = 614.0
-text = "Open Grimore
-"
-
-[node name="CurrentTurn" type="Label" parent="UI"]
-offset_left = 20.0
-offset_top = 24.0
-offset_right = 397.0
-offset_bottom = 107.0
-text = "Current Turn:"
-
-[node name="SpellEditor" type="BoxContainer" parent="UI"]
-visible = false
-offset_left = 188.0
-offset_top = 114.0
-offset_right = 995.0
-offset_bottom = 551.0
-vertical = true
-
-[node name="OptionButton" type="OptionButton" parent="UI/SpellEditor"]
-layout_mode = 2
-selected = 0
-item_count = 3
-popup/item_0/text = "Red"
-popup/item_0/id = 0
-popup/item_1/text = "Blue"
-popup/item_1/id = 1
-popup/item_2/text = "Green"
-popup/item_2/id = 2
-
-[connection signal="pressed" from="UI/Button" to="." method="_on_button_pressed"]
+[node name="UI" parent="." instance=ExtResource("4_aqk2v")]

@@ -31,18 +31,8 @@ public partial class Player : CharacterBody3D, IActor
 	{
 		//nicked from https://docs.godotengine.org/en/stable/tutorials/3d/spring_arm.html
 		base._UnhandledInput(ev);
-		
-		if (ev.IsActionPressed(Actions.Modifier))
-		{
-			_cameraFree = true;
-		}
 
-		if (ev.IsActionReleased(Actions.Modifier))
-		{
-			_cameraFree = false;
-		}
-
-		if (!_cameraFree) return;
+		if (CameraMode == World.CameraMode.isometric) return;
 		
 		if (ev is not InputEventMouseMotion mouseMotion) return;
 		
@@ -101,4 +91,5 @@ public partial class Player : CharacterBody3D, IActor
 	}
 
 	public string SpellColor { get; set; } = "white";
+	public World.CameraMode CameraMode { get; set; }
 }

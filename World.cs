@@ -10,46 +10,33 @@ public partial class World : Node3D
 	public TurnManager TurnManager;
 	
 	private Timer _timer;
-	private Node Interface => GetChildren().First(x => x.Name == "UI");
+	private Ui Interface => GetChildren().First(x => x.Name == "UI") as Ui;
 	private Player Player => GetChildren().OfType<Player>().First();
+	
+	
+	public enum CameraMode 
+	{
+		isometric,
+		thirdPerson,
+	}
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		TurnManager = new(this);
-		
-		TurnManager.OnTurnStart += actor => 
-			Interface
-					.GetChildren()
-					.OfType<Label>()
-					.Single()
-					.Text = $"Current Turn: {actor.Name}";
 
-		var openSpellEditorButton = Interface.GetChildren().OfType<Button>().First();
-		var spellEditor = Interface.GetChildren().OfType<BoxContainer>().First(c => c.Name == "SpellEditor");
-		openSpellEditorButton.Pressed += () =>
+		TurnManager.OnTurnStart += Interface.UpdateCurrentTurn;
+		Interface.ChangeSpellColour += colour => Player.SpellColor = colour;
+		Interface.ToggleCamera += () =>
 		{
-			CloseSpellEditor(spellEditor, openSpellEditorButton);
+			Player.CameraMode = Player.CameraMode == CameraMode.isometric
+				? CameraMode.thirdPerson
+				: CameraMode.isometric;
 		};
-
-		foreach (var button in spellEditor.GetChildren().OfType<OptionButton>())
-		{
-			button.ItemSelected += x =>
-			{
-				Player.SpellColor = button.GetItemText((int)x);
-				CloseSpellEditor(spellEditor, openSpellEditorButton);
-			};
-		}
-		
 		_levelLoader.Load(this, Levels.One);
-	}
 
-	private static void CloseSpellEditor(BoxContainer spellEditor, Button openSpellEditorButton)
-	{
-		spellEditor.Visible = !spellEditor.Visible;
-		openSpellEditorButton.ReleaseFocus();
+		Player.CameraMode = CameraMode.isometric;
 	}
-
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
