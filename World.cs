@@ -29,13 +29,13 @@ public partial class World : Node3D
 		Interface.ChangeSpellColour += colour => Player.SpellColor = colour;
 		Interface.ToggleCamera += () =>
 		{
-			Player.CameraMode = Player.CameraMode == CameraMode.isometric
+			Player.SetCameraMode(Player.CameraMode == CameraMode.isometric
 				? CameraMode.thirdPerson
-				: CameraMode.isometric;
+				: CameraMode.isometric);
 		};
 		_levelLoader.Load(this, Levels.One);
 
-		Player.CameraMode = CameraMode.isometric;
+		Player.SetCameraMode(CameraMode.isometric);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

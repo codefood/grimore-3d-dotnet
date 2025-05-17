@@ -15,10 +15,16 @@ script = ExtResource("1_b82nm")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("BoxShape3D_0hynd")
 
-[node name="CameraPivot" type="Node3D" parent="."]
+[node name="ThirdPersonCameraPivot" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+visible = false
 
-[node name="SpringArm3D" type="SpringArm3D" parent="CameraPivot"]
+[node name="SpringArm3D" type="SpringArm3D" parent="ThirdPersonCameraPivot"]
 spring_length = 6.0
 
-[node name="Camera3D" type="Camera3D" parent="CameraPivot/SpringArm3D"]
+[node name="Camera3D" type="Camera3D" parent="ThirdPersonCameraPivot/SpringArm3D"]
+
+[node name="IsometricCameraPivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 5, 5)
+
+[node name="Camera3D" type="Camera3D" parent="IsometricCameraPivot"]
