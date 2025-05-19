@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Godot;
 
@@ -12,6 +11,8 @@ public partial class Player : CharacterBody3D, IActor
 	
 	private bool _allowInput;
 	private Vector2 _currentDirection;
+	private ShaderMaterial _damageMaterial;
+	private Timer _timer;
 
 	private Node3D Fooman => GetChildren()
 		.OfType<Node3D>()
@@ -21,27 +22,48 @@ public partial class Player : CharacterBody3D, IActor
 	public void StartTurn() => 
 		_allowInput = true;
 
-	public void TakeDamage()
+	public override void _Ready()
 	{
-		var damageMaterial =  new ShaderMaterial()
+		base._Ready();
+		_damageMaterial =  new ShaderMaterial()
 		{
 			Shader = _damage,
 		};
-		SetMaterial(damageMaterial);
-		// await Task.Delay(TimeSpan.FromSeconds(1));
+		SetMaterialIfNotAlreadySet(_damageMaterial);
 	}
 
-	private void SetMaterial(ShaderMaterial material)
+	public void TakeDamage()
+	{
+		_damageMaterial.SetShaderParameter("active", true);
+		
+		_timer = new Timer()
+		{
+			Autostart = true,
+			WaitTime = 3f,
+			OneShot = true,
+			Name = $"damage timer",
+		};
+		_timer.Timeout += ResetDamageCalback;
+		AddChild(_timer);
+	}
+
+	private void ResetDamageCalback()
+	{
+		_damageMaterial.SetShaderParameter("active", false);
+		_timer.QueueFree();
+		_timer = null;
+	}
+
+	private void SetMaterialIfNotAlreadySet(ShaderMaterial material)
 	{
 		foreach (var mesh in Fooman.GetChildren().OfType<MeshInstance3D>())
 		{
-			mesh.MaterialOverlay = mesh.MaterialOverlay != material
-				? null 
-				: material;
-		
-			//this horror makes the head also go red, wtf?
 			for (var surf = 0; surf < mesh.Mesh.GetSurfaceCount(); surf++)
-				mesh.Mesh.SurfaceSetMaterial(surf, material);
+			{
+				if(mesh.GetSurfaceOverrideMaterial(surf) == null)
+					mesh.SetSurfaceOverrideMaterial(surf, material);	
+				
+			}
 		}
 	}
 

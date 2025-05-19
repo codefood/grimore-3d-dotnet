@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Godot;
 
 namespace Grimore;
@@ -43,6 +44,6 @@ public partial class Spell : AnimatableBody3D, IActor
 
     public void TakeDamage()
     {
-        
+        QueueFree();
     }
 }

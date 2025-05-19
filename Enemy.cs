@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Godot;
 
 namespace Grimore;
@@ -28,7 +29,7 @@ public partial class Enemy : AnimatableBody3D, IActor
             .ElementAt(GD.RandRange(0, Actions.Directions.Count - 1))
             .Value;
 
-        Acting.Invoke(new Move(this, direction));
+        Acting!.Invoke(new Move(this, direction));
     }
 
     public void TakeDamage() => 
