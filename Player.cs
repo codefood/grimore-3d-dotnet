@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Godot;
 
@@ -10,26 +11,37 @@ public partial class Player : CharacterBody3D, IActor
 	private Shader _damage = ResourceLoader.Load<Shader>("res://damage.gdshader");
 	
 	private bool _allowInput;
-	
+	private Vector2 _currentDirection;
+
+	private Node3D Fooman => GetChildren()
+		.OfType<Node3D>()
+		.First(f => f.Name == "fooman");
+
 	public event IActor.OnActing Acting;
 	public void StartTurn() => 
 		_allowInput = true;
 
 	public void TakeDamage()
 	{
-		var theFuckingModel = GetChildren().First(f => f.Name == "fooman");
 		var damageMaterial =  new ShaderMaterial()
 		{
 			Shader = _damage,
 		};
-		foreach (var mesh in theFuckingModel.GetChildren().OfType<MeshInstance3D>())
+		SetMaterial(damageMaterial);
+		// await Task.Delay(TimeSpan.FromSeconds(1));
+	}
+
+	private void SetMaterial(ShaderMaterial material)
+	{
+		foreach (var mesh in Fooman.GetChildren().OfType<MeshInstance3D>())
 		{
-			mesh.MaterialOverlay = mesh.MaterialOverlay != null 
+			mesh.MaterialOverlay = mesh.MaterialOverlay != material
 				? null 
-				: damageMaterial;
-			
+				: material;
+		
+			//this horror makes the head also go red, wtf?
 			for (var surf = 0; surf < mesh.Mesh.GetSurfaceCount(); surf++)
-				mesh.Mesh.SurfaceSetMaterial(surf, damageMaterial);
+				mesh.Mesh.SurfaceSetMaterial(surf, material);
 		}
 	}
 
@@ -46,12 +58,11 @@ public partial class Player : CharacterBody3D, IActor
 		if (directionsPressed.Count != 0)
 		{
 			var direction = directionsPressed.First().Value;
-			
-			GetChildren()
-				.OfType<Node3D>()
-				.First(f => f.Name == "fooman")
-				.SetBasis(new Basis(new Vector3(0, 1, 0), direction.Angle() + Mathf.Pi / 2));
-	
+
+			var angle = Angle(direction);
+			Fooman.SetBasis(new Basis(new Vector3(0, 1, 0), angle));
+			_currentDirection = direction;
+
 			Acting!.Invoke(new Move(this, direction));
 			_allowInput = false;
 
@@ -60,17 +71,30 @@ public partial class Player : CharacterBody3D, IActor
 		{
 			var instance = (Spell)_spellScene.Instantiate();
 			instance.Name = "Spell";
-			
-			instance.SetPosition(Position + (Vector3.Forward * World.TileSize) + Vector3.Up / 2);
+
+			instance.Position = Position + new Vector3(_currentDirection.X, 0.5f, _currentDirection.Y);
 			
 			var spellColour = Color.FromString(SpellColor, Color.FromHtml("000000"));
-			instance.Setup(spellColour, 1, Vector2.Up);
+			instance.Setup(spellColour, 1, _currentDirection);
 			
 			Acting!.Invoke(new Summon(this, instance));
 			_allowInput = false;
 		}
 	}
 
+	float Angle(Vector2 direction)
+	{
+		//horrible. there's definitely a good way of doing this.
+		if (direction == Vector2.Up)
+			return 0;
+		if (direction == Vector2.Left)
+			return Mathf.Pi / 2;
+		if (direction == Vector2.Down)
+			return Mathf.Pi;
+		if (direction == Vector2.Right)
+			return -(Mathf.Pi / 2);
+		return 0;
+	}
 	public string SpellColor { get; set; } = "white";
 	
 }
