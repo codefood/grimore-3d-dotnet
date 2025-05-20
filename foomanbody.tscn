@@ -1,5 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://kcagoqjmljpt"]
+[gd_scene load_steps=4 format=3 uid="uid://kcagoqjmljpt"]
 
 [ext_resource type="PackedScene" uid="uid://cucwvqkt1t5nc" path="res://blender/player.glb" id="1_ewfxs"]
+[ext_resource type="Shader" uid="uid://xyryaxwwsiba" path="res://damage.gdshader" id="2_t2uwp"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ewfxs"]
+render_priority = 0
+shader = ExtResource("2_t2uwp")
+shader_parameter/active = false
 
 [node name="player" instance=ExtResource("1_ewfxs")]
+
+[node name="body" parent="." index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_ewfxs")

@@ -47,11 +47,11 @@ public partial class Player : CharacterBody3D, IActor
 			OneShot = true,
 			Name = $"damage timer",
 		};
-		_timer.Timeout += ResetDamageCalback;
+		_timer.Timeout += ResetDamageCallback;
 		AddChild(_timer);
 	}
 
-	private void ResetDamageCalback()
+	private void ResetDamageCallback()
 	{
 		_damageMaterial.SetShaderParameter("active", false);
 		_timer.QueueFree();
