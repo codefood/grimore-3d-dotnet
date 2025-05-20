@@ -9,8 +9,8 @@ public partial class Camera : Node
 	private Node3D _isometricCameraPivot;
 	
 	const float MouseSensitivity = 0.01f;
-	private static readonly float XLimit = Mathf.DegToRad(30);
-	private static readonly float YLimit = Mathf.DegToRad(120);
+	private static readonly float XLimit = Mathf.DegToRad(90);
+	private static readonly float YLimit = Mathf.DegToRad(180);
 	public Mode CurrentMode { get; private set; }
 	
 	public enum Mode 

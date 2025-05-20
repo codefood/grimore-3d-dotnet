@@ -11,7 +11,6 @@ public partial class Player : CharacterBody3D, IActor
 	
 	private bool _allowInput;
 	private Vector2 _currentDirection;
-	private ShaderMaterial _damageMaterial;
 	private Timer _timer;
 
 	private Node3D Fooman => GetChildren()
@@ -22,23 +21,23 @@ public partial class Player : CharacterBody3D, IActor
 	public void StartTurn() => 
 		_allowInput = true;
 
-	public override void _Ready()
+
+	private void SetShaderTo(Material material)
 	{
-		base._Ready();
-		_damageMaterial =  new ShaderMaterial()
-		{
-			Shader = _damage,
-		};
-		
 		foreach (var mesh in Fooman.GetChildren().OfType<MeshInstance3D>())
 		{
-			mesh.MaterialOverlay = _damageMaterial;
+			mesh.MaterialOverlay = material;
 		}
 	}
 
 	public void TakeDamage()
 	{
-		_damageMaterial.SetShaderParameter("active", true);
+		var damageMaterial = new ShaderMaterial()
+		{
+			Shader = _damage,
+		};
+		damageMaterial.SetShaderParameter("active", true);
+		SetShaderTo(damageMaterial);
 		
 		_timer = new Timer()
 		{
@@ -53,7 +52,7 @@ public partial class Player : CharacterBody3D, IActor
 
 	private void ResetDamageCallback()
 	{
-		_damageMaterial.SetShaderParameter("active", false);
+		SetShaderTo(null);
 		_timer.QueueFree();
 		_timer = null;
 	}
