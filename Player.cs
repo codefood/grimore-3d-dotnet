@@ -29,7 +29,11 @@ public partial class Player : CharacterBody3D, IActor
 		{
 			Shader = _damage,
 		};
-		SetMaterialIfNotAlreadySet(_damageMaterial);
+		
+		foreach (var mesh in Fooman.GetChildren().OfType<MeshInstance3D>())
+		{
+			mesh.MaterialOverlay = _damageMaterial;
+		}
 	}
 
 	public void TakeDamage()
@@ -54,18 +58,6 @@ public partial class Player : CharacterBody3D, IActor
 		_timer = null;
 	}
 
-	private void SetMaterialIfNotAlreadySet(ShaderMaterial material)
-	{
-		foreach (var mesh in Fooman.GetChildren().OfType<MeshInstance3D>())
-		{
-			for (var surf = 0; surf < mesh.Mesh.GetSurfaceCount(); surf++)
-			{
-				if(mesh.GetSurfaceOverrideMaterial(surf) == null)
-					mesh.SetSurfaceOverrideMaterial(surf, material);	
-				
-			}
-		}
-	}
 
 	public override void _Input(InputEvent ev)
 	{
