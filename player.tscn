@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://bu1nrqvd1xev1"]
 
 [ext_resource type="Script" uid="uid://banquqisrwvsq" path="res://Player.cs" id="1_b82nm"]
-[ext_resource type="PackedScene" uid="uid://cn1y3q46hwmcl" path="res://assets/fooman.glb" id="2_8bqiu"]
+[ext_resource type="PackedScene" uid="uid://bamtyi42sc8o" path="res://blender/player.blend" id="3_hqtel"]
 [ext_resource type="PackedScene" uid="uid://bh03m0vcdehmu" path="res://camera.tscn" id="3_i3pqv"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0hynd"]
@@ -16,4 +16,4 @@ shape = SubResource("BoxShape3D_0hynd")
 
 [node name="Camera" parent="." instance=ExtResource("3_i3pqv")]
 
-[node name="fooman" parent="." instance=ExtResource("2_8bqiu")]
+[node name="player" parent="." instance=ExtResource("3_hqtel")]

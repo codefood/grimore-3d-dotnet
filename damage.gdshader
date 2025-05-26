@@ -1,4 +1,4 @@
-shader_type spatial;
+shader_type canvas_item;
 
 uniform bool active = false;
 
@@ -8,9 +8,13 @@ void vertex() {
 
 void fragment() {
 	// Called for every pixel the material is visible on.
-	if(active) {
-		ALBEDO = vec3(1, 0, 0);
-	}
+	COLOR = vec4(vec3(1.0) - texture(TEXTURE, UV).rgb, 1.0);
+	//if(active) {
+		//vec4 colour = texture(TEXTURE, UV);
+		//colour.r = 1.0;
+		//colour.b = 0.0;
+		//COLOR = colour;
+	//}
 	
 }
 

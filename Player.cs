@@ -32,6 +32,11 @@ public partial class Player : CharacterBody3D, IActor
 
 	public void TakeDamage()
 	{
+		if (_timer != null)
+		{
+			GD.Print("taking damage while taking damage");
+			return;
+		}
 		var damageMaterial = new ShaderMaterial()
 		{
 			Shader = _damage,
