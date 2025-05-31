@@ -1,20 +1,12 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Godot;
 
 namespace Grimore;
 
-public static class FooExt
-{
-    private static readonly Type[] PawnTypes = [typeof(Wall), typeof(Enemy), typeof(Spell)];
-
-    public static IEnumerable<Node3D> GetPawns(this IEnumerable<Node3D> nodes) =>
-        PawnTypes.SelectMany(p => nodes.Where(n => n.GetType() == p));
-}
-public class TurnManager(World world)
+public partial class TurnManager : Node
 {
     private readonly Queue<IActor> _actors = new();
+    private World _world;
 
     public delegate void TurnStarted(IActor actor);
 
@@ -47,7 +39,7 @@ public class TurnManager(World world)
         switch (action)
         {
             case Summon spell:
-                world.AddChild(spell.Instance);
+                _world.AddChild(spell.Instance);
                 Enrol(spell.Instance);
                 break;
             case Move:
@@ -115,7 +107,7 @@ public class TurnManager(World world)
     }
 
     private IActor Current { get; set; }
-
+    public void Setup(World world) => _world = world;
 
     public void Clear() => 
         _actors.Clear();

@@ -7,7 +7,7 @@ public partial class World : Node3D
 {
 	public const int TileSize = 2;
 	private readonly LevelLoader _levelLoader = new();
-	public TurnManager TurnManager;
+	public TurnManager Turner => FindChildren("TurnInstance").First() as TurnManager;
 	
 	private Timer _timer;
 	private Ui Interface => FindChild("UI") as Ui;
@@ -17,8 +17,13 @@ public partial class World : Node3D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		TurnManager = new(this);
-		TurnManager.OnTurnStart += Interface.UpdateCurrentTurn;
+		if (Turner == null)
+		{
+			GD.Print("No turnmanager in scene");
+			return;
+		}
+		Turner.Setup(this);
+		Turner.OnTurnStart += Interface.UpdateCurrentTurn;
 		
 		Interface.ChangeSpellColour += colour => Player.SpellColor = colour;
 		Interface.ToggleCamera += () =>

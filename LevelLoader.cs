@@ -24,7 +24,7 @@ public class LevelLoader
     {
         ClearThingsFrom(world);
         
-        world.TurnManager.Enrol(world.GetChildren()
+        world.Turner.Enrol(world.GetChildren()
             .OfType<Player>()
             .First());
         
@@ -64,12 +64,12 @@ public class LevelLoader
                 enemy!.Position = new Vector3((col + _offsetCols) * World.TileSize, 0.5f, (row + _offsetRows) * World.TileSize);
                 enemy.Name = $"Enemy {world.GetChildren().OfType<Enemy>().Count() + 1}";
                 world.AddChild(enemy);
-                world.TurnManager.Enrol(enemy);
+                world.Turner.Enrol(enemy);
             }
             
         }
 
-        world.TurnManager.StartNextTurn();
+        world.Turner.StartNextTurn();
     }
 
     private void ClearThingsFrom(World world)
@@ -77,6 +77,6 @@ public class LevelLoader
         world.GetChildren().OfType<Tile>().ForEach(x => x.QueueFree());
         world.GetChildren().OfType<Wall>().ForEach(x => x.QueueFree());
         world.GetChildren().OfType<Door>().ForEach(x => x.QueueFree());
-        world.TurnManager.Clear();
+        world.Turner.Clear();
     }
 }
