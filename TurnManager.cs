@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 
 namespace Grimore;
@@ -7,6 +8,10 @@ public partial class TurnManager : Node
 {
     private readonly Queue<IActor> _actors = new();
     private World _world;
+    private Timer _timer;
+    private Vector3 _velocity;
+    private PhysicsBody3D _actor;
+    private List<GodotObject> _processed = new();
 
     public delegate void TurnStarted(IActor actor);
 
@@ -42,57 +47,60 @@ public partial class TurnManager : Node
                 _world.AddChild(spell.Instance);
                 Enrol(spell.Instance);
                 break;
-            case Move:
-                ProcessMove(action);
+            case Move move:
+                //ProcessMove(action);
+                _actor = action.Actor as PhysicsBody3D;
+                _velocity = new Vector3(move.Direction.X * World.TileSize, 0, move.Direction.Y * World.TileSize);
                 break;
         }
+        
+        _timer.Start();
+    }
 
+    private void TurnTimer()
+    {
+        _timer.Stop();
+        _processed.Clear();
+        _actor = null;
+        _velocity = Vector3.Zero;
         StartNextTurn();
     }
 
-    private void ProcessMove(Command action)
-    { 
-        var move = (Move)action;
-      
-        GD.Print($"{move.Actor.Name} is moving ({move.Direction.X}, {move.Direction.Y})");
+    public override void _PhysicsProcess(double delta)
+    {
+        base._PhysicsProcess(delta);
         
-        var original = action.Actor.Position;
-        var target = new Vector3(move.Direction.X * World.TileSize, 0, move.Direction.Y * World.TileSize);
+        if(_actor == null) return;
         
-        //we move until we collide, then process those collisions, then continue
-        var physicsObject = ((PhysicsBody3D)action.Actor);
-        var collisions = physicsObject.MoveAndCollide(target);
-        var count = collisions?.GetCollisionCount() ?? 0;
-        
-        for(int idx = 0; idx < count; idx++)
+        var collisions = _actor.MoveAndCollide(_velocity * (float)delta);
+        foreach(var collision in collisions.EnumerateCollisions().Except(_processed))
         {
-            var collision = collisions!.GetCollider(idx);
             switch (collision)
             {
                 case Wall wall:
                     // lets not do anything
-                    action.Actor.Position = original;
+                    
                     return;
                 case Enemy enemy:
-                    GD.Print($"Enemy {enemy.Name} took damage from {action.Actor.Name}");
+                    GD.Print($"Enemy {enemy.Name} took damage from {_actor.Name}");
                     enemy.TakeDamage();
                     break;
                 case Door door:
                     door.Open();
                     break;
                 case Player p:
-                    GD.Print($"{action.Actor.Name} collided with player");
+                    GD.Print($"{_actor.Name} collided with player");
                     //p.TakeDamage();
                     //action.Actor.Position = original;
                     break;
                 case Spell spell:
-                    action.Actor.TakeDamage();
+                    ((IActor)_actor).TakeDamage();
                     break;
             }
+            _processed.Add(collision);
         }
-        //action.Actor.Position += collisions?.GetRemainder() ?? Vector3.Zero;
+        
     }
-
     private bool IsCurrentTurn(IActor actor) => 
         Current == actor;
 
@@ -104,6 +112,20 @@ public partial class TurnManager : Node
         OnTurnStart!.Invoke(Current);
         Current.StartTurn();
         
+    }
+
+    public override void _Ready()
+    {
+        base._Ready();
+        _timer = new Timer()
+        {
+            Autostart = false,
+            WaitTime = 1f,
+            OneShot = false,
+            Name = $"turn timer",
+        };
+        _timer.Timeout += TurnTimer;
+        AddChild(_timer);
     }
 
     private IActor Current { get; set; }
