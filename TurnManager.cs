@@ -61,18 +61,21 @@ public class TurnManager(World world)
     private void ProcessMove(Command action)
     { 
         var move = (Move)action;
+      
+        GD.Print($"{move.Actor.Name} is moving ({move.Direction.X}, {move.Direction.Y})");
         
         var original = action.Actor.Position;
         var target = new Vector3(move.Direction.X * World.TileSize, 0, move.Direction.Y * World.TileSize);
         
         //we move until we collide, then process those collisions, then continue
-        var collisions = ((PhysicsBody3D)action.Actor).MoveAndCollide(target);
+        var physicsObject = ((PhysicsBody3D)action.Actor);
+        var collisions = physicsObject.MoveAndCollide(target);
         var count = collisions?.GetCollisionCount() ?? 0;
         
         for(int idx = 0; idx < count; idx++)
         {
-            var potential = collisions!.GetCollider(idx);
-            switch (potential)
+            var collision = collisions!.GetCollider(idx);
+            switch (collision)
             {
                 case Wall wall:
                     // lets not do anything
@@ -86,17 +89,16 @@ public class TurnManager(World world)
                     door.Open();
                     break;
                 case Player p:
-                    p.TakeDamage();
-                    action.Actor.Position = original;
+                    GD.Print($"{action.Actor.Name} collided with player");
+                    //p.TakeDamage();
+                    //action.Actor.Position = original;
                     break;
                 case Spell spell:
                     action.Actor.TakeDamage();
                     break;
             }
-            
         }
-
-        action.Actor.Position = target; //finish the move
+        //action.Actor.Position += collisions?.GetRemainder() ?? Vector3.Zero;
     }
 
     private bool IsCurrentTurn(IActor actor) => 
@@ -107,7 +109,7 @@ public class TurnManager(World world)
         Current = _actors.Dequeue();
         _actors.Enqueue(Current);
         //GD.Print($"StartNextTurn, Current: {((Node)Current).Name}, Queue of: {_actors.Count}");
-        OnTurnStart.Invoke(Current);
+        OnTurnStart!.Invoke(Current);
         Current.StartTurn();
         
     }
