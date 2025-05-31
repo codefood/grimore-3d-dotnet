@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Godot;
 
@@ -37,13 +38,20 @@ public partial class Spell : AnimatableBody3D, IActor
     public int Force { get; set; }
 
     public event IActor.OnActing Acting;
+    public event IActor.OnDying Dying;
+
     public void StartTurn()
     {
-        Acting.Invoke(new Move(this, Direction * Force));
+        Acting!.Invoke(new Move(this, Direction * Force));
     }
 
     public void TakeDamage()
     {
-        QueueFree();
+        Dying!.Invoke(this);
+    }
+
+    public Aabb GetMesh()
+    {
+        return GetChildren().OfType<MeshInstance3D>().First().GetAabb();
     }
 }

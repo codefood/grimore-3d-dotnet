@@ -1,8 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Godot;
 
 namespace Grimore;
 
+public static class FooExt
+{
+    private static readonly Type[] PawnTypes = [typeof(Wall), typeof(Enemy), typeof(Spell)];
+
+    public static IEnumerable<Node3D> GetPawns(this IEnumerable<Node3D> nodes) =>
+        PawnTypes.SelectMany(p => nodes.Where(n => n.GetType() == p));
+}
 public class TurnManager(World world)
 {
     private readonly Queue<IActor> _actors = new();
@@ -13,9 +22,24 @@ public class TurnManager(World world)
     public void Enrol(IActor actor)
     {
         actor.Acting += PerformAction;
+        actor.Dying += DieAndFree;
         _actors.Enqueue(actor);    
     }
-    
+
+    private void DieAndFree(IActor toDelete)
+    {
+        for (int i = 0; i < _actors.Count - 1; i++)
+        {
+            var c = _actors.Dequeue();
+            if (c == toDelete)
+            {
+                ((Node)c).QueueFree();
+                continue;
+            }
+            _actors.Enqueue(c);
+        }
+    }
+
     private void PerformAction(Command action)
     {
         if (!IsCurrentTurn(action.Actor)) return;
@@ -26,12 +50,53 @@ public class TurnManager(World world)
                 world.AddChild(spell.Instance);
                 Enrol(spell.Instance);
                 break;
-            case Move move:
-                action.Actor.Position += new Vector3(move.Direction.X * World.TileSize, 0, move.Direction.Y * World.TileSize);
+            case Move:
+                ProcessMove(action);
                 break;
         }
 
         StartNextTurn();
+    }
+
+    private void ProcessMove(Command action)
+    { 
+        var move = (Move)action;
+        
+        var original = action.Actor.Position;
+        var target = new Vector3(move.Direction.X * World.TileSize, 0, move.Direction.Y * World.TileSize);
+        
+        //we move until we collide, then process those collisions, then continue
+        var collisions = ((PhysicsBody3D)action.Actor).MoveAndCollide(target);
+        var count = collisions?.GetCollisionCount() ?? 0;
+        
+        for(int idx = 0; idx < count; idx++)
+        {
+            var potential = collisions!.GetCollider(idx);
+            switch (potential)
+            {
+                case Wall wall:
+                    // lets not do anything
+                    action.Actor.Position = original;
+                    return;
+                case Enemy enemy:
+                    GD.Print($"Enemy {enemy.Name} took damage from {action.Actor.Name}");
+                    enemy.TakeDamage();
+                    break;
+                case Door door:
+                    door.Open();
+                    break;
+                case Player p:
+                    p.TakeDamage();
+                    action.Actor.Position = original;
+                    break;
+                case Spell spell:
+                    action.Actor.TakeDamage();
+                    break;
+            }
+            
+        }
+
+        action.Actor.Position = target; //finish the move
     }
 
     private bool IsCurrentTurn(IActor actor) => 

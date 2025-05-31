@@ -1,0 +1,17 @@
+[gd_scene load_steps=5 format=3 uid="uid://c60j0kpxqp86d"]
+
+[ext_resource type="Script" uid="uid://84xmge0054wm" path="res://Door.cs" id="1_ba8gm"]
+[ext_resource type="Shader" uid="uid://bx47ynkql62el" path="res://door.gdshader" id="2_v6xrn"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_v6xrn"]
+shader = ExtResource("2_v6xrn")
+shader_parameter/open = false
+
+[sub_resource type="SphereMesh" id="SphereMesh_ba8gm"]
+material = SubResource("ShaderMaterial_v6xrn")
+
+[node name="Door" type="Node3D"]
+script = ExtResource("1_ba8gm")
+
+[node name="DoorMesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_ba8gm")

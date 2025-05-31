@@ -8,14 +8,17 @@ public class LevelLoader
 {
     private int _offsetRows;
     private int _offsetCols;
+    static readonly PackedScene EnemyScene = ResourceLoader.Load<PackedScene>("res://enemy.tscn");
+    private static readonly PackedScene TileScene = ResourceLoader.Load<PackedScene>("res://tile.tscn");
     
     static readonly Dictionary<PackedScene, char[]> Things = new()
     {
-        { ResourceLoader.Load<PackedScene>("res://tile.tscn"), [' '] },
-        { ResourceLoader.Load<PackedScene>("res://wall.tscn"), ['W', 'w'] }
+        { TileScene, [' '] },
+        { ResourceLoader.Load<PackedScene>("res://wall.tscn"), ['W', 'w'] },
+        { ResourceLoader.Load<PackedScene>("res://door.tscn"), ['D', 'd'] }
     };
     
-    static readonly PackedScene Enemy = ResourceLoader.Load<PackedScene>("res://enemy.tscn");
+    
 
     public void Load(World world, string level)
     {
@@ -44,11 +47,20 @@ public class LevelLoader
             
             var instance = thing.Instantiate() as Node3D;
             instance!.Position = new Vector3((col + _offsetCols) * World.TileSize, 0, (row + _offsetRows) * World.TileSize);
+
+            if (instance is Door)
+            {
+                //special case to put doors on tiles
+                var tileForDoor = TileScene.Instantiate() as Node3D;
+                tileForDoor!.Position = new Vector3((col + _offsetCols) * World.TileSize, 0, (row + _offsetRows) * World.TileSize);
+                world.AddChild(tileForDoor);
+            }
+            
             world.AddChild(instance);
 
             if (instance is Tile && GD.Randi() % 40 == 0)
             {
-                var enemy = Enemy.Instantiate() as Enemy;
+                var enemy = EnemyScene.Instantiate() as Enemy;
                 enemy!.Position = new Vector3((col + _offsetCols) * World.TileSize, 0.5f, (row + _offsetRows) * World.TileSize);
                 enemy.Name = $"Enemy {world.GetChildren().OfType<Enemy>().Count() + 1}";
                 world.AddChild(enemy);
@@ -64,6 +76,7 @@ public class LevelLoader
     {
         world.GetChildren().OfType<Tile>().ForEach(x => x.QueueFree());
         world.GetChildren().OfType<Wall>().ForEach(x => x.QueueFree());
+        world.GetChildren().OfType<Door>().ForEach(x => x.QueueFree());
         world.TurnManager.Clear();
     }
 }

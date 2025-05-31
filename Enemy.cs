@@ -32,10 +32,20 @@ public partial class Enemy : AnimatableBody3D, IActor
         Acting!.Invoke(new Move(this, direction));
     }
 
-    public void TakeDamage() => 
-        QueueFree();
+    public void TakeDamage()
+    {
+        GD.Print("enemy taking damage");
+        Dying!.Invoke(this);
+    }
+
+    public Aabb GetMesh()
+    {
+        return GetChildren().OfType<MeshInstance3D>().First().GetAabb();
+    }
 
     public event IActor.OnActing Acting;
+    public event IActor.OnDying Dying;
+
     public void StartTurn()
     {
         _timer.Start();

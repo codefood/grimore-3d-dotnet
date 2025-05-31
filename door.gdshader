@@ -1,17 +1,17 @@
-shader_type spatial;
+shader_type canvas_item;
 
-uniform bool active = false;
+uniform bool open = false;
 
 void vertex() {
 	// Called for every vertex the material is visible on.
 }
 
 void fragment() {
-	// Called for every pixel the material is visible on.
-	if(active) {
-		ALBEDO = vec3(1, 0, 0);
+	if (open) {
+		COLOR = vec4(0.0, 1.0, 0.0, 1.0);
+	} else {
+		COLOR = vec4(1.0, 0.0, 0.0, 1.0);
 	}
-
 }
 
 //void light() {

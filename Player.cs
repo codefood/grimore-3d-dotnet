@@ -13,18 +13,20 @@ public partial class Player : CharacterBody3D, IActor
 	private Vector2 _currentDirection;
 	private Timer _timer;
 
-	private Node3D Fooman => GetChildren()
+	private Node3D PlayerEntity => GetChildren()
 		.OfType<Node3D>()
 		.First(f => f.Name == "fooman");
 
 	public event IActor.OnActing Acting;
+	public event IActor.OnDying Dying;
+
 	public void StartTurn() => 
 		_allowInput = true;
 
 
 	private void SetShaderTo(Material material)
 	{
-		foreach (var mesh in Fooman.GetChildren().OfType<MeshInstance3D>())
+		foreach (var mesh in PlayerEntity.GetChildren().OfType<MeshInstance3D>())
 		{
 			mesh.MaterialOverlay = material;
 		}
@@ -32,6 +34,7 @@ public partial class Player : CharacterBody3D, IActor
 
 	public void TakeDamage()
 	{
+		GD.Print("Player taking damage");
 		var damageMaterial = new ShaderMaterial()
 		{
 			Shader = _damage,
@@ -50,11 +53,17 @@ public partial class Player : CharacterBody3D, IActor
 		AddChild(_timer);
 	}
 
+	public Aabb GetMesh()
+	{
+		return PlayerEntity.GetChildren().OfType<MeshInstance3D>().First().GetAabb();
+	}
+
 	private void ResetDamageCallback()
 	{
 		SetShaderTo(null);
 		_timer.QueueFree();
 		_timer = null;
+		Dying!.Invoke(this);
 	}
 
 
@@ -73,7 +82,7 @@ public partial class Player : CharacterBody3D, IActor
 			var direction = directionsPressed.First().Value;
 
 			var angle = Angle(direction);
-			Fooman.SetBasis(new Basis(new Vector3(0, 1, 0), angle));
+			PlayerEntity.SetBasis(new Basis(new Vector3(0, 1, 0), angle));
 			_currentDirection = direction;
 
 			Acting!.Invoke(new Move(this, direction));
