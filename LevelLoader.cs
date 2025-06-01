@@ -15,7 +15,8 @@ public class LevelLoader
     {
         { TileScene, [' '] },
         { ResourceLoader.Load<PackedScene>("res://wall.tscn"), ['W', 'w'] },
-        { ResourceLoader.Load<PackedScene>("res://door.tscn"), ['D', 'd'] }
+        { ResourceLoader.Load<PackedScene>("res://door.tscn"), ['D', 'd'] },
+        { ResourceLoader.Load<PackedScene>("res://enemy.tscn"), ['E', 'e'] }
     };
     
     
@@ -45,28 +46,26 @@ public class LevelLoader
 
             if (thing == null) continue;
             
-            var instance = thing.Instantiate() as Node3D;
-            instance!.Position = new Vector3((col + _offsetCols) * World.TileSize, 0, (row + _offsetRows) * World.TileSize);
-
-            if (instance is Door)
+            var instance = (Node3D)thing.Instantiate();
+            instance.Position = new Vector3((col + _offsetCols) * World.TileSize, 0, (row + _offsetRows) * World.TileSize);
+            
+            var instanceType = instance.GetType();
+            instance.Name = $"{instanceType.Name} {world.GetChildren().Count(x => x.GetType() == instanceType)}";
+            
+            if (instance is Door or Enemy)
             {
-                //special case to put doors on tiles
-                var tileForDoor = TileScene.Instantiate() as Node3D;
-                tileForDoor!.Position = new Vector3((col + _offsetCols) * World.TileSize, 0, (row + _offsetRows) * World.TileSize);
-                world.AddChild(tileForDoor);
+                var tileForEntity = (Node3D)TileScene.Instantiate();
+                tileForEntity.Position = new Vector3((col + _offsetCols) * World.TileSize, 0, (row + _offsetRows) * World.TileSize);
+                world.AddChild(tileForEntity);
+                instance.Position += new Vector3(0, World.TileSize / 2, 0); 
+                
+                if(instance is Enemy en)
+                    world.Turner.Enrol(en);
+                
             }
             
             world.AddChild(instance);
 
-            if (instance is Tile && GD.Randi() % 40 == 0)
-            {
-                var enemy = EnemyScene.Instantiate() as Enemy;
-                enemy!.Position = new Vector3((col + _offsetCols) * World.TileSize, 0.5f, (row + _offsetRows) * World.TileSize);
-                enemy.Name = $"Enemy {world.GetChildren().OfType<Enemy>().Count() + 1}";
-                world.AddChild(enemy);
-                world.Turner.Enrol(enemy);
-            }
-            
         }
 
         world.Turner.StartNextTurn();

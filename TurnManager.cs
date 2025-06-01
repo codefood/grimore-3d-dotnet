@@ -12,6 +12,7 @@ public partial class TurnManager : Node
     private Vector3 _velocity;
     private PhysicsBody3D _actor;
     private List<GodotObject> _processed = new();
+    private Vector3? _initial;
 
     public delegate void TurnStarted(IActor actor);
 
@@ -49,8 +50,9 @@ public partial class TurnManager : Node
                 break;
             case Move move:
                 //ProcessMove(action);
-                _actor = action.Actor as PhysicsBody3D;
+                _actor = (PhysicsBody3D)action.Actor;
                 _velocity = new Vector3(move.Direction.X * World.TileSize, 0, move.Direction.Y * World.TileSize);
+                _initial = _actor.Position;
                 break;
         }
         
@@ -63,6 +65,7 @@ public partial class TurnManager : Node
         _processed.Clear();
         _actor = null;
         _velocity = Vector3.Zero;
+        _initial = null;
         StartNextTurn();
     }
 
@@ -78,8 +81,8 @@ public partial class TurnManager : Node
             switch (collision)
             {
                 case Wall wall:
-                    // lets not do anything
-                    
+                    //bounce back
+                    _velocity = -_velocity;
                     return;
                 case Enemy enemy:
                     GD.Print($"Enemy {enemy.Name} took damage from {_actor.Name}");
