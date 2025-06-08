@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://ce3ei8vs0x8kw"]
+
+[ext_resource type="Shader" uid="uid://b02qn2yi7m4u" path="res://octo/octo.gdshader" id="1_1oxla"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_1oxla"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1lnvo"]
+render_priority = 0
+shader = ExtResource("1_1oxla")
+
+[node name="Node3D" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_1oxla")
+surface_material_override/0 = SubResource("ShaderMaterial_1lnvo")
