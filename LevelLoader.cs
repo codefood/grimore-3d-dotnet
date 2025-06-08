@@ -16,7 +16,7 @@ public class LevelLoader
         { TileScene, [' '] },
         { ResourceLoader.Load<PackedScene>("res://wall.tscn"), ['W', 'w'] },
         { ResourceLoader.Load<PackedScene>("res://door.tscn"), ['D', 'd'] },
-        { ResourceLoader.Load<PackedScene>("res://enemy.tscn"), ['E', 'e'] }
+        { EnemyScene, ['E', 'e'] }
     };
     
     
@@ -76,6 +76,7 @@ public class LevelLoader
         world.GetChildren().OfType<Tile>().ForEach(x => x.QueueFree());
         world.GetChildren().OfType<Wall>().ForEach(x => x.QueueFree());
         world.GetChildren().OfType<Door>().ForEach(x => x.QueueFree());
+        world.GetChildren().OfType<Enemy>().ForEach(x => x.QueueFree());
         world.Turner.Clear();
     }
 }
