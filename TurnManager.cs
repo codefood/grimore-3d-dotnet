@@ -9,10 +9,11 @@ public partial class TurnManager : Node
     private readonly Queue<IActor> _actors = new();
     private World _world;
     private Timer _timer;
-    private Vector3 _velocity;
+    private Vector3 _direction;
     private PhysicsBody3D _actor;
-    private List<GodotObject> _processed = new();
+    private readonly List<GodotObject> _processed = new();
     private Vector3? _initial;
+    private const int Speed = 2;
 
     public delegate void TurnStarted(IActor actor);
 
@@ -26,7 +27,7 @@ public partial class TurnManager : Node
 
     private void DieAndFree(IActor toDelete)
     {
-        for (int i = 0; i < _actors.Count - 1; i++)
+        for (var i = 0; i < _actors.Count - 1; i++)
         {
             var c = _actors.Dequeue();
             if (c == toDelete)
@@ -49,10 +50,9 @@ public partial class TurnManager : Node
                 Enrol(spell.Instance);
                 break;
             case Move move:
-                //ProcessMove(action);
                 _actor = (PhysicsBody3D)action.Actor;
-                _velocity = new Vector3(move.Direction.X * World.TileSize, 0, move.Direction.Y * World.TileSize);
                 _initial = _actor.Position;
+                _direction = new Vector3(move.Direction.X * World.TileSize, 0, move.Direction.Y * World.TileSize);
                 break;
         }
         
@@ -64,7 +64,7 @@ public partial class TurnManager : Node
         _timer.Stop();
         _processed.Clear();
         _actor = null;
-        _velocity = Vector3.Zero;
+        _direction = Vector3.Zero;
         _initial = null;
         StartNextTurn();
     }
@@ -75,14 +75,20 @@ public partial class TurnManager : Node
         
         if(_actor == null) return;
         
-        var collisions = _actor.MoveAndCollide(_velocity * (float)delta);
+        var collisions = _actor.MoveAndCollide(_direction * (float)delta * Speed);
+
+        if (_actor is Player player)
+        {
+            
+        }
+        
         foreach(var collision in collisions.EnumerateCollisions().Except(_processed))
         {
             switch (collision)
             {
-                case Wall wall:
-                    //bounce back
-                    _velocity = -_velocity;
+                case Wall:
+                    _direction = Vector3.Zero;
+                    _actor.Position = _initial!.Value;
                     return;
                 case Enemy enemy:
                     GD.Print($"Enemy {enemy.Name} took damage from {_actor.Name}");
@@ -93,8 +99,6 @@ public partial class TurnManager : Node
                     break;
                 case Player p:
                     GD.Print($"{_actor.Name} collided with player");
-                    //p.TakeDamage();
-                    //action.Actor.Position = original;
                     break;
                 case Spell spell:
                     ((IActor)_actor).TakeDamage();
@@ -123,7 +127,7 @@ public partial class TurnManager : Node
         _timer = new Timer()
         {
             Autostart = false,
-            WaitTime = 1f,
+            WaitTime = 1f / Speed,
             OneShot = false,
             Name = $"turn timer",
         };

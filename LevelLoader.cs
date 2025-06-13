@@ -18,8 +18,6 @@ public class LevelLoader
         { ResourceLoader.Load<PackedScene>("res://door.tscn"), ['D', 'd'] },
         { EnemyScene, ['E', 'e'] }
     };
-    
-    
 
     public void Load(World world, string level)
     {
