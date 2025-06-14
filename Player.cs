@@ -15,7 +15,7 @@ public partial class Player : CharacterBody3D, IActor
 
 	private Node3D PlayerEntity => GetChildren()
 		.OfType<Node3D>()
-		.First(f => f.Name == "fooman");
+		.First(f => f.Name == "player");
 
 	public event IActor.OnActing Acting;
 	public event IActor.OnDying Dying;
