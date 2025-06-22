@@ -3,6 +3,7 @@
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tdfm5"]
 render_priority = 1
 transparency = 4
+albedo_color = Color(0.229481, 0.552586, 0.363198, 1)
 
 [resource]
 next_pass = SubResource("StandardMaterial3D_tdfm5")

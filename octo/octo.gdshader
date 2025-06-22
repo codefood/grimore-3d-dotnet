@@ -75,20 +75,63 @@ vec3 circle_pos(vec2 uv) {
 	pct = step(0.1, pct);
 	return vec3(pct);
 }
+vec3 distance_fields(vec2 st) {
+	vec3 color = vec3(0.0);
+	float d = 0.0;
+	st = st * 2.-1.;
+	d = length( abs(st)-.3 ); // * TIME;
+	return vec3(fract(d*10.0));
+}
+
+float sdOctahedron(vec3 p, float s)
+{
+    p = abs(p);
+    float m = p.x + p.y + p.z - s;
+
+    // exact distance
+    //#if 0
+    vec3 o = min(3.0*p - m, 0.0);
+    o = max(6.0*p - m*2.0 - o*3.0 + (o.x+o.y+o.z), 0.0);
+    return length(p - s*o/(o.x+o.y+o.z));
+    //#endif
+    
+    // exact distance
+    #if 1
+ 	vec3 q;
+         if( 3.0*p.x < m ) q = p.xyz;
+    else if( 3.0*p.y < m ) q = p.yzx;
+    else if( 3.0*p.z < m ) q = p.zxy;
+    else return m*0.57735027;
+    float k = clamp(0.5*(q.z-q.y+s),0.0,s); 
+    return length(vec3(q.x,q.y-s+k,q.z-k)); 
+    #endif
+    
+    // bound, not exact
+    #if 0
+	return m*0.57735027;
+    #endif
+}
+
+float sdSphere( vec3 p, float s )
+{
+  return length(p)-s;
+}
+
 
 void fragment() {
 	//vec3 color = float_square(UV);
 	//vec3 color = step_square(UV);
 	//vec3 color = step_square_space(UV);
 	//vec3 color = smooth_square(UV);
-	//vec3 color = circle(UV);
-	vec2 st = UV;
-	vec3 color = vec3(0.0);
-	float d = 0.0;
-	st = st * 2.-22.;
-	d = length( abs(st)-.82 ) * TIME;
+	vec3 color = float_square(UV);
+	//vec3 color = distance_fields(UV);
+	//vec3 pos = vec3(UV.x, 0.8, UV.y);
+	//float scale = 0.5;
+	//float color = sdSphere(pos, scale);
+	//ALBEDO = vec3(color, 0.0, 0.0);
 	
-	ALBEDO = vec3(fract(d*10.0));
+	
+	ALBEDO = color;
 
 	//ALBEDO = color;
 }
