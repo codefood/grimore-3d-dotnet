@@ -1,0 +1,22 @@
+[gd_scene load_steps=6 format=3 uid="uid://yn2d0fv3grg0"]
+
+[ext_resource type="Script" uid="uid://cfe4dd2ievos0" path="res://Key.cs" id="1_3nogi"]
+[ext_resource type="Shader" uid="uid://3yq73pq23ruh" path="res://Key.gdshader" id="2_3nogi"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_40kd0"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3nogi"]
+render_priority = 0
+next_pass = SubResource("ShaderMaterial_40kd0")
+shader = ExtResource("2_3nogi")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_40kd0"]
+material = SubResource("ShaderMaterial_3nogi")
+orientation = 2
+
+[node name="Key" type="Node3D"]
+script = ExtResource("1_3nogi")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 0, 0)
+mesh = SubResource("PlaneMesh_40kd0")
