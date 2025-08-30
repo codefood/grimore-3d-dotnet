@@ -16,7 +16,8 @@ public class LevelLoader
         { TileScene, [' '] },
         { ResourceLoader.Load<PackedScene>("res://wall.tscn"), ['W', 'w'] },
         { ResourceLoader.Load<PackedScene>("res://door.tscn"), ['D', 'd'] },
-        { EnemyScene, ['E', 'e'] }
+        { EnemyScene, ['E', 'e'] },
+        { ResourceLoader.Load<PackedScene>("res://npc.tscn"), ['N', 'n'] }
     };
 
     public void Load(World world, string level)
@@ -50,7 +51,7 @@ public class LevelLoader
             var instanceType = instance.GetType();
             instance.Name = $"{instanceType.Name} {world.GetChildren().Count(x => x.GetType() == instanceType)}";
             
-            if (instance is Door or Enemy)
+            if (instance is Door or Enemy or Npc)
             {
                 var tileForEntity = (Node3D)TileScene.Instantiate();
                 tileForEntity.Position = new Vector3((col + _offsetCols) * World.TileSize, 0, (row + _offsetRows) * World.TileSize);

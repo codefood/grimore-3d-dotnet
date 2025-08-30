@@ -12,7 +12,8 @@ W   WW E      W
 W             W
 W       D     W
 W             W
-W E           W
+WW           WW
+W       n     W
 """;
 	
 }

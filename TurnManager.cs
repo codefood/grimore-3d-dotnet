@@ -100,6 +100,12 @@ public partial class TurnManager : Node
                 case Player p:
                     GD.Print($"{_actor.Name} collided with player");
                     break;
+                case Npc npc:
+                    GD.Print("Lets do some dialog");
+                    npc.StartDialog();
+                    _direction = Vector3.Zero;
+                    _actor.Position = _initial!.Value;
+                    break;
                 case Spell spell:
                     ((IActor)_actor).TakeDamage();
                     break;
