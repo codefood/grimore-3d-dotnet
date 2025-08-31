@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
+using Grimore.Entities;
 
 namespace Grimore;
 
@@ -77,11 +78,6 @@ public partial class TurnManager : Node
         
         var collisions = _actor.MoveAndCollide(_direction * (float)delta * Speed);
 
-        if (_actor is Player player)
-        {
-            
-        }
-        
         foreach(var collision in collisions.EnumerateCollisions().Except(_processed))
         {
             switch (collision)

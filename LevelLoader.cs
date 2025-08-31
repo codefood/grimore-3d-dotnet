@@ -25,7 +25,7 @@ public class LevelLoader
         ClearThingsFrom(world);
         
         world.Turner.Enrol(world.GetChildren()
-            .OfType<Player>()
+            .OfType<Entities.Player>()
             .First());
         
         var levelLines = level.Split('\n');
@@ -51,14 +51,14 @@ public class LevelLoader
             var instanceType = instance.GetType();
             instance.Name = $"{instanceType.Name} {world.GetChildren().Count(x => x.GetType() == instanceType)}";
             
-            if (instance is Door or Enemy or Npc)
+            if (instance is Entities.Door or Entities.Enemy or Entities.Npc)
             {
                 var tileForEntity = (Node3D)TileScene.Instantiate();
                 tileForEntity.Position = new Vector3((col + _offsetCols) * World.TileSize, 0, (row + _offsetRows) * World.TileSize);
                 world.AddChild(tileForEntity);
                 instance.Position += new Vector3(0, World.TileSize / 2, 0); 
                 
-                if(instance is Enemy en)
+                if(instance is Entities.Enemy en)
                     world.Turner.Enrol(en);
                 
             }
@@ -72,10 +72,10 @@ public class LevelLoader
 
     private void ClearThingsFrom(World world)
     {
-        world.GetChildren().OfType<Tile>().ForEach(x => x.QueueFree());
-        world.GetChildren().OfType<Wall>().ForEach(x => x.QueueFree());
-        world.GetChildren().OfType<Door>().ForEach(x => x.QueueFree());
-        world.GetChildren().OfType<Enemy>().ForEach(x => x.QueueFree());
+        world.GetChildren().OfType<Entities.Tile>().ForEach(x => x.QueueFree());
+        world.GetChildren().OfType<Entities.Wall>().ForEach(x => x.QueueFree());
+        world.GetChildren().OfType<Entities.Door>().ForEach(x => x.QueueFree());
+        world.GetChildren().OfType<Entities.Enemy>().ForEach(x => x.QueueFree());
         world.Turner.Clear();
     }
 }

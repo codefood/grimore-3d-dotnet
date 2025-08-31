@@ -11,7 +11,7 @@ public partial class World : Node3D
 	
 	private Timer _timer;
 	private Ui Interface => FindChild("UI") as Ui;
-	private Player Player => GetChildren().OfType<Player>().First();
+	private Entities.Player Player => GetChildren().OfType<Entities.Player>().First();
 	private Camera Camera => FindChildren("Camera").OfType<Camera>().First();
 
 	// Called when the node enters the scene tree for the first time.
@@ -37,7 +37,18 @@ public partial class World : Node3D
 			Player.TakeDamage();
 		};
 		
-		_levelLoader.Load(this, Levels.One);
+		_levelLoader.Load(this, @"""
+WWDWWWWWWWWWWWW
+W       E     W
+W       WW    W
+D             D
+W   WW E      W
+W             W
+W       D     W
+W             W
+WW           WW
+W       n     W
+""");
 
 		Camera.SetMode(Camera.Mode.isometric);
 	}

@@ -1,7 +1,7 @@
 using System.Linq;
 using Godot;
 
-namespace Grimore;
+namespace Grimore.Entities;
 
 [GlobalClass]
 public partial class Player : CharacterBody3D, IActor

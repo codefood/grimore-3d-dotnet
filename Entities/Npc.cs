@@ -1,6 +1,7 @@
 using DialogueManagerRuntime;
 using Godot;
-using Grimore;
+
+namespace Grimore.Entities;
 
 [GlobalClass]
 public partial class Npc : Node3D, IActor

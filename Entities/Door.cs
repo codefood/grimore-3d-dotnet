@@ -1,6 +1,8 @@
 using System.Linq;
 using Godot;
 
+namespace Grimore.Entities;
+
 public partial class Door : Node3D
 {
     private MeshInstance3D _doorMesh;

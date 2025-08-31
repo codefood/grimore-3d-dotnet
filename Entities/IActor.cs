@@ -1,7 +1,6 @@
-﻿using System.Threading.Tasks;
-using Godot;
+﻿using Godot;
 
-namespace Grimore;
+namespace Grimore.Entities;
 
 public interface IActor
 {

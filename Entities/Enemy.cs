@@ -1,7 +1,7 @@
 using System.Linq;
 using Godot;
 
-namespace Grimore;
+namespace Grimore.Entities;
 
 public partial class Enemy : AnimatableBody3D, IActor
 {

@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Linq;
 using Grimore;
+using Grimore.Entities;
 
 public partial class Ui : Node2D
 {

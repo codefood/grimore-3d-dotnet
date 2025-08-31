@@ -1,8 +1,7 @@
 using System.Linq;
-using System.Threading.Tasks;
 using Godot;
 
-namespace Grimore;
+namespace Grimore.Entities;
 
 public partial class Spell : AnimatableBody3D, IActor
 {

@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-namespace Grimore;
+namespace Grimore.Entities;
 
 public class Summon(IActor actor, Spell instance) : Command(actor)
 {

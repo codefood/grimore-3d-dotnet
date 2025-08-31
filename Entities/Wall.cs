@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Grimore;
+namespace Grimore.Entities;
 
 public partial class Wall : StaticBody3D
 {
