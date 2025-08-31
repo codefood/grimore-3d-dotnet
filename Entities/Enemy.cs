@@ -3,12 +3,13 @@ using Godot;
 
 namespace Grimore.Entities;
 
-public partial class Enemy : AnimatableBody3D, IActor
+public partial class Enemy : AnimatableBody3D, IActor, IInteractable
 {
-    public void PlayerInteraction()
+    public bool PlayerInteraction()
     {
         GD.Print("enemy taking damage");
         Dying!.Invoke(this);
+        return false;
     }
 
     public event IActor.OnActing Acting;

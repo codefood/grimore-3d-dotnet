@@ -25,30 +25,26 @@ public partial class World : Node3D
 		Turner.Setup(this);
 		Turner.OnTurnStart += Interface.UpdateCurrentTurn;
 		
-		Interface.ChangeSpellColour += colour => Player.SpellColor = colour;
 		Interface.ToggleCamera += () =>
 		{
 			Camera.SetMode(Camera.CurrentMode == Camera.Mode.isometric
 				? Camera.Mode.thirdPerson
 				: Camera.Mode.isometric);
 		};
-		Interface.Damage += () =>
-		{
-			Player.PlayerInteraction();
-		};
 		
-		_levelLoader.Load(this, @"""
-WWDWWWWWWWWWWWW
-W       E     W
-W       WW    W
-D             D
-W   WW E      W
-W             W
-W       D     W
-W             W
-WW           WW
-W       n     W
-""");
+		// ReSharper disable once StringLiteralTypo
+		_levelLoader.Load(this, """
+		                        WWDWWWWWWWWWWWW
+		                        W       E     W
+		                        W       WW    W
+		                        D             D
+		                        W   WW E      W
+		                        W             W
+		                        W       D     W
+		                        W             W
+		                        WW           WW
+		                        W       n     W
+		                        """);
 
 		Camera.SetMode(Camera.Mode.isometric);
 	}

@@ -86,24 +86,15 @@ public partial class TurnManager : Node
                     _direction = Vector3.Zero;
                     _actor.Position = _initial!.Value;
                     return;
-                case Enemy enemy:
-                    GD.Print($"Enemy {enemy.Name} took damage from {_actor.Name}");
-                    enemy.PlayerInteraction();
-                    break;
-                case Door door:
-                    door.Open();
+                case IInteractable interactable:
+                    if (!interactable.PlayerInteraction())
+                    {
+                        _direction = Vector3.Zero;
+                        _actor.Position = _initial!.Value;
+                    }
                     break;
                 case Player p:
                     GD.Print($"{_actor.Name} collided with player");
-                    break;
-                case Npc npc:
-                    GD.Print("Lets do some dialog");
-                    npc.StartDialog();
-                    _direction = Vector3.Zero;
-                    _actor.Position = _initial!.Value;
-                    break;
-                case Spell spell:
-                    ((IActor)_actor).PlayerInteraction();
                     break;
             }
             _processed.Add(collision);

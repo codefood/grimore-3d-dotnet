@@ -3,7 +3,7 @@ using Godot;
 
 namespace Grimore.Entities;
 
-public partial class Door : Node3D
+public partial class Door : Node3D, IInteractable
 {
     private MeshInstance3D _doorMesh;
     private CollisionShape3D _collision;
@@ -13,19 +13,23 @@ public partial class Door : Node3D
     {
         _doorMesh = GetChild<MeshInstance3D>(0);
         _collision = GetChildren().OfType<CollisionShape3D>().First();
-        ToggleMesh();
+        SetMeshVisibility();
     }
 
-    private void ToggleMesh()
+    private void SetMeshVisibility()
     {
         _doorMesh.Visible = !IsOpen;
         _collision.Disabled = IsOpen;
     }
 
-    public void Open()
+    public bool PlayerInteraction()
     {
+        if (IsOpen) return true;
+        
         GD.Print("Door is opening");
         IsOpen = true;
-        ToggleMesh();
+        SetMeshVisibility();
+        return false;
+
     }
 }

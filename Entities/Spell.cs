@@ -3,7 +3,7 @@ using Godot;
 
 namespace Grimore.Entities;
 
-public partial class Spell : AnimatableBody3D, IActor
+public partial class Spell : AnimatableBody3D, IActor, IInteractable
 {
     public void Setup(Color color, int force, Vector2 direction)
     {
@@ -32,9 +32,9 @@ public partial class Spell : AnimatableBody3D, IActor
         Direction = direction;
     }
 
-    public Vector2 Direction { get; set; }
+    private Vector2 Direction { get; set; }
 
-    public int Force { get; set; }
+    private int Force { get; set; }
 
     public event IActor.OnActing Acting;
     public event IActor.OnDying Dying;
@@ -44,8 +44,9 @@ public partial class Spell : AnimatableBody3D, IActor
         Acting!.Invoke(new Move(this, Direction * Force));
     }
 
-    public void PlayerInteraction()
+    public bool PlayerInteraction()
     {
         Dying!.Invoke(this);
+        return true;
     }
 }

@@ -4,7 +4,7 @@ using Godot;
 namespace Grimore.Entities;
 
 [GlobalClass]
-public partial class Npc : Node3D, IActor
+public partial class Npc : Node3D, IActor, IInteractable
 {
     public event IActor.OnActing Acting;
     public event IActor.OnDying Dying;
@@ -14,8 +14,9 @@ public partial class Npc : Node3D, IActor
     public void StartTurn() => 
         Acting?.Invoke(new NoopCommand(this));
 
-    public void PlayerInteraction() { }
-
-    public void StartDialog() => 
+    public bool PlayerInteraction()
+    {
         DialogueManager.ShowExampleDialogueBalloon(GD.Load<Resource>("res://assets/npc.dialogue"));
+        return false;
+    }
 }
