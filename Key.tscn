@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://yn2d0fv3grg0"]
 
-[ext_resource type="Script" uid="uid://cfe4dd2ievos0" path="res://Key.cs" id="1_3nogi"]
+[ext_resource type="Script" uid="uid://cfe4dd2ievos0" path="res://Entities/Key.cs" id="1_3nogi"]
 [ext_resource type="Shader" uid="uid://3yq73pq23ruh" path="res://Key.gdshader" id="2_3nogi"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_40kd0"]

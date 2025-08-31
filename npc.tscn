@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://d01tv7mvepgu5"]
 
 [ext_resource type="PackedScene" uid="uid://cucwvqkt1t5nc" path="res://blender/player.glb" id="1_ideak"]
-[ext_resource type="Script" uid="uid://cbx48lp25x2da" path="res://Npc.cs" id="1_xxcha"]
+[ext_resource type="Script" uid="uid://cbx48lp25x2da" path="res://Entities/Npc.cs" id="1_xxcha"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_xxcha"]
 size = Vector3(1, 2, 1)

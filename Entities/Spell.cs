@@ -48,9 +48,4 @@ public partial class Spell : AnimatableBody3D, IActor
     {
         Dying!.Invoke(this);
     }
-
-    public Aabb GetMesh()
-    {
-        return GetChildren().OfType<MeshInstance3D>().First().GetAabb();
-    }
 }

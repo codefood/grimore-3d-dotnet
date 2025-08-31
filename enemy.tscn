@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://5ieai0q0syi"]
 
-[ext_resource type="Script" uid="uid://b13imu6nq2bib" path="res://Enemy.cs" id="1_7k104"]
+[ext_resource type="Script" uid="uid://b13imu6nq2bib" path="res://Entities/Enemy.cs" id="1_7k104"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7k104"]
 transparency = 1

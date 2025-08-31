@@ -11,11 +11,6 @@ public partial class Enemy : AnimatableBody3D, IActor
         Dying!.Invoke(this);
     }
 
-    public Aabb GetMesh()
-    {
-        return GetChildren().OfType<MeshInstance3D>().First().GetAabb();
-    }
-
     public event IActor.OnActing Acting;
     public event IActor.OnDying Dying;
 

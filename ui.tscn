@@ -5,14 +5,6 @@
 [node name="UI" type="Node2D"]
 script = ExtResource("1_fyqef")
 
-[node name="OpenGrimore" type="Button" parent="."]
-offset_left = 30.0
-offset_top = 583.0
-offset_right = 189.0
-offset_bottom = 614.0
-text = "Open Grimore
-"
-
 [node name="CurrentTurn" type="Label" parent="."]
 offset_left = 20.0
 offset_top = 24.0
@@ -40,16 +32,9 @@ popup/item_2/text = "Green"
 popup/item_2/id = 2
 
 [node name="ChangeCamera" type="Button" parent="."]
-offset_left = 201.0
-offset_top = 584.0
-offset_right = 270.0
-offset_bottom = 615.0
+offset_left = 46.0
+offset_top = 586.0
+offset_right = 115.0
+offset_bottom = 617.0
 text = "Camera
 "
-
-[node name="OuchButton" type="Button" parent="."]
-offset_left = 281.0
-offset_top = 585.0
-offset_right = 350.0
-offset_bottom = 616.0
-text = "Ouch"
