@@ -3,6 +3,7 @@ using Godot;
 
 namespace Grimore;
 
+[GlobalClass]
 public partial class Player : CharacterBody3D, IActor
 {
 	
@@ -12,6 +13,7 @@ public partial class Player : CharacterBody3D, IActor
 	private bool _allowInput;
 	private Vector2 _currentDirection;
 	private Timer _timer;
+	public string SpellColor { get; set; } = "white";
 
 	private Node3D PlayerEntity => GetChildren()
 		.OfType<Node3D>()
@@ -19,7 +21,13 @@ public partial class Player : CharacterBody3D, IActor
 
 	public event IActor.OnActing Acting;
 	public event IActor.OnDying Dying;
-
+	
+	public void SelectSpellColour(string colour)
+	{
+		GD.Print($"Setting spell colour to {colour}");
+		SpellColor = colour;
+	}
+	
 	public void StartTurn() => 
 		_allowInput = true;
 
@@ -51,11 +59,6 @@ public partial class Player : CharacterBody3D, IActor
 		};
 		_timer.Timeout += ResetDamageCallback;
 		AddChild(_timer);
-	}
-
-	public Aabb GetMesh()
-	{
-		return PlayerEntity.GetChildren().OfType<MeshInstance3D>().First().GetAabb();
 	}
 
 	private void ResetDamageCallback()
@@ -117,6 +120,5 @@ public partial class Player : CharacterBody3D, IActor
 			return -(Mathf.Pi / 2);
 		return 0;
 	}
-	public string SpellColor { get; set; } = "white";
 	
 }
