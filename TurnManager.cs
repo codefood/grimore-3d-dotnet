@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using DialogueManagerRuntime;
 using Godot;
 using Grimore.Entities;
 
@@ -15,6 +16,7 @@ public partial class TurnManager : Node
     private readonly List<GodotObject> _processed = new();
     private Vector3? _initial;
     private const int Speed = 2;
+    private bool _paused = false;
 
     public delegate void TurnStarted(IActor actor);
 
@@ -102,7 +104,7 @@ public partial class TurnManager : Node
         
     }
     private bool IsCurrentTurn(IActor actor) => 
-        Current == actor;
+        !_paused && Current == actor;
 
     public void StartNextTurn()
     {
@@ -126,6 +128,17 @@ public partial class TurnManager : Node
         };
         _timer.Timeout += TurnTimer;
         AddChild(_timer);
+        
+        DialogueManager.DialogueStarted += _ =>
+        {
+            _timer.Paused = true;
+            _paused = false;
+        };
+        DialogueManager.DialogueEnded += _ =>
+        {
+            _timer.Paused = false;
+            _paused = false;
+        };
     }
 
     private IActor Current { get; set; }
