@@ -5,7 +5,7 @@ namespace Grimore.Entities;
 
 public partial class Enemy : AnimatableBody3D, IActor
 {
-    public void TakeDamage()
+    public void PlayerInteraction()
     {
         GD.Print("enemy taking damage");
         Dying!.Invoke(this);

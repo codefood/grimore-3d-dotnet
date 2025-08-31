@@ -11,7 +11,7 @@ public partial class Key : Node3D, IActor
         
     }
 
-    public void TakeDamage()
+    public void PlayerInteraction()
     {
         //collected!
     }

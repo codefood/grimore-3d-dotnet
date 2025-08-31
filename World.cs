@@ -34,7 +34,7 @@ public partial class World : Node3D
 		};
 		Interface.Damage += () =>
 		{
-			Player.TakeDamage();
+			Player.PlayerInteraction();
 		};
 		
 		_levelLoader.Load(this, @"""

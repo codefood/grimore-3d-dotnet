@@ -44,7 +44,7 @@ public partial class Spell : AnimatableBody3D, IActor
         Acting!.Invoke(new Move(this, Direction * Force));
     }
 
-    public void TakeDamage()
+    public void PlayerInteraction()
     {
         Dying!.Invoke(this);
     }

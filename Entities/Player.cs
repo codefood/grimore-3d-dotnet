@@ -40,7 +40,7 @@ public partial class Player : CharacterBody3D, IActor
 		}
 	}
 
-	public void TakeDamage()
+	public void PlayerInteraction()
 	{
 		GD.Print("Player taking damage");
 		var damageMaterial = new ShaderMaterial()

@@ -88,7 +88,7 @@ public partial class TurnManager : Node
                     return;
                 case Enemy enemy:
                     GD.Print($"Enemy {enemy.Name} took damage from {_actor.Name}");
-                    enemy.TakeDamage();
+                    enemy.PlayerInteraction();
                     break;
                 case Door door:
                     door.Open();
@@ -103,7 +103,7 @@ public partial class TurnManager : Node
                     _actor.Position = _initial!.Value;
                     break;
                 case Spell spell:
-                    ((IActor)_actor).TakeDamage();
+                    ((IActor)_actor).PlayerInteraction();
                     break;
             }
             _processed.Add(collision);

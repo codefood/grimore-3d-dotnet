@@ -14,7 +14,7 @@ public partial class Npc : Node3D, IActor
     public void StartTurn() => 
         Acting?.Invoke(new NoopCommand(this));
 
-    public void TakeDamage() { }
+    public void PlayerInteraction() { }
 
     public void StartDialog() => 
         DialogueManager.ShowExampleDialogueBalloon(GD.Load<Resource>("res://assets/npc.dialogue"));

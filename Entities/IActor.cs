@@ -11,5 +11,5 @@ public interface IActor
     delegate void OnDying(IActor actor);
     event OnDying Dying;
     void StartTurn();
-    void TakeDamage();
+    void PlayerInteraction();
 }
