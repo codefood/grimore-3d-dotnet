@@ -19,14 +19,35 @@ public partial class TurnManager : Node
     private bool _paused = false;
 
     public delegate void TurnStarted(IActor actor);
-
-    public event TurnStarted OnTurnStart;
-    public void Enrol(IActor actor)
+    public override void _Ready()
     {
-        actor.Acting += PerformAction;
-        actor.Dying += DieAndFree;
-        _actors.Enqueue(actor);    
+        base._Ready();
+        _timer = new Timer()
+        {
+            Autostart = false,
+            WaitTime = 1f / Speed,
+            OneShot = false,
+            Name = $"turn timer",
+        };
+        _timer.Timeout += TurnTimer;
+        AddChild(_timer);
+        
+        DialogueManager.DialogueStarted += _ =>
+        {
+            _timer.Paused = true;
+            _paused = false;
+        };
+        DialogueManager.DialogueEnded += _ =>
+        {
+            _timer.Paused = false;
+            _paused = false;
+        };
+        IActor.Acting += PerformAction;
+        IActor.Dying += DieAndFree;
     }
+    public event TurnStarted OnTurnStart;
+    public void Enrol(IActor actor) => 
+        _actors.Enqueue(actor);
 
     private void DieAndFree(IActor toDelete)
     {
@@ -44,7 +65,7 @@ public partial class TurnManager : Node
 
     private void PerformAction(Command action)
     {
-        if (!IsCurrentTurn(action.Actor)) return;
+        if (!(!_paused && Current == action.Actor)) return;
 		
         switch (action)
         {
@@ -60,16 +81,6 @@ public partial class TurnManager : Node
         }
         
         _timer.Start();
-    }
-
-    private void TurnTimer()
-    {
-        _timer.Stop();
-        _processed.Clear();
-        _actor = null;
-        _direction = Vector3.Zero;
-        _initial = null;
-        StartNextTurn();
     }
 
     public override void _PhysicsProcess(double delta)
@@ -103,8 +114,6 @@ public partial class TurnManager : Node
         }
         
     }
-    private bool IsCurrentTurn(IActor actor) => 
-        !_paused && Current == actor;
 
     public void StartNextTurn()
     {
@@ -113,34 +122,18 @@ public partial class TurnManager : Node
         //GD.Print($"StartNextTurn, Current: {((Node)Current).Name}, Queue of: {_actors.Count}");
         OnTurnStart!.Invoke(Current);
         Current.StartTurn();
-        
     }
 
-    public override void _Ready()
+    private void TurnTimer()
     {
-        base._Ready();
-        _timer = new Timer()
-        {
-            Autostart = false,
-            WaitTime = 1f / Speed,
-            OneShot = false,
-            Name = $"turn timer",
-        };
-        _timer.Timeout += TurnTimer;
-        AddChild(_timer);
-        
-        DialogueManager.DialogueStarted += _ =>
-        {
-            _timer.Paused = true;
-            _paused = false;
-        };
-        DialogueManager.DialogueEnded += _ =>
-        {
-            _timer.Paused = false;
-            _paused = false;
-        };
+        _timer.Stop();
+        _processed.Clear();
+        _actor = null;
+        _direction = Vector3.Zero;
+        _initial = null;
+        StartNextTurn();
     }
-
+    
     private IActor Current { get; set; }
     public void Setup(World world) => _world = world;
 

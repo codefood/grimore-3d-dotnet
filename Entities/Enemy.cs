@@ -8,12 +8,9 @@ public partial class Enemy : AnimatableBody3D, IActor, IInteractable
     public bool PlayerInteraction()
     {
         GD.Print("enemy taking damage");
-        Dying!.Invoke(this);
+        IActor.InvokeDying(this);
         return false;
     }
-
-    public event IActor.OnActing Acting;
-    public event IActor.OnDying Dying;
 
     public void StartTurn()
     {
@@ -21,6 +18,6 @@ public partial class Enemy : AnimatableBody3D, IActor, IInteractable
             .ElementAt(GD.RandRange(0, Actions.Directions.Count - 1))
             .Value;
 
-        Acting!.Invoke(new Move(this, direction));
+        IActor.InvokeActing(new Move(this, direction));
     }
 }

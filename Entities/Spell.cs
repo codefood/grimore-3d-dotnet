@@ -1,4 +1,3 @@
-using System.Linq;
 using Godot;
 
 namespace Grimore.Entities;
@@ -36,17 +35,12 @@ public partial class Spell : AnimatableBody3D, IActor, IInteractable
 
     private int Force { get; set; }
 
-    public event IActor.OnActing Acting;
-    public event IActor.OnDying Dying;
-
-    public void StartTurn()
-    {
-        Acting!.Invoke(new Move(this, Direction * Force));
-    }
+    public void StartTurn() => 
+        IActor.InvokeActing(new Move(this, Direction * Force));
 
     public bool PlayerInteraction()
     {
-        Dying!.Invoke(this);
+        IActor.InvokeDying(this);
         return true;
     }
 }

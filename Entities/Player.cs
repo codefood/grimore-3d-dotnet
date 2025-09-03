@@ -18,10 +18,7 @@ public partial class Player : CharacterBody3D, IActor
 	private Node3D PlayerEntity => GetChildren()
 		.OfType<Node3D>()
 		.First(f => f.Name == "player");
-
-	public event IActor.OnActing Acting;
-	public event IActor.OnDying Dying;
-	
+//
 	public void SelectSpellColour(string colour)
 	{
 		GD.Print($"Setting spell colour to {colour}");
@@ -66,7 +63,8 @@ public partial class Player : CharacterBody3D, IActor
 		SetShaderTo(null);
 		_timer.QueueFree();
 		_timer = null;
-		Dying!.Invoke(this);
+		
+		IActor.InvokeDying(this);
 	}
 
 
@@ -88,7 +86,7 @@ public partial class Player : CharacterBody3D, IActor
 			PlayerEntity.SetBasis(new Basis(new Vector3(0, 1, 0), angle));
 			_currentDirection = direction;
 
-			Acting!.Invoke(new Move(this, direction));
+			IActor.InvokeActing(new Move(this, direction));
 			_allowInput = false;
 
 		}
@@ -102,7 +100,7 @@ public partial class Player : CharacterBody3D, IActor
 			var spellColour = Color.FromString(SpellColor, Color.FromHtml("000000"));
 			instance.Setup(spellColour, 1, _currentDirection);
 			
-			Acting!.Invoke(new Summon(this, instance));
+			IActor.InvokeActing(new Summon(this, instance));
 			_allowInput = false;
 		}
 	}
