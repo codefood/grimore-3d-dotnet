@@ -8,7 +8,6 @@ namespace Grimore.Entities;
 public partial class Player : CharacterBody3D, IActor
 {
 	private PackedScene _spellScene = ResourceLoader.Load<PackedScene>("res://spell.tscn");
-	private Shader _damage = ResourceLoader.Load<Shader>("res://damage.gdshader");
 	
 	private bool _allowInput;
 	private Vector2 _currentDirection;
@@ -16,6 +15,10 @@ public partial class Player : CharacterBody3D, IActor
 	private string SpellColor { get; set; } = "white";
 	public event Action<int> HealthChanged;
 	private int health = 3;
+	ShaderMaterial damageMaterial = new()
+	{
+		Shader = ResourceLoader.Load<Shader>("res://damage.gdshader"),
+	};
 
 	private Node3D PlayerEntity => GetChildren()
 		.OfType<Node3D>()
@@ -32,12 +35,18 @@ public partial class Player : CharacterBody3D, IActor
 		HealthChanged!.Invoke(health);
 		_allowInput = true;
 	}
-	
+
+	public override void _Ready()
+	{
+		base._Ready();
+		SetShaderTo(damageMaterial);
+	}
+
 	private void SetShaderTo(Material material)
 	{
 		foreach (var mesh in PlayerEntity.GetChildren().OfType<MeshInstance3D>())
 		{
-			mesh.MaterialOverlay = material;
+			mesh.MaterialOverride = material;
 		}
 	}
 
@@ -47,12 +56,8 @@ public partial class Player : CharacterBody3D, IActor
 		HealthChanged!.Invoke(health);
 		GD.Print($"Player taking damage, down to {health} HP");
 		
-		var damageMaterial = new ShaderMaterial()
-		{
-			Shader = _damage,
-		};
 		damageMaterial.SetShaderParameter("active", true);
-		SetShaderTo(damageMaterial);
+		
 		
 		_timer = new Timer()
 		{
@@ -67,7 +72,7 @@ public partial class Player : CharacterBody3D, IActor
 
 	private void ResetDamageCallback()
 	{
-		SetShaderTo(null);
+		damageMaterial.SetShaderParameter("active", false);
 		_timer.QueueFree();
 		_timer = null;
 	}

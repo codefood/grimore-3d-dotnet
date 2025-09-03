@@ -8,7 +8,6 @@ void vertex() {
 
 void fragment() {
 	// Called for every pixel the material is visible on.
-	ALBEDO = vec3(0, 1, 0);
 	if(active) {
 		ALBEDO = vec3(1, 0, 0);
 	}
