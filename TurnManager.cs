@@ -95,9 +95,9 @@ public partial class TurnManager : Node
         {
             switch (collision)
             {
-                case IInteractable interactor:
+                case IInteractable interactor when _actor is Player p:
                     GD.Print($"player collided with {((Node)interactor).Name}");
-                    if (!interactor.PlayerInteraction(_actor as Player))
+                    if (!interactor.PlayerInteraction(p))
                     {
                         _direction = Vector3.Zero;
                         _actor.Position = _initial!.Value;
@@ -110,6 +110,10 @@ public partial class TurnManager : Node
                         _direction = Vector3.Zero;
                         _actor.Position = _initial!.Value;
                     }
+                    break;
+                default:
+                    _direction = Vector3.Zero;
+                    _actor.Position = _initial!.Value;
                     break;
             }
             _processed.Add(collision);

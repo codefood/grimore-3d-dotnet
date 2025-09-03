@@ -38,3 +38,9 @@ offset_right = 115.0
 offset_bottom = 617.0
 text = "Camera
 "
+
+[node name="HealthContainer" type="FlowContainer" parent="."]
+offset_left = 26.0
+offset_top = 86.0
+offset_right = 471.0
+offset_bottom = 126.0

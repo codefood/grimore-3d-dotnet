@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Godot;
 
@@ -6,29 +7,32 @@ namespace Grimore.Entities;
 [GlobalClass]
 public partial class Player : CharacterBody3D, IActor
 {
-	
 	private PackedScene _spellScene = ResourceLoader.Load<PackedScene>("res://spell.tscn");
 	private Shader _damage = ResourceLoader.Load<Shader>("res://damage.gdshader");
 	
 	private bool _allowInput;
 	private Vector2 _currentDirection;
 	private Timer _timer;
-	public string SpellColor { get; set; } = "white";
+	private string SpellColor { get; set; } = "white";
+	public event Action<int> HealthChanged;
+	private int health = 3;
 
 	private Node3D PlayerEntity => GetChildren()
 		.OfType<Node3D>()
 		.First(f => f.Name == "player");
-//
-	public void SelectSpellColour(string colour)
+
+	void SelectSpellColour(string colour)
 	{
 		GD.Print($"Setting spell colour to {colour}");
 		SpellColor = colour;
 	}
-	
-	public void StartTurn() => 
+
+	public void StartTurn()
+	{
+		HealthChanged!.Invoke(health);
 		_allowInput = true;
-
-
+	}
+	
 	private void SetShaderTo(Material material)
 	{
 		foreach (var mesh in PlayerEntity.GetChildren().OfType<MeshInstance3D>())
@@ -39,7 +43,10 @@ public partial class Player : CharacterBody3D, IActor
 
 	public void TakeDamage()
 	{
-		GD.Print("Player taking damage");
+		health--;
+		HealthChanged!.Invoke(health);
+		GD.Print($"Player taking damage, down to {health} HP");
+		
 		var damageMaterial = new ShaderMaterial()
 		{
 			Shader = _damage,
@@ -63,10 +70,7 @@ public partial class Player : CharacterBody3D, IActor
 		SetShaderTo(null);
 		_timer.QueueFree();
 		_timer = null;
-		
-		// IActor.InvokeDying(this);
 	}
-
 
 	public override void _Input(InputEvent ev)
 	{
@@ -88,7 +92,6 @@ public partial class Player : CharacterBody3D, IActor
 
 			IActor.InvokeActing(new Move(this, direction));
 			_allowInput = false;
-
 		}
 
 		if (!ev.IsActionPressed(Actions.Act)) return;
@@ -118,4 +121,5 @@ public partial class Player : CharacterBody3D, IActor
 			return -(Mathf.Pi / 2);
 		return 0;
 	}
+
 }

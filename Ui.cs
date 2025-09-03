@@ -10,6 +10,21 @@ public partial class Ui : Node2D
                 .Single()
                 .Text = $"Current Turn: {actor.Name}";
 
+    public void UpdateHealth(int health)
+    {
+        health = int.Max(health, 0);
+        var container = GetChildren().OfType<FlowContainer>()
+            .Single();
+        if (health == container.GetChildCount()) return;
+        while(health < container.GetChildCount()) container.RemoveChild(container.GetChild(0));
+        while (health > container.GetChildCount()) container.AddChild(new ColorRect()
+        {
+            Color = Color.FromHtml("FF0000"),
+            Size = new Vector2(32, 32),
+            CustomMinimumSize = new Vector2(32, 32)
+        });
+    }
+
     public delegate void OnToggleCamera();
     public event OnToggleCamera ToggleCamera;
     

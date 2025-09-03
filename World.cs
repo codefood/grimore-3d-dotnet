@@ -24,6 +24,7 @@ public partial class World : Node3D
 		}
 		Turner.Setup(this);
 		Turner.OnTurnStart += Interface.UpdateCurrentTurn;
+		Player.HealthChanged += Interface.UpdateHealth;
 		
 		Interface.ToggleCamera += () =>
 		{
