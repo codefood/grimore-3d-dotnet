@@ -11,7 +11,7 @@ public partial class Npc : Node3D, IActor, IInteractable
     public void StartTurn() => 
         IActor.InvokeActing(new NoopCommand(this));
 
-    public bool PlayerInteraction()
+    public bool PlayerInteraction(Player player)
     {
         DialogueManager.ShowExampleDialogueBalloon(GD.Load<Resource>("res://assets/npc.dialogue"));
         return false;

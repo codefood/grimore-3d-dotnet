@@ -22,7 +22,7 @@ public partial class Door : Node3D, IInteractable
         _collision.Disabled = IsOpen;
     }
 
-    public bool PlayerInteraction()
+    public bool PlayerInteraction(Player player)
     {
         if (IsOpen) return true;
         

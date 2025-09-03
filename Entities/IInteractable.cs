@@ -2,5 +2,5 @@
 
 public interface IInteractable
 {
-    bool PlayerInteraction();
+    bool PlayerInteraction(Player player);
 }

@@ -1,6 +1,6 @@
 shader_type spatial;
 
-uniform bool active = false;
+uniform bool active = true;
 
 void vertex() {
 	// Called for every vertex the material is visible on.

@@ -37,7 +37,7 @@ public partial class Player : CharacterBody3D, IActor
 		}
 	}
 
-	public void PlayerInteraction()
+	public void TakeDamage()
 	{
 		GD.Print("Player taking damage");
 		var damageMaterial = new ShaderMaterial()
@@ -64,7 +64,7 @@ public partial class Player : CharacterBody3D, IActor
 		_timer.QueueFree();
 		_timer = null;
 		
-		IActor.InvokeDying(this);
+		// IActor.InvokeDying(this);
 	}
 
 
@@ -90,19 +90,19 @@ public partial class Player : CharacterBody3D, IActor
 			_allowInput = false;
 
 		}
-		if (ev.IsActionPressed(Actions.Act))
-		{
-			var instance = (Spell)_spellScene.Instantiate();
-			instance.Name = "Spell";
 
-			instance.Position = Position + new Vector3(_currentDirection.X, 0.5f, _currentDirection.Y);
+		if (!ev.IsActionPressed(Actions.Act)) return;
+		
+		var instance = (Spell)_spellScene.Instantiate();
+		instance.Name = "Spell";
+
+		instance.Position = Position + new Vector3(_currentDirection.X, 0.5f, _currentDirection.Y);
 			
-			var spellColour = Color.FromString(SpellColor, Color.FromHtml("000000"));
-			instance.Setup(spellColour, 1, _currentDirection);
+		var spellColour = Color.FromString(SpellColor, Color.FromHtml("000000"));
+		instance.Setup(spellColour, 1, _currentDirection);
 			
-			IActor.InvokeActing(new Summon(this, instance));
-			_allowInput = false;
-		}
+		IActor.InvokeActing(new Summon(this, instance));
+		_allowInput = false;
 	}
 
 	float Angle(Vector2 direction)
@@ -118,5 +118,4 @@ public partial class Player : CharacterBody3D, IActor
 			return -(Mathf.Pi / 2);
 		return 0;
 	}
-	
 }

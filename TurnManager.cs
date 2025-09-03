@@ -95,19 +95,21 @@ public partial class TurnManager : Node
         {
             switch (collision)
             {
-                case Wall:
-                    _direction = Vector3.Zero;
-                    _actor.Position = _initial!.Value;
-                    return;
-                case IInteractable interactable:
-                    if (!interactable.PlayerInteraction())
+                case IInteractable interactor:
+                    GD.Print($"player collided with {((Node)interactor).Name}");
+                    if (!interactor.PlayerInteraction(_actor as Player))
                     {
                         _direction = Vector3.Zero;
                         _actor.Position = _initial!.Value;
                     }
                     break;
-                case Player p:
+                case Player p when _actor is IInteractable interactor:
                     GD.Print($"{_actor.Name} collided with player");
+                    if (!interactor.PlayerInteraction(p))
+                    {
+                        _direction = Vector3.Zero;
+                        _actor.Position = _initial!.Value;
+                    }
                     break;
             }
             _processed.Add(collision);
