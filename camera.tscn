@@ -16,6 +16,6 @@ spring_length = 6.0
 current = true
 
 [node name="IsometricCameraPivot" type="Node3D" parent="."]
-transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 5, 10, 5)
+transform = Transform3D(0.707107, -0.353553, 0.612372, 0, 0.866026, 0.5, -0.707107, -0.353553, 0.612372, 5, 6, 5)
 
 [node name="Camera3D" type="Camera3D" parent="IsometricCameraPivot"]
