@@ -57,8 +57,13 @@ public partial class Player : CharacterBody3D, IActor
 		HealthChanged!.Invoke(health);
 		GD.Print($"Player taking damage, down to {health} HP");
 		
-		damageMaterial.SetShaderParameter("active", true);
+		if (health <= 0)
+		{
+			IActor.InvokeDying(this);
+			return;
+		}
 		
+		damageMaterial.SetShaderParameter("active", true);
 		
 		_timer = new Timer()
 		{
