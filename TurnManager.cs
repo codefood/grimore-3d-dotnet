@@ -16,7 +16,6 @@ public partial class TurnManager : Node
     private readonly List<GodotObject> _processed = new();
     private Vector3? _initial;
     private const int Speed = 2;
-    private bool _paused = false;
 
     public delegate void TurnStarted(IActor actor);
     public override void _Ready()
@@ -35,12 +34,12 @@ public partial class TurnManager : Node
         DialogueManager.DialogueStarted += _ =>
         {
             _timer.Paused = true;
-            _paused = false;
+            GameState.Pause();
         };
         DialogueManager.DialogueEnded += _ =>
         {
             _timer.Paused = false;
-            _paused = false;
+            GameState.Resume();
         };
         IActor.Acting += PerformAction;
         IActor.Dying += DieAndFree;
@@ -65,7 +64,8 @@ public partial class TurnManager : Node
 
     private void PerformAction(Command action)
     {
-        if (!(!_paused && Current == action.Actor)) return;
+        if (GameState.Current != GameState.State.WaitingForInput) return;
+        if (Current != action.Actor) return;
 		
         switch (action)
         {
