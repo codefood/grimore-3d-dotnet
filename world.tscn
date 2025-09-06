@@ -8,6 +8,9 @@
 [ext_resource type="PackedScene" uid="uid://yn2d0fv3grg0" path="res://Key.tscn" id="6_dwbse"]
 
 [sub_resource type="Environment" id="Environment_tlwt5"]
+background_mode = 1
+background_color = Color(0.112224, 0.193541, 0.22569, 1)
+volumetric_fog_density = 0.5
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_vd5hd"]
 
@@ -16,8 +19,12 @@ script = ExtResource("1_whjl1")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -0.707107, 0.707107, 0, -0.707107, -0.707107, 0, 10, -10)
-light_angular_distance = 0.8
+light_color = Color(0.914875, 0.843708, 0.768652, 1)
+light_energy = 0.7
+light_indirect_energy = 0.7
+light_angular_distance = 0.5
 shadow_enabled = true
+shadow_opacity = 0.7
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_tlwt5")

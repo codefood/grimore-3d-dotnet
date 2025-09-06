@@ -88,6 +88,11 @@ public partial class TurnManager : Node
         base._PhysicsProcess(delta);
         
         if(_actor == null) return;
+
+        if (_actor is Spell)
+        {
+            _direction += new Vector3(0, 0.1f, 0);
+        }
         
         var collisions = _actor.MoveAndCollide(_direction * (float)delta * Speed);
 
@@ -96,13 +101,13 @@ public partial class TurnManager : Node
             switch (collision)
             {
                 case IInteractable when _actor is Spell spell:
-                    GD.Print("Spell hit a wall");
+                    GD.Print("Spell hit a thing");
                     spell.PlayerInteraction(null);
                     _direction = Vector3.Zero;
                     _actor.Position = _initial!.Value;
                     break;
                 case IInteractable interactor when _actor is Player p:
-                    GD.Print($"player collided with {((Node)interactor).Name}");
+                    GD.Print($"{((Node)interactor).Name} collided with {_actor.Name}");
                     if (!interactor.PlayerInteraction(p))
                     {
                         _direction = Vector3.Zero;

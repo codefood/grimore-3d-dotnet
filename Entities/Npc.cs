@@ -13,6 +13,7 @@ public partial class Npc : Node3D, IActor, IInteractable
 
     public bool PlayerInteraction(Player player)
     {
+        if (player == null) return false;
         DialogueManager.ShowExampleDialogueBalloon(GD.Load<Resource>("res://assets/npc.dialogue"));
         return false;
     }
