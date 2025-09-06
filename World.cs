@@ -14,8 +14,6 @@ public partial class World : Node3D
 	private Entities.Player Player => GetChildren().OfType<Entities.Player>().First();
 	private Camera Camera => FindChildren("Camera").OfType<Camera>().First();
 
-	
-	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		if (Turner == null)
@@ -49,11 +47,5 @@ public partial class World : Node3D
 		                        """);
 
 		Camera.SetMode(Camera.Mode.isometric);
-	}
-
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-		
 	}
 }

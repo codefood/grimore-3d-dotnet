@@ -40,8 +40,8 @@ public partial class Spell : AnimatableBody3D, IActor, IInteractable
 
     public bool PlayerInteraction(Player player)
     {
-        // IActor.InvokeDying(this);
-        player.TakeDamage();
+        player?.TakeDamage();
+        IActor.InvokeDying(this);
         return true;
     }
 }

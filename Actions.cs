@@ -6,7 +6,7 @@ namespace Grimore;
 public static class Actions
 {
     private const string Right = "right";
-    private const string Up = "up";
+    public const string Up = "up";
     private const string Down = "down";
     private const string Left = "left";
     

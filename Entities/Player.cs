@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Godot;
 
@@ -10,7 +11,7 @@ public partial class Player : CharacterBody3D, IActor
 	private PackedScene _spellScene = ResourceLoader.Load<PackedScene>("res://spell.tscn");
 	
 	private bool _allowInput;
-	private Vector2 _currentDirection;
+	private Vector2? _currentDirection;
 	private Timer _timer;
 	private string SpellColor { get; set; } = "white";
 	public event Action<int> HealthChanged;
@@ -86,31 +87,41 @@ public partial class Player : CharacterBody3D, IActor
 		var directionsPressed = Actions.Directions
 			.Where(k => ev.IsActionPressed(k.Key))
 			.ToList();
+
+		Command action = null;
 		
-		if (directionsPressed.Count != 0)
-		{
-			var direction = directionsPressed.First().Value;
+		if (directionsPressed.Count != 0) action = Move(directionsPressed);
+		if (ev.IsActionPressed(Actions.Act)) action = CastSpell();
 
-			var angle = Angle(direction);
-			PlayerEntity.SetBasis(new Basis(new Vector3(0, 1, 0), angle));
-			_currentDirection = direction;
-
-			IActor.InvokeActing(new Move(this, direction));
-			_allowInput = false;
-		}
-
-		if (!ev.IsActionPressed(Actions.Act)) return;
+		if (action == null) return;
 		
+		IActor.InvokeActing(action);
+		_allowInput = false;
+	}
+
+	private Move Move(List<KeyValuePair<string, Vector2>> directionsPressed)
+	{
+		var direction = directionsPressed.First().Value;
+
+		var angle = Angle(direction);
+		PlayerEntity.SetBasis(new Basis(new Vector3(0, 1, 0), angle));
+		_currentDirection = direction;
+		var move = new Move(this, direction);
+		return move;
+	}
+
+	private CastSpell CastSpell()
+	{
 		var instance = (Spell)_spellScene.Instantiate();
 		instance.Name = "Spell";
 
-		instance.Position = Position + new Vector3(_currentDirection.X, 0.5f, _currentDirection.Y);
-			
+		_currentDirection ??= Actions.Directions[Actions.Up];
+
+		instance.Position = Position + new Vector3(_currentDirection!.Value.X * World.TileSize, 0.5f, _currentDirection!.Value.Y * World.TileSize);
+
 		var spellColour = Color.FromString(SpellColor, Color.FromHtml("000000"));
-		instance.Setup(spellColour, 1, _currentDirection);
-			
-		IActor.InvokeActing(new Summon(this, instance));
-		_allowInput = false;
+		instance.Setup(spellColour, 1, _currentDirection!.Value);
+		return new CastSpell(this, instance);
 	}
 
 	float Angle(Vector2 direction)

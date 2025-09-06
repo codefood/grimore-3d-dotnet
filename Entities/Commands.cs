@@ -2,7 +2,7 @@
 
 namespace Grimore.Entities;
 
-public class Summon(IActor actor, Spell instance) : Command(actor)
+public class CastSpell(IActor actor, Spell instance) : Command(actor)
 {
     public Spell Instance { get; } = instance;
 }

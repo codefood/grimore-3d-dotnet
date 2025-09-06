@@ -8,7 +8,7 @@ namespace Grimore;
 
 public partial class TurnManager : Node
 {
-    private readonly Queue<IActor> _actors = new();
+    private Queue<IActor> _actors = new();
     private World _world;
     private Timer _timer;
     private Vector3 _direction;
@@ -45,21 +45,21 @@ public partial class TurnManager : Node
         IActor.Dying += DieAndFree;
     }
     public event TurnStarted OnTurnStart;
-    public void Enrol(IActor actor) => 
+    public void Enrol(IActor actor) =>
         _actors.Enqueue(actor);
+
+    private void InsertNextActor(IActor actor) => 
+        _actors = new Queue<IActor>([actor, .._actors.ToList()]);
 
     private void DieAndFree(IActor toDelete)
     {
-        for (var i = 0; i < _actors.Count - 1; i++)
+        _actors = new Queue<IActor>(_actors.ToList().Except([toDelete]));
+        if (toDelete == Current)
         {
-            var c = _actors.Dequeue();
-            if (c == toDelete)
-            {
-                ((Node)c).QueueFree();
-                continue;
-            }
-            _actors.Enqueue(c);
+            StartNextTurn();
         }
+
+        ((Node)toDelete).QueueFree();
     }
 
     private void PerformAction(Command action)
@@ -69,9 +69,9 @@ public partial class TurnManager : Node
 		
         switch (action)
         {
-            case Summon spell:
+            case CastSpell spell:
                 _world.AddChild(spell.Instance);
-                Enrol(spell.Instance);
+                InsertNextActor(spell.Instance);
                 break;
             case Move move:
                 _actor = (PhysicsBody3D)action.Actor;
@@ -95,6 +95,12 @@ public partial class TurnManager : Node
         {
             switch (collision)
             {
+                case IInteractable when _actor is Spell spell:
+                    GD.Print("Spell hit a wall");
+                    spell.PlayerInteraction(null);
+                    _direction = Vector3.Zero;
+                    _actor.Position = _initial!.Value;
+                    break;
                 case IInteractable interactor when _actor is Player p:
                     GD.Print($"player collided with {((Node)interactor).Name}");
                     if (!interactor.PlayerInteraction(p))
@@ -125,7 +131,6 @@ public partial class TurnManager : Node
     {
         Current = _actors.Dequeue();
         _actors.Enqueue(Current);
-        //GD.Print($"StartNextTurn, Current: {((Node)Current).Name}, Queue of: {_actors.Count}");
         OnTurnStart!.Invoke(Current);
         Current.StartTurn();
     }
