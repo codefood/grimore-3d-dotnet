@@ -30,7 +30,14 @@ public partial class TurnManager : Node
         };
         _timer.Timeout += TurnTimer;
         AddChild(_timer);
-        
+        GameState.State.WaitingForInput.OnEnter += () =>
+        {
+            _timer.Paused = false;
+        };
+        GameState.State.Paused.OnEnter += () =>
+        {
+            _timer.Paused = true;
+        };
         DialogueManager.DialogueStarted += _ =>
         {
             _timer.Paused = true;
@@ -39,7 +46,7 @@ public partial class TurnManager : Node
         DialogueManager.DialogueEnded += _ =>
         {
             _timer.Paused = false;
-            GameState.Resume();
+            GameState.Start();
         };
         IActor.Acting += PerformAction;
         IActor.Dying += DieAndFree;
@@ -54,6 +61,11 @@ public partial class TurnManager : Node
     private void DieAndFree(IActor toDelete)
     {
         _actors = new Queue<IActor>(_actors.ToList().Except([toDelete]));
+        if (toDelete is Player)
+        {
+            GameState.GameOver();
+            return;
+        }
         if (toDelete == Current)
         {
             StartNextTurn();
@@ -86,6 +98,8 @@ public partial class TurnManager : Node
     public override void _PhysicsProcess(double delta)
     {
         base._PhysicsProcess(delta);
+        
+        if (GameState.Current != GameState.State.WaitingForInput) return;
         
         if(_actor == null) return;
 
