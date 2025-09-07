@@ -69,15 +69,14 @@ public class LevelLoader
 
         }
 
+        world.Player.Position = Vector3.Zero;
         world.Turner.StartNextTurn();
     }
 
     private void ClearThingsFrom(World world)
     {
-        world.GetChildren().OfType<Tile>().ForEach(x => x.QueueFree());
-        world.GetChildren().OfType<Wall>().ForEach(x => x.QueueFree());
-        world.GetChildren().OfType<Door>().ForEach(x => x.QueueFree());
-        world.GetChildren().OfType<Enemy>().ForEach(x => x.QueueFree());
+        world.GetChildren().OfType<IActor>().Except([world.Player]).ForEach(x => ((Node)x).QueueFree());
+        world.GetChildren().OfType<IInteractable>().ForEach(x => ((Node)x).QueueFree());
         world.Turner.Clear();
     }
 }

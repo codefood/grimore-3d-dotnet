@@ -11,7 +11,7 @@ public partial class World : Node3D
 	
 	private Timer _timer;
 	private Ui Interface => FindChild("UI") as Ui;
-	private Entities.Player Player => GetChildren().OfType<Entities.Player>().First();
+	public Entities.Player Player => GetChildren().OfType<Entities.Player>().First();
 	private Camera Camera => FindChildren("Camera").OfType<Camera>().First();
 
 	public override void _Ready()
@@ -33,19 +33,20 @@ public partial class World : Node3D
 		};
 		
 		// ReSharper disable once StringLiteralTypo
-		_levelLoader.Load(this, """
-		                        WWDWWWWWWWWWWWW
-		                        W       E     W
-		                        W       WW    W
-		                        D             D
-		                        W   WW E      W
-		                        W             W
-		                        W       D     W
-		                        W             W
-		                        WW           WW
-		                        W       n     W
-		                        """);
+		GameState.State.Started.OnEnter += () => _levelLoader.Load(this, """
+		                                                         WWDWWWWWWWWWWWW
+		                                                         W       E     W
+		                                                         W       WW    W
+		                                                         D             D
+		                                                         W   WW E      W
+		                                                         W             W
+		                                                         W       D     W
+		                                                         W             W
+		                                                         WW           WW
+		                                                         W       n     W
+		                                                         """);
 
 		Camera.SetMode(Camera.Mode.isometric);
+		GameState.Start();
 	}
 }

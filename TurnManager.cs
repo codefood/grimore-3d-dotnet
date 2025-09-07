@@ -18,6 +18,8 @@ public partial class TurnManager : Node
     private const int Speed = 2;
 
     public delegate void TurnStarted(IActor actor);
+    public event TurnStarted OnTurnStart;
+    
     public override void _Ready()
     {
         base._Ready();
@@ -41,7 +43,6 @@ public partial class TurnManager : Node
         IActor.Acting += PerformAction;
         IActor.Dying += DieAndFree;
     }
-    public event TurnStarted OnTurnStart;
     public void Enrol(IActor actor) =>
         _actors.Enqueue(actor);
 
@@ -104,12 +105,6 @@ public partial class TurnManager : Node
         {
             switch (collision)
             {
-                case IInteractable when _actor is Spell spell:
-                    GD.Print("Spell hit a thing");
-                    spell.PlayerInteraction(null);
-                    _direction = Vector3.Zero;
-                    _actor.Position = _initial!.Value;
-                    break;
                 case IInteractable interactor when _actor is Player p:
                     GD.Print($"{((Node)interactor).Name} collided with {_actor.Name}");
                     if (!interactor.PlayerInteraction(p))
@@ -125,6 +120,12 @@ public partial class TurnManager : Node
                         _direction = Vector3.Zero;
                         _actor.Position = _initial!.Value;
                     }
+                    break;
+                case IInteractable when _actor is IInteractable thing:
+                    GD.Print($"{_actor.Name} hit a thing and is being moved back to {_initial}");
+                    thing.PlayerInteraction(null);
+                    _direction = Vector3.Zero;
+                    _actor.Position = _initial!.Value;
                     break;
                 default:
                     _direction = Vector3.Zero;
@@ -146,17 +147,25 @@ public partial class TurnManager : Node
 
     private void TurnTimer()
     {
+        Reset();
+        StartNextTurn();
+    }
+
+    private void Reset()
+    {
         _timer.Stop();
         _processed.Clear();
         _actor = null;
         _direction = Vector3.Zero;
         _initial = null;
-        StartNextTurn();
     }
-    
+
     private IActor Current { get; set; }
     public void Setup(World world) => _world = world;
 
-    public void Clear() => 
+    public void Clear()
+    {
+        Reset();
         _actors.Clear();
+    }
 }

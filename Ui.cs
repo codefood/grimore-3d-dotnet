@@ -1,5 +1,6 @@
 using Godot;
 using System.Linq;
+using Grimore;
 using Grimore.Entities;
 
 public partial class Ui : Node2D
@@ -35,6 +36,15 @@ public partial class Ui : Node2D
         {
             ToggleCamera?.Invoke();
         };
+        GameState.State.Ended.OnEnter += () =>
+        {
+            GetChildren().OfType<Control>().First(c => c.Name == "GameOver").Show();
+        };
+        GameState.State.Started.OnEnter += () =>
+        {
+            GetChildren().OfType<Control>().First(c => c.Name == "GameOver").Hide();
+        };
+        
     }
     
     private static void CloseSpellEditor(BoxContainer spellEditor, Button openSpellEditorButton)

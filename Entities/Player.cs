@@ -86,6 +86,12 @@ public partial class Player : CharacterBody3D, IActor
 	public override void _Input(InputEvent ev)
 	{
 		base._Input(ev);
+
+		if (GameState.Current == GameState.State.Ended)
+		{
+			GameState.Start();
+			return;
+		}
 		
 		if (!_allowInput) return;
 		
