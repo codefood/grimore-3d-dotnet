@@ -15,14 +15,14 @@ public static class GameState
         public event Action OnEnter;
         
         private State() {}
-        public static readonly State WaitingForInput = new();
+        public static readonly State Started = new();
         public static readonly State Paused = new();
         public static readonly State Ended = new();
     }
 		
-    public static State Current = State.WaitingForInput;
+    public static State Current = State.Started;
 
     public static void Pause() => Current = State.Paused.Enter();
-    public static void Start() => Current = State.WaitingForInput.Enter();
+    public static void Start() => Current = State.Started.Enter();
     public static void GameOver() => Current = State.Ended.Enter();
 }

@@ -30,24 +30,14 @@ public partial class TurnManager : Node
         };
         _timer.Timeout += TurnTimer;
         AddChild(_timer);
-        GameState.State.WaitingForInput.OnEnter += () =>
-        {
-            _timer.Paused = false;
-        };
-        GameState.State.Paused.OnEnter += () =>
-        {
-            _timer.Paused = true;
-        };
-        DialogueManager.DialogueStarted += _ =>
-        {
-            _timer.Paused = true;
-            GameState.Pause();
-        };
-        DialogueManager.DialogueEnded += _ =>
-        {
-            _timer.Paused = false;
-            GameState.Start();
-        };
+        
+        GameState.State.Paused.OnEnter += () => _timer.Paused = true;
+        GameState.State.Started.OnEnter += () => _timer.Paused = false;
+        GameState.State.Ended.OnEnter += () => _timer.Paused = true;
+        
+        DialogueManager.DialogueStarted += _ => GameState.Pause();
+        DialogueManager.DialogueEnded += _ => GameState.Start();
+        
         IActor.Acting += PerformAction;
         IActor.Dying += DieAndFree;
     }
@@ -76,7 +66,7 @@ public partial class TurnManager : Node
 
     private void PerformAction(Command action)
     {
-        if (GameState.Current != GameState.State.WaitingForInput) return;
+        if (GameState.Current != GameState.State.Started) return;
         if (Current != action.Actor) return;
 		
         switch (action)
@@ -99,7 +89,7 @@ public partial class TurnManager : Node
     {
         base._PhysicsProcess(delta);
         
-        if (GameState.Current != GameState.State.WaitingForInput) return;
+        if (GameState.Current != GameState.State.Started) return;
         
         if(_actor == null) return;
 
