@@ -6,6 +6,7 @@ namespace Grimore;
 public partial class World : Node3D
 {
 	public const int TileSize = 2;
+	public const float HalfTileSize = 1f;
 	private readonly LevelLoader _levelLoader = new();
 	public TurnManager Turner => FindChildren("TurnInstance").First() as TurnManager;
 	
@@ -33,18 +34,7 @@ public partial class World : Node3D
 		};
 		
 		// ReSharper disable once StringLiteralTypo
-		GameState.State.Started.OnEnter += () => _levelLoader.Load(this, """
-		                                                         WWDWWWWWWWWWWWW
-		                                                         W       E     W
-		                                                         W       WW    W
-		                                                         D             D
-		                                                         W   WW E      W
-		                                                         W             W
-		                                                         W       D     W
-		                                                         W             W
-		                                                         WW           WW
-		                                                         W       n     W
-		                                                         """);
+		GameState.State.Started.OnEnter += () => _levelLoader.Load(this);
 
 		Camera.SetMode(Camera.Mode.isometric);
 		GameState.Start();

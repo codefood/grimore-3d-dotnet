@@ -21,7 +21,7 @@ public class LevelLoader
         { ResourceLoader.Load<PackedScene>("res://key.tscn"), ['K', 'k'] }
     };
 
-    public void Load(World world, string level)
+    public void Load(World world)
     {
         ClearThingsFrom(world);
         
@@ -29,7 +29,18 @@ public class LevelLoader
             .OfType<Player>()
             .First());
         
-        var levelLines = level
+        var levelLines = """
+            WWDWWWWWWWWWWWW
+            W       E     W
+            W       WW    W
+            D             D
+            W   WW E      W
+            W             W
+            W             W
+            W      kDd    W
+            WW           WW
+            W       n     D
+            """
             .Split('\n')
             .Select(l => l.Trim())
             .ToArray();
@@ -50,24 +61,26 @@ public class LevelLoader
             if (thing == null) continue;
             
             var instance = (Node3D)thing.Instantiate();
-            instance.Position = new Vector3((col + _offsetCols) * World.TileSize, 0, (row + _offsetRows) * World.TileSize);
-            
             var instanceType = instance.GetType();
+            
+            instance.Position = new Vector3(
+                (col + _offsetCols) * World.TileSize, 
+                0, 
+                (row + _offsetRows) * World.TileSize);
+            
             instance.Name = $"{instanceType.Name} {world.GetChildren().Count(x => x.GetType() == instanceType)}";
-            
-            if (instance is Door or Enemy or Npc)
-            {
-                var tileForEntity = (Node3D)TileScene.Instantiate();
-                tileForEntity.Position = new Vector3((col + _offsetCols) * World.TileSize, 0, (row + _offsetRows) * World.TileSize);
-                world.AddChild(tileForEntity);
-                instance.Position += new Vector3(0, World.TileSize / 2, 0); 
-                
-                if(instance is Enemy en)
-                    world.Turner.Enrol(en);
-            }
-            
+ 
             world.AddChild(instance);
 
+            if (instance is Wall or Tile) continue;
+            
+            instance.Position += new Vector3(0, World.HalfTileSize, 0);
+            
+            var tileForEntity = (Node3D)TileScene.Instantiate();
+            tileForEntity.Position = new Vector3((col + _offsetCols) * World.TileSize, 0, (row + _offsetRows) * World.TileSize);
+            world.AddChild(tileForEntity);
+                
+            if (instance is IActor actor) world.Turner.Enrol(actor);
         }
 
         world.Player.Position = Vector3.Zero;
