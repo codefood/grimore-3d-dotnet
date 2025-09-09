@@ -7,13 +7,16 @@ public partial class World : Node3D
 {
 	public const int TileSize = 2;
 	public const float HalfTileSize = 1f;
-	private readonly LevelLoader _levelLoader = new();
-	public TurnManager Turner => FindChildren("TurnInstance").First() as TurnManager;
+	public TurnManager Turner => 
+		FindChildren("TurnInstance").First() as TurnManager;
 	
 	private Timer _timer;
-	private Ui Interface => FindChild("UI") as Ui;
-	public Entities.Player Player => GetChildren().OfType<Entities.Player>().First();
-	private Camera Camera => FindChildren("Camera").OfType<Camera>().First();
+	private Ui Interface => 
+		FindChild("UI") as Ui;
+	public Entities.Player Player => 
+		GetChildren().OfType<Entities.Player>().First();
+	private Camera Camera => 
+		FindChildren("Camera").OfType<Camera>().First();
 
 	public override void _Ready()
 	{
@@ -33,8 +36,7 @@ public partial class World : Node3D
 				: Camera.Mode.isometric);
 		};
 		
-		// ReSharper disable once StringLiteralTypo
-		GameState.State.Started.OnEnter += () => _levelLoader.Load(this);
+		GameState.State.Started.OnEnter += () => LevelLoader.Load(this);
 
 		Camera.SetMode(Camera.Mode.isometric);
 		GameState.Start();

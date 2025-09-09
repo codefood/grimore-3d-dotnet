@@ -7,8 +7,6 @@ namespace Grimore;
 
 public class LevelLoader
 {
-    private int _offsetRows;
-    private int _offsetCols;
     private static readonly PackedScene TileScene = ResourceLoader.Load<PackedScene>("res://tile.tscn");
     
     static readonly Dictionary<PackedScene, char[]> Things = new()
@@ -21,7 +19,7 @@ public class LevelLoader
         { ResourceLoader.Load<PackedScene>("res://key.tscn"), ['K', 'k'] }
     };
 
-    public void Load(World world)
+    public static void Load(World world)
     {
         ClearThingsFrom(world);
         
@@ -47,8 +45,8 @@ public class LevelLoader
 
         var width = levelLines.Max(l => l.Length);
         var height = levelLines.Length;
-        _offsetRows = 0 - width / 2;
-        _offsetCols = 0 - height / 2;
+        var offsetRows = 0 - width / 2;
+        var offsetCols = 0 - height / 2;
 
         for (var row = 0; row < height; row++)
         for (var col = 0; col < width; col++)
@@ -64,9 +62,9 @@ public class LevelLoader
             var instanceType = instance.GetType();
             
             instance.Position = new Vector3(
-                (col + _offsetCols) * World.TileSize, 
+                (col + offsetCols) * World.TileSize, 
                 0, 
-                (row + _offsetRows) * World.TileSize);
+                (row + offsetRows) * World.TileSize);
             
             instance.Name = $"{instanceType.Name} {world.GetChildren().Count(x => x.GetType() == instanceType)}";
  
@@ -77,7 +75,7 @@ public class LevelLoader
             instance.Position += new Vector3(0, World.HalfTileSize, 0);
             
             var tileForEntity = (Node3D)TileScene.Instantiate();
-            tileForEntity.Position = new Vector3((col + _offsetCols) * World.TileSize, 0, (row + _offsetRows) * World.TileSize);
+            tileForEntity.Position = new Vector3((col + offsetCols) * World.TileSize, 0, (row + offsetRows) * World.TileSize);
             world.AddChild(tileForEntity);
                 
             if (instance is IActor actor) world.Turner.Enrol(actor);
@@ -87,7 +85,7 @@ public class LevelLoader
         world.Turner.StartNextTurn();
     }
 
-    private void ClearThingsFrom(World world)
+    private static void ClearThingsFrom(World world)
     {
         world.GetChildren().OfType<IActor>().Except([world.Player]).ForEach(x => ((Node)x).QueueFree());
         world.GetChildren().OfType<IInteractable>().ForEach(x => ((Node)x).QueueFree());
