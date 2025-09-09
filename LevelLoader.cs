@@ -80,9 +80,6 @@ public class LevelLoader
                 
             if (instance is IActor actor) world.Turner.Enrol(actor);
         }
-
-        world.Player.Position = Vector3.Zero;
-        world.Turner.StartNextTurn();
     }
 
     private static void ClearThingsFrom(World world)

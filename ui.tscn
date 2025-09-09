@@ -16,6 +16,14 @@ offset_right = 397.0
 offset_bottom = 107.0
 text = "Current Turn:"
 
+[node name="CurrentQuest" type="Label" parent="."]
+offset_left = 22.0
+offset_top = 126.0
+offset_right = 399.0
+offset_bottom = 209.0
+text = "Current Quest
+:"
+
 [node name="SpellEditor" type="BoxContainer" parent="."]
 visible = false
 offset_left = 188.0
@@ -50,6 +58,7 @@ offset_right = 471.0
 offset_bottom = 126.0
 
 [node name="GameOver" type="ColorRect" parent="."]
+visible = false
 offset_right = 1152.0
 offset_bottom = 648.0
 color = Color(0.172833, 0.172833, 0.172833, 1)

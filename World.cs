@@ -1,5 +1,7 @@
+using System;
 using System.Linq;
 using Godot;
+using Grimore.Entities;
 
 namespace Grimore;
 
@@ -17,6 +19,7 @@ public partial class World : Node3D
 		GetChildren().OfType<Entities.Player>().First();
 	private Camera Camera => 
 		FindChildren("Camera").OfType<Camera>().First();
+	public Quest Quest { get; set; }
 
 	public override void _Ready()
 	{
@@ -36,9 +39,55 @@ public partial class World : Node3D
 				: Camera.Mode.isometric);
 		};
 		
-		GameState.State.Started.OnEnter += () => LevelLoader.Load(this);
 
+		Quest.OnUpdate += () => Interface.UpdateQuest(Quest);
+		
+		GameState.State.Started.OnEnter += () =>
+		{
+			LevelLoader.Load(this);
+			Quest = new Quest(
+				new InteractionSuccess("Collect", "Key 1"),
+				new InteractionSuccess("Open", "Door 3")
+			);	
+			Interface.UpdateQuest(Quest);
+			
+			Player.Position = Vector3.Zero;
+			Player.Keys = 0;
+			Player.Health = 3;
+			
+			Interface.UpdateHealth(Player.Health);
+			Turner.StartNextTurn();
+		};
+		
 		Camera.SetMode(Camera.Mode.isometric);
 		GameState.Start();
 	}
+
+}
+
+public class Quest(params Requirement[] requirements)
+{
+	public readonly Requirement[] Requirements = requirements;
+
+	public static event Action OnUpdate;
+
+	public void InteractionSuccess(IInteractable interactor)
+	{
+		foreach (var requirement in Requirements.OfType<InteractionSuccess>()
+			         .Where(x => x.InteractionName == ((Node)interactor).Name))
+		{
+			requirement.Met = true;
+		}
+
+		OnUpdate?.Invoke();
+	}
+}
+public class InteractionSuccess(string verb, string interactionName) : Requirement(verb)
+{
+	public string InteractionName { get; } = interactionName;
+}
+public abstract class Requirement(string verb)
+{
+	public string Verb { get; } = verb;
+	public bool Met { get; set; }
 }

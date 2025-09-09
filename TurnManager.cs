@@ -112,6 +112,10 @@ public partial class TurnManager : Node
                         _direction = Vector3.Zero;
                         _actor.Position = _initial!.Value;
                     }
+                    else 
+                    {
+                        _world.Quest.InteractionSuccess(interactor);    
+                    }
                     break;
                 case Player p when _actor is IInteractable interactor:
                     GD.Print($"{_actor.Name} collided with player");

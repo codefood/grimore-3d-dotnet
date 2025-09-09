@@ -15,7 +15,7 @@ public partial class Player : CharacterBody3D, IActor
 	private Timer _timer;
 	private string SpellColor { get; set; } = "white";
 	public event Action<int> HealthChanged;
-	private int health = 3;
+	public int Health = 3;
 	ShaderMaterial damageMaterial = new()
 	{
 		Shader = ResourceLoader.Load<Shader>("res://damage.gdshader"),
@@ -35,7 +35,7 @@ public partial class Player : CharacterBody3D, IActor
 
 	public void StartTurn()
 	{
-		HealthChanged!.Invoke(health);
+		HealthChanged!.Invoke(Health);
 		_allowInput = true;
 	}
 
@@ -55,11 +55,11 @@ public partial class Player : CharacterBody3D, IActor
 
 	public void TakeDamage()
 	{
-		health--;
-		HealthChanged!.Invoke(health);
-		GD.Print($"Player taking damage, down to {health} HP");
+		Health--;
+		HealthChanged!.Invoke(Health);
+		GD.Print($"Player taking damage, down to {Health} HP");
 		
-		if (health <= 0)
+		if (Health <= 0)
 		{
 			IActor.InvokeDying(this);
 			return;

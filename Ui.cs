@@ -8,9 +8,19 @@ public partial class Ui : Node2D
     public void UpdateCurrentTurn(IActor actor) =>
         GetChildren()
                 .OfType<Label>()
-                .Single()
+                .Single(x => x.Name == "CurrentTurn")
                 .Text = $"Current Turn: {actor.Name}";
 
+    public void UpdateQuest(Quest quest) =>
+            GetChildren()
+                    .OfType<Label>()
+                    .Single(x => x.Name == "CurrentQuest")
+                    .Text = $"Current Turn:\n" + 
+                            string.Join('\n', 
+                            quest.Requirements
+                                .OfType<InteractionSuccess>()
+                                .Select((x => $"[{(x.Met ? "X" : " ")}] - {x.Verb} {x.InteractionName}")));
+    
     public void UpdateHealth(int health)
     {
         health = int.Max(health, 0);

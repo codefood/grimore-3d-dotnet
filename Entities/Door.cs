@@ -28,7 +28,7 @@ public partial class Door : Node3D, IInteractable
         if (player.Keys <= 0) return false;
         
         player.Keys--;
-        GD.Print($"Door is opening, {player.Keys} keys left");
+        GD.Print($"{this.Name} is opening, {player.Keys} keys left");
         IsOpen = true;
         SetMeshVisibility();
         return true;
