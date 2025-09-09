@@ -2,15 +2,13 @@ using Godot;
 
 namespace Grimore.Entities;
 
-public partial class Key : Node3D, IActor
+public partial class Key : Node3D, IInteractable
 {
-    public void StartTurn()
-    {
-        
-    }
 
-    public void PlayerInteraction()
+    public bool PlayerInteraction(Player player)
     {
-        //collected!
+        player.Keys++;
+        QueueFree();
+        return true;
     }
 }

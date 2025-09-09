@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://yn2d0fv3grg0"]
+[gd_scene load_steps=9 format=3 uid="uid://yn2d0fv3grg0"]
 
 [ext_resource type="Script" uid="uid://cfe4dd2ievos0" path="res://Entities/Key.cs" id="1_3nogi"]
 [ext_resource type="Shader" uid="uid://3yq73pq23ruh" path="res://Key.gdshader" id="2_3nogi"]
@@ -14,9 +14,31 @@ shader = ExtResource("2_3nogi")
 material = SubResource("ShaderMaterial_3nogi")
 orientation = 2
 
-[node name="Key" type="Node3D"]
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_3nogi"]
+albedo_color = Color(0.560017, 0.523422, 0.291901, 1)
+emission_enabled = true
+emission = Color(0.433, 0.37412, 0.184862, 1)
+clearcoat_enabled = true
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_3nogi"]
+material = SubResource("ORMMaterial3D_3nogi")
+radius = 0.2
+height = 0.8
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3nogi"]
+
+[node name="Key" type="AnimatableBody3D"]
 script = ExtResource("1_3nogi")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 0, 0)
+visible = false
 mesh = SubResource("PlaneMesh_40kd0")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("CapsuleMesh_3nogi")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CapsuleShape3D_3nogi")

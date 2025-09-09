@@ -25,6 +25,8 @@ public partial class Player : CharacterBody3D, IActor
 		.OfType<Node3D>()
 		.First(f => f.Name == "player");
 
+	public int Keys { get; set; }
+
 	void SelectSpellColour(string colour)
 	{
 		GD.Print($"Setting spell colour to {colour}");

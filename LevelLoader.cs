@@ -17,7 +17,8 @@ public class LevelLoader
         { ResourceLoader.Load<PackedScene>("res://enemy.tscn"), ['E', 'e'] },
         { ResourceLoader.Load<PackedScene>("res://wall.tscn"), ['W', 'w'] },
         { ResourceLoader.Load<PackedScene>("res://door.tscn"), ['D', 'd'] },
-        { ResourceLoader.Load<PackedScene>("res://npc.tscn"), ['N', 'n'] }
+        { ResourceLoader.Load<PackedScene>("res://npc.tscn"), ['N', 'n'] },
+        { ResourceLoader.Load<PackedScene>("res://key.tscn"), ['K', 'k'] }
     };
 
     public void Load(World world, string level)

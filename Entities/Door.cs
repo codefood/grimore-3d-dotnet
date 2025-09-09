@@ -25,11 +25,13 @@ public partial class Door : Node3D, IInteractable
     public bool PlayerInteraction(Player player)
     {
         if (IsOpen) return true;
+        if (player.Keys <= 0) return false;
         
-        GD.Print("Door is opening");
+        player.Keys--;
+        GD.Print($"Door is opening, {player.Keys} keys left");
         IsOpen = true;
         SetMeshVisibility();
-        return false;
+        return true;
 
     }
 }
