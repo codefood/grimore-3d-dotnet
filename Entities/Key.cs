@@ -5,7 +5,7 @@ namespace Grimore.Entities;
 public partial class Key : Node3D, IInteractable
 {
 
-    public bool PlayerInteraction(Player player)
+    public bool Interact(Player player)
     {
         player.Keys++;
         QueueFree();

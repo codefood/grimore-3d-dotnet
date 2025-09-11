@@ -73,7 +73,8 @@ public class Quest(params Requirement[] requirements)
 
 	public void InteractionSuccess(IInteractable interactor)
 	{
-		foreach (var requirement in Requirements.OfType<InteractionSuccess>()
+		foreach (var requirement in Requirements
+			         .OfType<InteractionSuccess>()
 			         .Where(x => x.InteractionName == ((Node)interactor).Name))
 		{
 			requirement.Met = true;

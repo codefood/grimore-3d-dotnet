@@ -16,7 +16,7 @@ public partial class Enemy : AnimatableBody3D, IActor, IInteractable
                 .Except([Direction])
                 .Count() - 1));
 
-    public bool PlayerInteraction(Player player)
+    public bool Interact(Player player)
     {
         if(player == null) Direction = RandomDirection();
         player?.TakeDamage();

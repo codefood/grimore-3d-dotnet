@@ -92,7 +92,7 @@ public partial class TurnManager : Node
         
         if (GameState.Current != GameState.State.Started) return;
         
-        if(_actor == null) return;
+        if (_actor == null) return;
 
         if (_actor is Spell)
         {
@@ -101,13 +101,13 @@ public partial class TurnManager : Node
         
         var collisions = _actor.MoveAndCollide(_direction * (float)delta * Speed);
 
-        foreach(var collision in collisions.EnumerateCollisions().Except(_processed))
+        foreach(var collision in EnumerateCollisions(collisions).Except(_processed))
         {
             switch (collision)
             {
                 case IInteractable interactor when _actor is Player p:
                     GD.Print($"{((Node)interactor).Name} collided with {_actor.Name}");
-                    if (!interactor.PlayerInteraction(p))
+                    if (!interactor.Interact(p))
                     {
                         _direction = Vector3.Zero;
                         _actor.Position = _initial!.Value;
@@ -119,7 +119,7 @@ public partial class TurnManager : Node
                     break;
                 case Player p when _actor is IInteractable interactor:
                     GD.Print($"{_actor.Name} collided with player");
-                    if (!interactor.PlayerInteraction(p))
+                    if (!interactor.Interact(p))
                     {
                         _direction = Vector3.Zero;
                         _actor.Position = _initial!.Value;
@@ -127,7 +127,7 @@ public partial class TurnManager : Node
                     break;
                 case IInteractable when _actor is IInteractable thing:
                     GD.Print($"{_actor.Name} hit a thing and is being moved back to {_initial}");
-                    thing.PlayerInteraction(null);
+                    thing.Interact(null);
                     _direction = Vector3.Zero;
                     _actor.Position = _initial!.Value;
                     break;
@@ -139,6 +139,15 @@ public partial class TurnManager : Node
             _processed.Add(collision);
         }
         
+    }
+    
+    static IEnumerable<GodotObject> EnumerateCollisions(KinematicCollision3D collisions)
+    {
+        var count = collisions?.GetCollisionCount() ?? 0;
+        for (var idx = 0; idx < count; idx++)
+        {
+            yield return collisions!.GetCollider(idx);
+        }
     }
 
     public void StartNextTurn()
