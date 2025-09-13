@@ -13,6 +13,7 @@ public partial class TurnManager : Node
     private Timer _timer;
     private readonly List<GodotObject> _processed = new();
     private Vector3? _initial;
+    private Timer _resetTimer;
     private const int Speed = 2;
 
     public delegate void TurnStarted(IActor actor);
@@ -144,8 +145,16 @@ public partial class TurnManager : Node
         var elapsed = Mathf.Max(_timer.WaitTime - _timer.TimeLeft, 0.01f);
         GD.Print($"resetting timer, WaitTime: {_timer.WaitTime}, TImeLeft: {_timer.TimeLeft} == {elapsed}");
         _timer.Stop();
-        _timer.WaitTime = elapsed;
-        _timer.Start();
+        
+        _resetTimer = new Timer()
+        {
+            Autostart = true,
+            WaitTime = elapsed,
+            OneShot = true,
+            Name = $"reset timer",
+        };
+        _resetTimer.Timeout += TurnTimer;
+        AddChild(_resetTimer);
     }
 
     static IEnumerable<GodotObject> EnumerateCollisions(KinematicCollision3D collisions)
@@ -175,6 +184,12 @@ public partial class TurnManager : Node
 
     private void Reset()
     {
+        if (_resetTimer != null)
+        {
+            _resetTimer.Timeout -= TurnTimer;
+            _resetTimer.QueueFree();
+            _resetTimer = null;
+        }
         _timer.Stop();
         _processed.Clear();
         States.Playing.Command = null;
