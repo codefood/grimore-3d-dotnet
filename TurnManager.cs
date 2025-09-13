@@ -12,7 +12,6 @@ public partial class TurnManager : Node
     private World _world;
     private Timer _timer;
     private Vector3 _direction;
-    private PhysicsBody3D _actor;
     private readonly List<GodotObject> _processed = new();
     private Vector3? _initial;
     private const int Speed = 2;
@@ -33,9 +32,9 @@ public partial class TurnManager : Node
         _timer.Timeout += TurnTimer;
         AddChild(_timer);
         
-        GameState.State.Paused.OnEnter += () => _timer.Paused = true;
-        GameState.State.Started.OnEnter += () => _timer.Paused = false;
-        GameState.State.Ended.OnEnter += () => _timer.Paused = true;
+        States.Paused.OnEnter += () => _timer.Paused = true;
+        States.Playing.OnEnter += () => _timer.Paused = false;
+        States.Ended.OnEnter += () => _timer.Paused = true;
         
         DialogueManager.DialogueStarted += _ => GameState.Pause();
         DialogueManager.DialogueEnded += _ => GameState.Start();
@@ -57,7 +56,7 @@ public partial class TurnManager : Node
             GameState.GameOver();
             return;
         }
-        if (toDelete == Current)
+        if (toDelete == States.Playing.Actor)
         {
             StartNextTurn();
         }
@@ -67,8 +66,8 @@ public partial class TurnManager : Node
 
     private void PerformAction(Command action)
     {
-        if (GameState.Current != GameState.State.Started) return;
-        if (Current != action.Actor) return;
+        if (GameState.Current is not GameState.TurnState) return;
+        if (States.Playing.Actor != action.Actor) return;
 		
         switch (action)
         {
@@ -77,8 +76,8 @@ public partial class TurnManager : Node
                 InsertNextActor(spell.Instance);
                 break;
             case Move move:
-                _actor = (PhysicsBody3D)action.Actor;
-                _initial = _actor.Position;
+                States.Playing.Actor = action.Actor;
+                _initial = ((PhysicsBody3D)action.Actor).Position;
                 _direction = new Vector3(move.Direction.X * World.TileSize, 0, move.Direction.Y * World.TileSize);
                 break;
         }
@@ -90,50 +89,51 @@ public partial class TurnManager : Node
     {
         base._PhysicsProcess(delta);
         
-        if (GameState.Current != GameState.State.Started) return;
+        if (GameState.Current is not GameState.TurnState) return;
         
-        if (_actor == null) return;
+        if (States.Playing.Actor == null) return;
 
-        if (_actor is Spell)
+        if (States.Playing.Actor is Spell)
         {
             _direction += new Vector3(0, 0.1f, 0);
         }
+        var actor = States.Playing.Actor as PhysicsBody3D;
         
-        var collisions = _actor.MoveAndCollide(_direction * (float)delta * Speed);
+        var collisions = actor.MoveAndCollide(_direction * (float)delta * Speed);
 
         foreach(var collision in EnumerateCollisions(collisions).Except(_processed))
         {
             switch (collision)
             {
-                case IInteractable interactor when _actor is Player p:
-                    GD.Print($"{((Node)interactor).Name} collided with {_actor.Name}");
+                case IInteractable interactor when actor is Player p:
+                    GD.Print($"{((Node)interactor).Name} collided with {actor.Name}");
                     if (!interactor.Interact(p))
                     {
                         _direction = Vector3.Zero;
-                        _actor.Position = _initial!.Value;
+                        actor.Position = _initial!.Value;
                     }
                     else 
                     {
                         _world.Quest.InteractionSuccess(interactor);    
                     }
                     break;
-                case Player p when _actor is IInteractable interactor:
-                    GD.Print($"{_actor.Name} collided with player");
+                case Player p when actor is IInteractable interactor:
+                    GD.Print($"{actor} collided with player");
                     if (!interactor.Interact(p))
                     {
                         _direction = Vector3.Zero;
-                        _actor.Position = _initial!.Value;
+                        actor.Position = _initial!.Value;
                     }
                     break;
-                case IInteractable when _actor is IInteractable thing:
-                    GD.Print($"{_actor.Name} hit a thing and is being moved back to {_initial}");
+                case IInteractable when actor is IInteractable thing:
+                    GD.Print($"{actor.Name} hit a thing and is being moved back to {_initial}");
                     thing.Interact(null);
                     _direction = Vector3.Zero;
-                    _actor.Position = _initial!.Value;
+                    actor.Position = _initial!.Value;
                     break;
                 default:
                     _direction = Vector3.Zero;
-                    _actor.Position = _initial!.Value;
+                    actor.Position = _initial!.Value;
                     break;
             }
             _processed.Add(collision);
@@ -152,10 +152,10 @@ public partial class TurnManager : Node
 
     public void StartNextTurn()
     {
-        Current = _actors.Dequeue();
-        _actors.Enqueue(Current);
-        OnTurnStart!.Invoke(Current);
-        Current.StartTurn();
+        States.Playing.Actor = _actors.Dequeue();
+        _actors.Enqueue(States.Playing.Actor);
+        OnTurnStart!.Invoke(States.Playing.Actor);
+        States.Playing.Actor.StartTurn();
     }
 
     private void TurnTimer()
@@ -168,12 +168,10 @@ public partial class TurnManager : Node
     {
         _timer.Stop();
         _processed.Clear();
-        _actor = null;
         _direction = Vector3.Zero;
         _initial = null;
     }
-
-    private IActor Current { get; set; }
+    
     public void Setup(World world) => _world = world;
 
     public void Clear()

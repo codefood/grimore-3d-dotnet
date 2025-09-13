@@ -10,7 +10,6 @@ public partial class Player : CharacterBody3D, IActor
 {
 	private PackedScene _spellScene = ResourceLoader.Load<PackedScene>("res://spell.tscn");
 	
-	private bool _allowInput;
 	private Vector2? _currentDirection;
 	private Timer _timer;
 	private string SpellColor { get; set; } = "white";
@@ -33,11 +32,8 @@ public partial class Player : CharacterBody3D, IActor
 		SpellColor = colour;
 	}
 
-	public void StartTurn()
-	{
+	public void StartTurn() => 
 		HealthChanged!.Invoke(Health);
-		_allowInput = true;
-	}
 
 	public override void _Ready()
 	{
@@ -89,13 +85,16 @@ public partial class Player : CharacterBody3D, IActor
 	{
 		base._Input(ev);
 
-		if (GameState.Current == GameState.State.Ended)
+		if (GameState.Current == States.Ended)
 		{
 			GameState.Start();
 			return;
 		}
-		
-		if (!_allowInput) return;
+
+		if (GameState.Current != States.Playing)
+		{
+			return;
+		}
 		
 		var directionsPressed = Actions.Directions
 			.Where(k => ev.IsActionPressed(k.Key))
@@ -109,7 +108,6 @@ public partial class Player : CharacterBody3D, IActor
 		if (action == null) return;
 		
 		IActor.InvokeActing(action);
-		_allowInput = false;
 	}
 
 	private Move Move(List<KeyValuePair<string, Vector2>> directionsPressed)

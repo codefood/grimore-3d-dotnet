@@ -46,11 +46,11 @@ public partial class Ui : Node2D
         {
             ToggleCamera?.Invoke();
         };
-        GameState.State.Ended.OnEnter += () =>
+        States.Ended.OnEnter += () =>
         {
             GetChildren().OfType<Control>().First(c => c.Name == "GameOver").Show();
         };
-        GameState.State.Started.OnEnter += () =>
+        States.Playing.OnEnter += () =>
         {
             GetChildren().OfType<Control>().First(c => c.Name == "GameOver").Hide();
         };

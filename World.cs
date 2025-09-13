@@ -42,7 +42,7 @@ public partial class World : Node3D
 
 		Quest.OnUpdate += () => Interface.UpdateQuest(Quest);
 		
-		GameState.State.Started.OnEnter += () =>
+		States.Playing.OnEnter += () =>
 		{
 			LevelLoader.Load(this);
 			Quest = new Quest(
