@@ -34,7 +34,7 @@ public class LevelLoader
             D             D
             W   WW E      W
             W             W
-            W             W
+            W   W         W
             W      kDd    W
             WW           WW
             W       n     D
