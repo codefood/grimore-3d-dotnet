@@ -11,8 +11,9 @@ public class Move(IActor actor, Vector2 direction) : Command(actor)
     private Vector2 Direction { get; set; } = direction;
     public Vector3 ToWorldDirection() => 
         new(Direction.X * World.TileSize, 0, Direction.Y * World.TileSize);
-    public void Cancel() => Direction = Vector2.Zero;
-    
+
+    public void Cancel() => Direction = -Direction;
+
 }
 public abstract class Command(IActor actor)
 {

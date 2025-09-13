@@ -106,7 +106,8 @@ public partial class TurnManager : Node
                     if (!interactor.Interact(p))
                     {
                         States.Playing.Command!.Cancel();
-                        actor.Position = _initial!.Value;
+                        _timer.Stop();
+                        _timer.Start();
                     }
                     else 
                     {
@@ -118,18 +119,21 @@ public partial class TurnManager : Node
                     if (!interactor.Interact(p))
                     {
                         States.Playing.Command!.Cancel();
-                        actor.Position = _initial!.Value;
+                        _timer.Stop();
+                        _timer.Start();
                     }
                     break;
                 case IInteractable when actor is IInteractable thing:
                     GD.Print($"{actor.Name} hit a thing and is being moved back to {_initial}");
                     thing.Interact(null);
                     States.Playing.Command!.Cancel();
-                    actor.Position = _initial!.Value;
+                    _timer.Stop();
+                    _timer.Start();
                     break;
                 default:
                     States.Playing.Command!.Cancel();
-                    actor.Position = _initial!.Value;
+                    _timer.Stop();
+                    _timer.Start();
                     break;
             }
             _processed.Add(collision);
@@ -149,6 +153,7 @@ public partial class TurnManager : Node
     public void StartNextTurn()
     {
         States.Playing.Actor = _actors.Dequeue();
+        States.Playing.Command = null;        
         _actors.Enqueue(States.Playing.Actor);
         OnTurnStart!.Invoke(States.Playing.Actor);
         States.Playing.Actor.StartTurn();
@@ -164,7 +169,7 @@ public partial class TurnManager : Node
     {
         _timer.Stop();
         _processed.Clear();
-        States.Playing.Command?.Cancel();
+        States.Playing.Command = null;
         _initial = null;
     }
     
