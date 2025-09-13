@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://ciulncpj4aa2k"]
+[gd_scene load_steps=5 format=3 uid="uid://ciulncpj4aa2k"]
 
-[ext_resource type="Script" uid="uid://cn4vdc7bg3iqo" path="res://Tile.cs" id="1_acylh"]
+[ext_resource type="Script" uid="uid://cn4vdc7bg3iqo" path="res://Entities/Tile.cs" id="1_acylh"]
 [ext_resource type="PackedScene" uid="uid://ywxekoflmpov" path="res://assets/floortile.glb" id="2_h200c"]
+[ext_resource type="PackedScene" uid="uid://dr5cwkp25o4an" path="res://floortile.tscn" id="3_a2t34"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cpanm"]
 size = Vector3(2, 0.12, 2)
@@ -10,7 +11,10 @@ size = Vector3(2, 0.12, 2)
 script = ExtResource("1_acylh")
 
 [node name="floortile" parent="." instance=ExtResource("2_h200c")]
+visible = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.06, 0)
 shape = SubResource("BoxShape3D_cpanm")
+
+[node name="floortile2" parent="." instance=ExtResource("3_a2t34")]

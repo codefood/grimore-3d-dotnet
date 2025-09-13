@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://dr5cwkp25o4an"]
+
+[ext_resource type="PackedScene" uid="uid://ywxekoflmpov" path="res://assets/floortile.glb" id="1_1kirf"]
+[ext_resource type="Material" uid="uid://jr82pykkxfw0" path="res://assets/materials/floortile.001.tres" id="2_1kirf"]
+
+[node name="floortile" instance=ExtResource("1_1kirf")]
+
+[node name="Cube" parent="." index="0"]
+surface_material_override/0 = ExtResource("2_1kirf")
