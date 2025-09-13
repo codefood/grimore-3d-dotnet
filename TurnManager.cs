@@ -80,7 +80,9 @@ public partial class TurnManager : Node
                 States.Playing.Command = move;
                 break;
         }
-        
+
+        _timer.WaitTime = 1f / Speed;
+        GD.Print($"starting timer, WaitTime: {_timer.WaitTime}");
         _timer.Start();
     }
 
@@ -139,8 +141,10 @@ public partial class TurnManager : Node
 
     private void GoBackwards()
     {
+        var elapsed = Mathf.Max(_timer.WaitTime - _timer.TimeLeft, 0.01f);
+        GD.Print($"resetting timer, WaitTime: {_timer.WaitTime}, TImeLeft: {_timer.TimeLeft} == {elapsed}");
         _timer.Stop();
-        _timer.WaitTime -= _timer.TimeLeft;
+        _timer.WaitTime = elapsed;
         _timer.Start();
     }
 
@@ -167,6 +171,7 @@ public partial class TurnManager : Node
         Reset();
         StartNextTurn();
     }
+
 
     private void Reset()
     {
