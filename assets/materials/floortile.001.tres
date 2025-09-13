@@ -4,13 +4,16 @@
 [ext_resource type="Shader" uid="uid://sv0nx4aqd4es" path="res://tileedger.gdshader" id="2_d7jlb"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vrmsj"]
+resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("2_d7jlb")
-shader_parameter/outline_color = Color(0, 0, 0, 1)
-shader_parameter/outline_width = 10.0
-shader_parameter/constant_width = false
+shader_parameter/gridlineOnEvery = 2.0
+shader_parameter/lineThickness = 0.05
+shader_parameter/originOffset = Vector2(1, 1)
+shader_parameter/color = Color(0, 0, 0, 1)
 
 [resource]
+resource_local_to_scene = true
 resource_name = "Material.001"
 next_pass = SubResource("ShaderMaterial_vrmsj")
 cull_mode = 2
