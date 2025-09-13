@@ -37,7 +37,6 @@ public static class GameState
         Current = States.Paused.Enter();
     }
 
-    //TODO? do we need to previous?.Enter() that would re-start turn after pause
     public static void Start() => Current = previous ?? States.Playing.Enter();
     public static void GameOver() => Current = States.Ended.Enter();
 }
