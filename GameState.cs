@@ -11,6 +11,8 @@ public static class States
 }
 public static class GameState
 {
+    private static State previous;
+
     public class TurnState : State
     {
         public IActor Actor { get; set; }
@@ -29,7 +31,13 @@ public static class GameState
 		
     public static State Current = States.Playing;
 
-    public static void Pause() => Current = States.Paused.Enter();
-    public static void Start() => Current = States.Playing.Enter();
+    public static void Pause()
+    {
+        previous = Current;
+        Current = States.Paused.Enter();
+    }
+
+    //TODO? do we need to previous?.Enter() that would re-start turn after pause
+    public static void Start() => Current = previous ?? States.Playing.Enter();
     public static void GameOver() => Current = States.Ended.Enter();
 }

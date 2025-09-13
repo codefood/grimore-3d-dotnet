@@ -106,8 +106,7 @@ public partial class TurnManager : Node
                     if (!interactor.Interact(p))
                     {
                         States.Playing.Command!.Cancel();
-                        _timer.Stop();
-                        _timer.Start();
+                        GoBackwards();
                     }
                     else 
                     {
@@ -119,28 +118,32 @@ public partial class TurnManager : Node
                     if (!interactor.Interact(p))
                     {
                         States.Playing.Command!.Cancel();
-                        _timer.Stop();
-                        _timer.Start();
+                        GoBackwards();
                     }
                     break;
                 case IInteractable when actor is IInteractable thing:
                     GD.Print($"{actor.Name} hit a thing and is being moved back to {_initial}");
                     thing.Interact(null);
                     States.Playing.Command!.Cancel();
-                    _timer.Stop();
-                    _timer.Start();
+                    GoBackwards();
                     break;
                 default:
                     States.Playing.Command!.Cancel();
-                    _timer.Stop();
-                    _timer.Start();
+                    GoBackwards();
                     break;
             }
             _processed.Add(collision);
         }
         
     }
-    
+
+    private void GoBackwards()
+    {
+        _timer.Stop();
+        _timer.WaitTime -= _timer.TimeLeft;
+        _timer.Start();
+    }
+
     static IEnumerable<GodotObject> EnumerateCollisions(KinematicCollision3D collisions)
     {
         var count = collisions?.GetCollisionCount() ?? 0;

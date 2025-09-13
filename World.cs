@@ -15,8 +15,8 @@ public partial class World : Node3D
 	private Timer _timer;
 	private Ui Interface => 
 		FindChild("UI") as Ui;
-	public Entities.Player Player => 
-		GetChildren().OfType<Entities.Player>().First();
+	public Player Player => 
+		GetChildren().OfType<Player>().First();
 	private Camera Camera => 
 		FindChildren("Camera").OfType<Camera>().First();
 	public Quest Quest { get; set; }
@@ -38,7 +38,6 @@ public partial class World : Node3D
 				? Camera.Mode.thirdPerson
 				: Camera.Mode.isometric);
 		};
-		
 
 		Quest.OnUpdate += () => Interface.UpdateQuest(Quest);
 		
@@ -50,8 +49,8 @@ public partial class World : Node3D
 				new InteractionSuccess("Open", "Door 3")
 			);	
 			Interface.UpdateQuest(Quest);
-			
-			Player.Position = Vector3.Zero;
+
+			Player.Position = new Vector3(TileSize, 0, 0);
 			Player.Keys = 0;
 			Player.Health = 3;
 			
