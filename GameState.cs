@@ -14,6 +14,7 @@ public static class GameState
     public class TurnState : State
     {
         public IActor Actor { get; set; }
+        public Move Command { get; set; }
     }
     public class State
     {

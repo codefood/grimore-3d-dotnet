@@ -8,7 +8,11 @@ public class CastSpell(IActor actor, Spell instance) : Command(actor)
 }
 public class Move(IActor actor, Vector2 direction) : Command(actor)
 {
-    public Vector2 Direction { get; } = direction;
+    private Vector2 Direction { get; set; } = direction;
+    public Vector3 ToWorldDirection() => 
+        new(Direction.X * World.TileSize, 0, Direction.Y * World.TileSize);
+    public void Cancel() => Direction = Vector2.Zero;
+    
 }
 public abstract class Command(IActor actor)
 {
