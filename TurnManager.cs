@@ -80,6 +80,9 @@ public partial class TurnManager : Node
                 _initial = ((PhysicsBody3D)action.Actor).Position;
                 States.Playing.Command = move;
                 break;
+            case TargetSpell spell:
+                States.Playing.Command = spell;
+                return;
         }
 
         _timer.WaitTime = 1f / Speed;
@@ -92,52 +95,55 @@ public partial class TurnManager : Node
         base._PhysicsProcess(delta);
         
         if (GameState.Current is not GameState.TurnState) return;
-        
-        var actor = States.Playing.Actor as PhysicsBody3D;
-        if (actor == null) return;
+        if (States.Playing.Actor is not PhysicsBody3D actor) return;
+        if (States.Playing.Command is not Move move) return;
 
-        var direction = States.Playing.Command?.ToWorldDirection() ?? Vector3.Zero;
+        var direction = move.ToWorldDirection();
         
         var collisions = actor!.MoveAndCollide(direction * ((float)delta * Speed));
 
-        foreach(var collision in EnumerateCollisions(collisions).Except(_processed))
-        {
-            switch (collision)
+        EnumerateCollisions(collisions)
+            .Except(_processed)
+            .ForEach(collision =>
             {
-                case IInteractable interactor when actor is Player p:
-                    GD.Print($"{((Node)interactor).Name} collided with {actor.Name}");
-                    if (!interactor.Interact(p))
-                    {
+                switch (collision)
+                {
+                    case IInteractable interactor when actor is Player p:
+                        GD.Print($"{((Node)interactor).Name} collided with {actor.Name}");
+                        if (!interactor.Interact(p))
+                        {
+                            States.Playing.Command!.Cancel();
+                            GoBackwards();
+                        }
+                        else
+                        {
+                            _world.Quest.InteractionSuccess(interactor);
+                        }
+
+                        break;
+                    case Player p when actor is IInteractable interactor:
+                        GD.Print($"{actor} collided with player");
+                        if (!interactor.Interact(p))
+                        {
+                            States.Playing.Command!.Cancel();
+                            GoBackwards();
+                        }
+
+                        break;
+                    case IInteractable when actor is IInteractable thing:
+                        GD.Print($"{actor.Name} hit a thing and is being moved back to {_initial}");
+                        thing.Interact(null);
                         States.Playing.Command!.Cancel();
                         GoBackwards();
-                    }
-                    else 
-                    {
-                        _world.Quest.InteractionSuccess(interactor);    
-                    }
-                    break;
-                case Player p when actor is IInteractable interactor:
-                    GD.Print($"{actor} collided with player");
-                    if (!interactor.Interact(p))
-                    {
+                        break;
+                    default:
                         States.Playing.Command!.Cancel();
                         GoBackwards();
-                    }
-                    break;
-                case IInteractable when actor is IInteractable thing:
-                    GD.Print($"{actor.Name} hit a thing and is being moved back to {_initial}");
-                    thing.Interact(null);
-                    States.Playing.Command!.Cancel();
-                    GoBackwards();
-                    break;
-                default:
-                    States.Playing.Command!.Cancel();
-                    GoBackwards();
-                    break;
-            }
-            _processed.Add(collision);
-        }
-        
+                        break;
+                }
+
+                _processed.Add(collision);
+            });
     }
 
     private void GoBackwards()

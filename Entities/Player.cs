@@ -103,7 +103,8 @@ public partial class Player : CharacterBody3D, IActor
 		Command action = null;
 		
 		if (directionsPressed.Count != 0) action = Move(directionsPressed);
-		if (ev.IsActionPressed(Actions.Act)) action = CastSpell();
+		// if (ev.IsActionPressed(Actions.Act)) action = CastSpell();
+		if (ev.IsActionPressed(Actions.Act)) action = new TargetSpell(this);
 
 		if (action == null) return;
 		
@@ -134,7 +135,7 @@ public partial class Player : CharacterBody3D, IActor
 		instance.Setup(spellColour, 1, _currentDirection!.Value);
 		return new CastSpell(this, instance);
 	}
-
+	
 	float Angle(Vector2 direction)
 	{
 		//horrible. there's definitely a good way of doing this.
