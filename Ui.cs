@@ -18,8 +18,7 @@ public partial class Ui : Node2D
                     .Text = $"Current Turn:\n" + 
                             string.Join('\n', 
                             quest.Requirements
-                                .OfType<InteractionSuccess>()
-                                .Select((x => $"[{(x.Met ? "X" : " ")}] - {x.Verb} {x.InteractionName}")));
+                                .Select((x => x.Display)));
     
     public void UpdateHealth(int health)
     {

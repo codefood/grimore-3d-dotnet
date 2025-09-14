@@ -77,6 +77,7 @@ public partial class TurnManager : Node
                 break;
             case Move move:
                 States.Playing.Actor = action.Actor;
+                if (action.Actor is Player) _world.Quest.Moved(move);
                 _initial = ((PhysicsBody3D)action.Actor).Position;
                 States.Playing.Command = move;
                 break;
