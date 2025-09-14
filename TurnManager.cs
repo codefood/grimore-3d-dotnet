@@ -105,46 +105,48 @@ public partial class TurnManager : Node
 
         EnumerateCollisions(collisions)
             .Except(_processed)
-            .ForEach(collision =>
-            {
-                switch (collision)
+            .ForEach(collision => { Interact(collision, actor); });
+    }
+
+    private void Interact(GodotObject collision, PhysicsBody3D actor)
+    {
+        switch (collision)
+        {
+            case IInteractable interactor when actor is Player p:
+                GD.Print($"{((Node)interactor).Name} collided with {actor.Name}");
+                if (!interactor.Interact(p))
                 {
-                    case IInteractable interactor when actor is Player p:
-                        GD.Print($"{((Node)interactor).Name} collided with {actor.Name}");
-                        if (!interactor.Interact(p))
-                        {
-                            States.Playing.Command!.Cancel();
-                            GoBackwards();
-                        }
-                        else
-                        {
-                            _world.Quest.InteractionSuccess(interactor);
-                        }
-
-                        break;
-                    case Player p when actor is IInteractable interactor:
-                        GD.Print($"{actor} collided with player");
-                        if (!interactor.Interact(p))
-                        {
-                            States.Playing.Command!.Cancel();
-                            GoBackwards();
-                        }
-
-                        break;
-                    case IInteractable when actor is IInteractable thing:
-                        GD.Print($"{actor.Name} hit a thing and is being moved back to {_initial}");
-                        thing.Interact(null);
-                        States.Playing.Command!.Cancel();
-                        GoBackwards();
-                        break;
-                    default:
-                        States.Playing.Command!.Cancel();
-                        GoBackwards();
-                        break;
+                    States.Playing.Command!.Cancel();
+                    GoBackwards();
+                }
+                else
+                {
+                    _world.Quest.InteractionSuccess(interactor);
                 }
 
-                _processed.Add(collision);
-            });
+                break;
+            case Player p when actor is IInteractable interactor:
+                GD.Print($"{actor} collided with player");
+                if (!interactor.Interact(p))
+                {
+                    States.Playing.Command!.Cancel();
+                    GoBackwards();
+                }
+
+                break;
+            case IInteractable when actor is IInteractable thing:
+                GD.Print($"{actor.Name} hit a thing and is being moved back to {_initial}");
+                thing.Interact(null);
+                States.Playing.Command!.Cancel();
+                GoBackwards();
+                break;
+            default:
+                States.Playing.Command!.Cancel();
+                GoBackwards();
+                break;
+        }
+
+        _processed.Add(collision);
     }
 
     private void GoBackwards()

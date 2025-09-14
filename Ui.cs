@@ -6,20 +6,15 @@ using Grimore.Entities;
 public partial class Ui : Node2D
 {
     public void UpdateCurrentTurn(IActor actor) =>
-        GetChildren()
-                .OfType<Label>()
-                .Single(x => x.Name == "CurrentTurn")
-                .Text = $"Current Turn: {actor.Name}";
+        GetNode<Label>("CurrentTurn")
+            .Text = $"Current Turn: {actor.Name}";
 
     public void UpdateQuest(Quest quest) =>
-            GetChildren()
-                    .OfType<Label>()
-                    .Single(x => x.Name == "CurrentQuest")
-                    .Text = $"Current Turn:\n" + 
-                            string.Join('\n', 
-                            quest.Requirements
-                                .Select((x => x.Display)));
-    
+        GetNode<Label>("CurrentQuest")
+            .Text = "Current Quest:\n" + 
+                    string.Join('\n', 
+                    quest.Requirements.Select((x => x.DisplayText)));
+
     public void UpdateHealth(int health)
     {
         health = int.Max(health, 0);
