@@ -29,7 +29,7 @@ public partial class World : Node3D
 			return;
 		}
 		Turner.Setup(this);
-		Turner.OnTurnStart += Interface.UpdateCurrentTurn;
+		TurnManager.OnTurnStart += Interface.UpdateCurrentTurn;
 		Player.HealthChanged += Interface.UpdateHealth;
 		
 		Interface.ToggleCamera += () =>

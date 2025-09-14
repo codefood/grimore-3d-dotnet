@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DialogueManagerRuntime;
@@ -15,9 +16,8 @@ public partial class TurnManager : Node
     private Vector3? _initial;
     private Timer _resetTimer;
     private const int Speed = 2;
-
-    public delegate void TurnStarted(IActor actor);
-    public event TurnStarted OnTurnStart;
+    
+    public static event Action<IActor> OnTurnStart;
     
     public override void _Ready()
     {
