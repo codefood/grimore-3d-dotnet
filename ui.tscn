@@ -5,6 +5,7 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fyqef"]
 
 [sub_resource type="SystemFont" id="SystemFont_m6e0p"]
+subpixel_positioning = 0
 
 [node name="UI" type="Node2D"]
 script = ExtResource("1_fyqef")
@@ -83,3 +84,9 @@ text = "GAME OVER
 
 Press any key to explore the Dungeon of Despair once more..."
 horizontal_alignment = 1
+
+[node name="FPS" type="Label" parent="."]
+offset_left = 1082.0
+offset_top = 30.0
+offset_right = 1122.0
+offset_bottom = 53.0

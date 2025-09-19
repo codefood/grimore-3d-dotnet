@@ -5,6 +5,8 @@ using Grimore.Entities;
 
 public partial class Ui : Node2D
 {
+    private Label fpsControl;
+
     public void UpdateCurrentTurn(IActor actor) =>
         GetNode<Label>("CurrentTurn")
             .Text = $"Current Turn: {actor.Name}";
@@ -35,22 +37,21 @@ public partial class Ui : Node2D
     
     public override void _Ready()
     {
-        var changeCameraButton = GetChildren().OfType<Button>().First(c => c.Name == "ChangeCamera");
-        changeCameraButton.Pressed += () =>
-        {
-            ToggleCamera?.Invoke();
-        };
-        States.Ended.OnEnter += () =>
-        {
-            GetChildren().OfType<Control>().First(c => c.Name == "GameOver").Show();
-        };
-        States.Playing.OnEnter += () =>
-        {
-            GetChildren().OfType<Control>().First(c => c.Name == "GameOver").Hide();
-        };
+        var changeCameraButton = GetNode<Button>("ChangeCamera");
+        changeCameraButton.Pressed += () => ToggleCamera?.Invoke();
         
+        States.Ended.OnEnter += () => GetNode<Control>("GameOver").Show();
+        States.Playing.OnEnter += () => GetNode<Control>("GameOver").Hide();
+
+        fpsControl = GetNode<Label>("FPS");
     }
-    
+
+    public override void _Process(double delta)
+    {
+        base._Process(delta);
+        fpsControl.Text = Mathf.RoundToInt(Engine.GetFramesPerSecond()).ToString();
+    }
+
     private static void CloseSpellEditor(BoxContainer spellEditor, Button openSpellEditorButton)
     {
         spellEditor.Visible = !spellEditor.Visible;

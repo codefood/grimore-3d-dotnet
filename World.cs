@@ -8,17 +8,19 @@ public partial class World : Node3D
 {
 	public const int TileSize = 2;
 	public const float HalfTileSize = 1f;
-	public TurnManager Turner => 
-		FindChildren("TurnInstance").First() as TurnManager;
+
+	public TurnManager Turner =>
+		GetNode<TurnManager>("TurnInstance");
 	
 	private Timer _timer;
-	private Ui Interface => 
-		FindChild("UI") as Ui;
+
+	private Ui Interface =>
+		GetNode<Ui>("UI");
 	public Player Player => 
 		GetChildren().OfType<Player>().First();
 	private Camera Camera => 
 		FindChildren("Camera").OfType<Camera>().First();
-	public Quest Quest { get; set; }
+	public Quest Quest { get; private set; }
 
 	public override void _Ready()
 	{
