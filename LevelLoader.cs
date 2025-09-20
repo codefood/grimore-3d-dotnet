@@ -2,21 +2,22 @@
 using System.Linq;
 using Godot;
 using Grimore.Entities;
+using static Godot.ResourceLoader;
 
 namespace Grimore;
 
-public class LevelLoader
+public static class LevelLoader
 {
-    private static readonly PackedScene TileScene = ResourceLoader.Load<PackedScene>("res://tile.tscn");
-    
-    static readonly Dictionary<PackedScene, char[]> Things = new()
+    private static readonly PackedScene TileScene = Load<PackedScene>("res://tile.tscn");
+
+    private static readonly Dictionary<PackedScene, char[]> Things = new()
     {
         { TileScene, [' '] },
-        { ResourceLoader.Load<PackedScene>("res://enemy.tscn"), ['E', 'e'] },
-        { ResourceLoader.Load<PackedScene>("res://wall.tscn"), ['W', 'w'] },
-        { ResourceLoader.Load<PackedScene>("res://door.tscn"), ['D', 'd'] },
-        { ResourceLoader.Load<PackedScene>("res://npc.tscn"), ['N', 'n'] },
-        { ResourceLoader.Load<PackedScene>("res://key.tscn"), ['K', 'k'] }
+        { Load<PackedScene>("res://enemy.tscn"), ['E', 'e'] },
+        { Load<PackedScene>("res://wall.tscn"), ['W', 'w'] },
+        { Load<PackedScene>("res://door.tscn"), ['D', 'd'] },
+        { Load<PackedScene>("res://npc.tscn"), ['N', 'n'] },
+        { Load<PackedScene>("res://key.tscn"), ['K', 'k'] }
     };
 
     public static void Load(World world)
