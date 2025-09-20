@@ -55,7 +55,12 @@ public partial class World : Node3D
 			);	
 			Interface.UpdateQuest(Quest);
 
-			Player.Position = new Vector3(TileSize, 0, 0);
+			Player.Position = 
+				GetChildren().OfType<Tile>()
+				.OrderBy(_ => GD.Randi())
+				.First()
+				.Position + new Vector3(0, 0, 0.1f);
+			
 			Player.Keys = 0;
 			Player.Health = 3;
 			

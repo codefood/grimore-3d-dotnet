@@ -1,22 +1,22 @@
-[gd_scene load_steps=6 format=3 uid="uid://c60j0kpxqp86d"]
+[gd_scene load_steps=5 format=3 uid="uid://c60j0kpxqp86d"]
 
 [ext_resource type="Script" uid="uid://84xmge0054wm" path="res://Entities/Door.cs" id="1_ba8gm"]
-[ext_resource type="Shader" uid="uid://bx47ynkql62el" path="res://door.gdshader" id="2_v6xrn"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_v6xrn"]
-shader = ExtResource("2_v6xrn")
-shader_parameter/open = false
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ba8gm"]
+albedo_color = Color(0.642778, 0.342006, 0.198351, 1)
 
-[sub_resource type="SphereMesh" id="SphereMesh_ba8gm"]
-material = SubResource("ShaderMaterial_v6xrn")
+[sub_resource type="BoxMesh" id="BoxMesh_v6xrn"]
+material = SubResource("StandardMaterial3D_ba8gm")
+size = Vector3(0.9, 1.9, 0.2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_v6xrn"]
+size = Vector3(0.9, 1.9, 0.2)
 
 [node name="Door" type="AnimatableBody3D"]
 script = ExtResource("1_ba8gm")
 
 [node name="DoorMesh" type="MeshInstance3D" parent="."]
-mesh = SubResource("SphereMesh_ba8gm")
+mesh = SubResource("BoxMesh_v6xrn")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_v6xrn")

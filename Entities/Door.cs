@@ -9,6 +9,12 @@ public partial class Door : Node3D, IInteractable
     private CollisionShape3D _collision;
     private bool IsOpen { get; set; }
 
+    public void RotateMe()
+    {
+        _doorMesh.RotateY(Mathf.Pi / 2);
+        _collision.RotateY(Mathf.Pi / 2);
+    }
+
     public override void _Ready()
     {
         _doorMesh = GetChild<MeshInstance3D>(0);
@@ -18,7 +24,7 @@ public partial class Door : Node3D, IInteractable
 
     private void SetMeshVisibility()
     {
-        _doorMesh.Visible = !IsOpen;
+        if (IsOpen) RotateMe();
         _collision.Disabled = IsOpen;
     }
 

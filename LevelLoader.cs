@@ -26,23 +26,19 @@ public class LevelLoader
         world.Turner.Enrol(world.GetChildren()
             .OfType<Player>()
             .First());
-        
-        var levelLines = """
-            WWDWWWWWWWWWWWW
-            W       E     W
-            W       WW    W
-            D             D
-            W   WW E      W
-            W             W
-            W   W         W
-            W      kDd    W
-            WW           WW
-            W       n     D
-            """
-            .Split('\n')
-            .Select(l => l.Trim())
-            .ToArray();
 
+        var levelLines = """
+            WWDWWDWWDWWW
+            W    E     W
+            W         kD
+            d          W
+            W   k      d
+            D         kW
+            W    n     D
+            D        e W
+            """
+            .Split('\n');
+  
         var width = levelLines.Max(l => l.Length);
         var height = levelLines.Length;
         var offsetRows = 0 - width / 2;
@@ -71,6 +67,11 @@ public class LevelLoader
             world.AddChild(instance);
 
             if (instance is Wall or Tile) continue;
+
+            if (instance is Door d)
+            {
+                if(col == 0 || col == width -1) d.RotateMe();
+            }
             
             instance.Position += new Vector3(0, World.HalfTileSize, 0);
             
