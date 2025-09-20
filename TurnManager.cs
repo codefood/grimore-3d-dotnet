@@ -10,14 +10,14 @@ namespace Grimore;
 public partial class TurnManager : Node
 {
     private Queue<IActor> _actors = new();
-    private World _world;
     private Timer _timer;
     private readonly List<GodotObject> _processed = new();
     private Vector3? _initial;
     private Timer _resetTimer;
     private const int Speed = 2;
-    
+    public static event Action<Move> OnPlayerMove;
     public static event Action<IActor> OnTurnStart;
+    public static event Action<IInteractable> OnInteractionSuccess;
     
     public override void _Ready()
     {
@@ -72,12 +72,12 @@ public partial class TurnManager : Node
         switch (action)
         {
             case CastSpell spell:
-                _world.AddChild(spell.Instance);
+                AddChild(spell.Instance);
                 InsertNextActor(spell.Instance);
                 break;
             case Move move:
                 States.Playing.Actor = action.Actor;
-                if (action.Actor is Player) _world.Quest.Moved(move);
+                if (action.Actor is Player) OnPlayerMove!.Invoke(move);
                 _initial = ((PhysicsBody3D)action.Actor).Position;
                 States.Playing.Command = move;
                 break;
@@ -121,7 +121,7 @@ public partial class TurnManager : Node
                 }
                 else
                 {
-                    _world.Quest.InteractionSuccess(interactor);
+                    OnInteractionSuccess!.Invoke(interactor);
                 }
 
                 break;
@@ -204,8 +204,6 @@ public partial class TurnManager : Node
         States.Playing.Command = null;
         _initial = null;
     }
-    
-    public void Setup(World world) => _world = world;
 
     public void Clear()
     {

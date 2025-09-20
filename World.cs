@@ -29,8 +29,7 @@ public partial class World : Node3D
 			GD.Print("No turnmanager in scene");
 			return;
 		}
-		Turner.Setup(this);
-		TurnManager.OnTurnStart += Interface.UpdateCurrentTurn;
+
 		Player.HealthChanged += Interface.UpdateHealth;
 		
 		Interface.ToggleCamera += () =>
@@ -53,6 +52,11 @@ public partial class World : Node3D
 				new Quest.InteractionRequired("Collect", "Key 1"),
 				new Quest.InteractionRequired("Open", "Door 3")
 			);	
+			
+			TurnManager.OnPlayerMove += Quest.Moved;
+			TurnManager.OnInteractionSuccess += Quest.InteractionSuccess;
+			TurnManager.OnTurnStart += Interface.UpdateCurrentTurn;
+			
 			Interface.UpdateQuest(Quest);
 
 			Player.Position = 
