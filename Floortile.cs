@@ -14,7 +14,6 @@ public partial class Floortile : StaticBody3D
             TurnManager.OnTurnStart -= TurnManagerOnOnTurnStart;
             MouseEntered -= MouseEnter;
             MouseExited -= MouseExit;
-
         }
         base.Dispose(disposing);
     }

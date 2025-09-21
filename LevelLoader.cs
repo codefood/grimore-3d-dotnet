@@ -29,7 +29,7 @@ public static class LevelLoader
             """
             WWWWW1WWWWW
             W   k        
-            W            
+            W       e    
             W            
             """
         },
@@ -37,11 +37,11 @@ public static class LevelLoader
             1,
             """
             WW2WW
-            W   W
+            W k W
             w   W
             W   W
-            W   W
-            WW1WW
+            W k W
+            WW0WW
             """
         }
     };
@@ -96,9 +96,11 @@ public static class LevelLoader
             
             world.AddChild(instance);
 
-            if (instance is Wall wall && (col == width - 1 || row == height - 1)) wall.SemiTransparent = true; 
+            if (instance is Wall wall && (col > 0 && row > 0)) wall.SemiTransparent = true; 
 
             if (instance is Wall or Tile) continue;
+            
+            if (instance is IActor actor) world.Turner.Enrol(actor);
 
             instance.Position += new Vector3(0, World.HalfTileSize, 0);
             
@@ -111,12 +113,10 @@ public static class LevelLoader
                 if (doorIndex == level) startPosition = instance.Position;
             }
             
-            
             var tileForEntity = (Node3D)TileScene.Instantiate();
             tileForEntity.Position = new Vector3((col + offsetCols) * World.TileSize, 0, (row + offsetRows) * World.TileSize);
             world.AddChild(tileForEntity);
                 
-            if (instance is IActor actor) world.Turner.Enrol(actor);
         }
 
         world.Player.Position =

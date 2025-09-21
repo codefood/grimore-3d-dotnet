@@ -43,7 +43,7 @@ public partial class World : Node3D
 		
 		States.Playing.OnEnter += () =>
 		{
-			LevelLoader.Load(this, 0);
+			LevelLoader.Load(this, 1);
 			Quest = new Quest(
 				new Quest.MoveSuccess(Vector2.Up, "North"),
 				new Quest.MoveSuccess(Vector2.Down, "South"),
@@ -58,8 +58,6 @@ public partial class World : Node3D
 			TurnManager.OnTurnStart += Interface.UpdateCurrentTurn;
 			
 			Interface.UpdateQuest(Quest);
-
-			
 			
 			Player.Keys = 0;
 			Player.Health = 3;
