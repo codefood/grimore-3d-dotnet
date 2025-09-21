@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Godot;
 
@@ -7,7 +8,9 @@ public partial class Door : Node3D, IInteractable
 {
     private MeshInstance3D _doorMesh;
     private CollisionShape3D _collision;
+    public event Action<int> LoadLevel;
     private bool IsOpen { get; set; }
+    public int DoorIndex { get; set; }
 
     public void RotateMe()
     {
@@ -30,13 +33,20 @@ public partial class Door : Node3D, IInteractable
 
     public bool Interact(Player player)
     {
-        if (IsOpen) return true;
-        if (player.Keys <= 0) return false;
-        
-        player.Keys--;
-        GD.Print($"{Name} is opening, {player.Keys} keys left");
-        IsOpen = true;
-        SetMeshVisibility();
+        if (!IsOpen)
+        {
+            if (player.Keys <= 0) return false;
+
+            player.Keys--;
+            GD.Print($"{Name} is opening, {player.Keys} keys left");
+            IsOpen = true;
+            SetMeshVisibility();
+        }
+        if (IsOpen)
+        {
+            LoadLevel!.Invoke(DoorIndex);
+        }
+
         return true;
 
     }

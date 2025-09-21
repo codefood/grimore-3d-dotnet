@@ -43,7 +43,7 @@ public partial class World : Node3D
 		
 		States.Playing.OnEnter += () =>
 		{
-			LevelLoader.Load(this);
+			LevelLoader.Load(this, 0);
 			Quest = new Quest(
 				new Quest.MoveSuccess(Vector2.Up, "North"),
 				new Quest.MoveSuccess(Vector2.Down, "South"),
@@ -51,7 +51,7 @@ public partial class World : Node3D
 				new Quest.MoveSuccess(Vector2.Right, "West"),
 				new Quest.InteractionRequired("Collect", "Key 1"),
 				new Quest.InteractionRequired("Open", "Door 3")
-			);	
+			);
 			
 			TurnManager.OnPlayerMove += Quest.Moved;
 			TurnManager.OnInteractionSuccess += Quest.InteractionSuccess;
@@ -59,11 +59,7 @@ public partial class World : Node3D
 			
 			Interface.UpdateQuest(Quest);
 
-			Player.Position = 
-				GetChildren().OfType<Tile>()
-				.OrderBy(_ => GD.Randi())
-				.First()
-				.Position + new Vector3(0, 0, 0.1f);
+			
 			
 			Player.Keys = 0;
 			Player.Health = 3;

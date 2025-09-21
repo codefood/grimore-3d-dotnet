@@ -20,9 +20,7 @@ public partial class Player : CharacterBody3D, IActor
 		Shader = ResourceLoader.Load<Shader>("res://damage.gdshader"),
 	};
 
-	private Node3D PlayerEntity => GetChildren()
-		.OfType<Node3D>()
-		.First(f => f.Name == "player");
+	private Node3D PlayerEntity => GetNode<Node3D>("player");
 
 	public int Keys { get; set; }
 
@@ -45,7 +43,7 @@ public partial class Player : CharacterBody3D, IActor
 	{
 		foreach (var mesh in PlayerEntity.GetChildren().OfType<MeshInstance3D>())
 		{
-			mesh.MaterialOverride = material;
+			//mesh.MaterialOverride = material;
 		}
 	}
 
