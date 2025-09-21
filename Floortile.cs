@@ -5,44 +5,63 @@ namespace Grimore;
 
 public partial class Floortile : StaticBody3D
 {
+    private ShaderMaterial _shader;
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            TurnManager.OnTurnStart -= TurnManagerOnOnTurnStart;
+            MouseEntered -= MouseEnter;
+            MouseExited -= MouseExit;
+
+        }
+        base.Dispose(disposing);
+    }
+
+    private void TurnManagerOnOnTurnStart(IActor actor)
+    {
+        if (actor is Player player)
+        {
+            DefaultColour = 
+                AbsDistanceTo(player) <= 4f
+                    ? _green
+                    : _red;
+        }
+        else
+        {
+            DefaultColour = _gray;
+        }
+        _shader?.SetShaderParameter("color", DefaultColour);
+    }
+
     public override void _Ready()
     {
         var mesh = GetNode<MeshInstance3D>("Cube");
-        var shader = mesh.GetActiveMaterial(0)?.NextPass as ShaderMaterial;
-
-        TurnManager.OnTurnStart += actor =>
-        {
-            if (actor is Player player)
-            {
-                DefaultColour = 
-                    AbsDistanceTo(player) <= 4f
-                        ? _green
-                        : _red;
-            }
-            else
-            {
-                DefaultColour = _gray;
-            }
-            shader?.SetShaderParameter("color", DefaultColour);
-        };
+        _shader = mesh.GetActiveMaterial(0)?.NextPass as ShaderMaterial;
         
-        MouseEntered += () =>
-        {
-            if (GameState.Current != States.Playing || States.Playing.Command is not TargetSpell target) return;
-            var actor = target.Actor as Node3D;
+        TurnManager.OnTurnStart += TurnManagerOnOnTurnStart;
+        MouseEntered += MouseEnter;
+        MouseExited += MouseExit;
+    }
 
-            shader?.SetShaderParameter("color",
-                AbsDistanceTo(actor) <= 2f
-                    ? _green
-                    : _red);
+    private void MouseExit()
+    {
+        _shader?.SetShaderParameter("color", DefaultColour);
+        _shader?.SetShaderParameter("lineThickness", 0.05f);
+    }
+
+    private void MouseEnter()
+    {
+        if (GameState.Current != States.Playing || States.Playing.Command is not TargetSpell target) return;
+        var actor = target.Actor as Node3D;
+
+        _shader?.SetShaderParameter("color",
+            AbsDistanceTo(actor) <= 2f
+                ? _green
+                : _red);
             
-            shader?.SetShaderParameter("lineThickness", 0.5f);
-        };
-        MouseExited += () =>
-        {
-            shader?.SetShaderParameter("color", DefaultColour);
-            shader?.SetShaderParameter("lineThickness", 0.05f);
-        };
+        _shader?.SetShaderParameter("lineThickness", 0.5f);
     }
 
     private Vector4 DefaultColour { get; set; } = _gray;
