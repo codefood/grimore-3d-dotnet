@@ -43,8 +43,35 @@ public static class LevelLoader
             W k W
             WW0WW
             """
+        },
+        {
+            2,
+            """
+            WWWWWWW
+            Wk   kW
+            3E   E4
+            W  k  W
+            WWWWW1W
+            """
+        },
+        {
+            3,
+            """
+            WWW
+            W 2
+            WWW
+            """
+        },
+        {
+            4,
+            """
+            WWWWWWWWWWWW
+            2         EW
+            WWWWWWWWWWWW
+            """
         }
     };
+
 
     public static void Load(World world, int level, int? from = null)
     {

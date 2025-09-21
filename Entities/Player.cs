@@ -82,8 +82,12 @@ public partial class Player : CharacterBody3D, IActor
 	public override void _Input(InputEvent ev)
 	{
 		base._Input(ev);
+				
+		var directionsPressed = Actions.Directions
+			.Where(k => ev.IsActionPressed(k.Key))
+			.ToList();
 
-		if (GameState.Current == States.Ended)
+		if (GameState.Current == States.Ended && directionsPressed.Any())
 		{
 			GameState.Start();
 			return;
@@ -93,10 +97,6 @@ public partial class Player : CharacterBody3D, IActor
 		{
 			return;
 		}
-		
-		var directionsPressed = Actions.Directions
-			.Where(k => ev.IsActionPressed(k.Key))
-			.ToList();
 
 		Command action = null;
 		
