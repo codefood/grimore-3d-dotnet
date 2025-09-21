@@ -9,8 +9,8 @@ namespace Grimore.Entities;
 public partial class Player : CharacterBody3D, IActor
 {
 	private PackedScene _spellScene = ResourceLoader.Load<PackedScene>("res://spell.tscn");
-	
-	private Vector2? _currentDirection;
+
+	public Vector2? CurrentDirection;
 	private Timer _timer;
 	private string SpellColor { get; set; } = "white";
 	public event Action<int> HealthChanged;
@@ -115,7 +115,7 @@ public partial class Player : CharacterBody3D, IActor
 
 		var angle = Angle(direction);
 		PlayerEntity.SetBasis(new Basis(new Vector3(0, 1, 0), angle));
-		_currentDirection = direction;
+		CurrentDirection = direction;
 		var move = new Move(this, direction);
 		return move;
 	}
@@ -125,12 +125,12 @@ public partial class Player : CharacterBody3D, IActor
 		var instance = (Spell)_spellScene.Instantiate();
 		instance.Name = "Spell";
 
-		_currentDirection ??= Actions.Directions[Actions.Up];
+		CurrentDirection ??= Actions.Directions[Actions.Up];
 
-		instance.Position = Position + new Vector3(_currentDirection!.Value.X * World.TileSize, 0.5f, _currentDirection!.Value.Y * World.TileSize);
+		instance.Position = Position + new Vector3(CurrentDirection!.Value.X * World.TileSize, 0.5f, CurrentDirection!.Value.Y * World.TileSize);
 
 		var spellColour = Color.FromString(SpellColor, Color.FromHtml("000000"));
-		instance.Setup(spellColour, 1, _currentDirection!.Value);
+		instance.Setup(spellColour, 1, CurrentDirection!.Value);
 		return new CastSpell(this, instance);
 	}
 	

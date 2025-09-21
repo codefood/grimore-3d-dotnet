@@ -46,7 +46,7 @@ public static class LevelLoader
         }
     };
 
-    public static void Load(World world, int level)
+    public static void Load(World world, int level, int? from = null)
     {
         ClearThingsFrom(world);
         
@@ -90,7 +90,7 @@ public static class LevelLoader
             instance.Name = $"{instanceType.Name} {world.GetChildren().Count(x => x.GetType() == instanceType)}";
             
             instance.Position = new Vector3(
-                (col + offsetCols) * World.TileSize, 
+                (col + offsetCols) * World.TileSize,                                                                                                                                                                         
                 0, 
                 (row + offsetRows) * World.TileSize);
             
@@ -108,15 +108,26 @@ public static class LevelLoader
             {
                 d.DoorIndex = doorIndex;
                 if(col == 0 || col == width -1) d.RotateMe();
+
+                d.LoadLevel += transitionTo =>
+                {
+                    if (level != transitionTo) Load(world, transitionTo, level);
+                };
                 
-                d.LoadLevel += lvl => Load(world, lvl);
-                if (doorIndex == level) startPosition = instance.Position;
+                if (doorIndex == from)
+                {
+                    if(world.Player.CurrentDirection != null)
+                        startPosition = instance.Position + new Vector3(world.Player.CurrentDirection.Value.X * World.TileSize, 0, world.Player.CurrentDirection.Value.Y * World.TileSize);
+                    else
+                        startPosition = instance.Position;
+                    
+                    d.Open();
+                }
             }
             
             var tileForEntity = (Node3D)TileScene.Instantiate();
             tileForEntity.Position = new Vector3((col + offsetCols) * World.TileSize, 0, (row + offsetRows) * World.TileSize);
             world.AddChild(tileForEntity);
-                
         }
 
         world.Player.Position =

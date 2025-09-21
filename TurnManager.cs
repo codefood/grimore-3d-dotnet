@@ -105,7 +105,7 @@ public partial class TurnManager : Node
 
         EnumerateCollisions(collisions)
             .Except(_processed)
-            .ForEach(collision => { Interact(collision, actor); });
+            .ForEach(collision => Interact(collision, actor));
     }
 
     private void Interact(GodotObject collision, PhysicsBody3D actor)
@@ -123,7 +123,6 @@ public partial class TurnManager : Node
                 {
                     OnInteractionSuccess!.Invoke(interactor);
                 }
-
                 break;
             case Player p when actor is IInteractable interactor:
                 GD.Print($"{actor} collided with player");

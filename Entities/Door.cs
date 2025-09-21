@@ -22,13 +22,12 @@ public partial class Door : Node3D, IInteractable
     {
         _doorMesh = GetChild<MeshInstance3D>(0);
         _collision = GetChildren().OfType<CollisionShape3D>().First();
-        SetMeshVisibility();
+        RotateIfOpen();
     }
 
-    private void SetMeshVisibility()
+    private void RotateIfOpen()
     {
         if (IsOpen) RotateMe();
-        _collision.Disabled = IsOpen;
     }
 
     public bool Interact(Player player)
@@ -39,8 +38,7 @@ public partial class Door : Node3D, IInteractable
 
             player.Keys--;
             GD.Print($"{Name} is opening, {player.Keys} keys left");
-            IsOpen = true;
-            SetMeshVisibility();
+            Open();
         }
         if (IsOpen)
         {
@@ -48,6 +46,11 @@ public partial class Door : Node3D, IInteractable
         }
 
         return true;
+    }
 
+    public void Open()
+    {
+        IsOpen = true;
+        RotateIfOpen();
     }
 }
