@@ -18,7 +18,7 @@ public static class LevelLoader
         { Load<PackedScene>("res://enemy.tscn"), ['E', 'e'] },
         { Load<PackedScene>("res://wall.tscn"), ['W', 'w'] },
         { Load<PackedScene>("res://npc.tscn"), ['N', 'n'] },
-        { Load<PackedScene>("res://key.tscn"), ['K', 'k'] }
+        { Load<PackedScene>("res://Key.tscn"), ['K', 'k'] }
     };
     
     // ReSharper disable once StringLiteralTypo
