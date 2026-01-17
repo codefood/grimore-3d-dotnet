@@ -12,7 +12,7 @@ config_version=5
 
 config/name="grimore-3d-dotnet"
 run/main_scene="res://world.tscn"
-config/features=PackedStringArray("4.4", "C#", "GL Compatibility")
+config/features=PackedStringArray("4.5", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
@@ -30,6 +30,10 @@ project/assembly_name="grimore-3d-dotnet"
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/dialogue_manager/plugin.cfg")
+
+[filesystem]
+
+import/blender/enabled=false
 
 [input]
 
