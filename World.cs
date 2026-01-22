@@ -1,6 +1,7 @@
 using System.Linq;
 using Godot;
 using Grimore.Entities;
+using static Grimore.Quest;
 
 namespace Grimore;
 
@@ -14,13 +15,13 @@ public partial class World : Node3D
 	
 	private Timer _timer;
 
-	private Ui Interface =>
+	public Ui Interface =>
 		GetNode<Ui>("UI");
 	public Player Player => 
 		GetChildren().OfType<Player>().First();
 	private Camera Camera => 
 		FindChildren("Camera").OfType<Camera>().First();
-	public Quest Quest { get; private set; }
+	public Quest Quest { get; set; }
 
 	public override void _Ready()
 	{
@@ -39,23 +40,13 @@ public partial class World : Node3D
 				: Camera.Mode.isometric);
 		};
 
-		Quest.OnUpdate += () => Interface.UpdateQuest(Quest);
+		OnUpdate += () => Interface.UpdateQuest(Quest);
 		
 		States.Playing.OnEnter += () =>
 		{
 			LevelLoader.Load(this, 1);
-			Quest = new Quest(
-				new Quest.MoveSuccess(Vector2.Up, "North"),
-				new Quest.MoveSuccess(Vector2.Down, "South"),
-				new Quest.MoveSuccess(Vector2.Left, "East"),
-				new Quest.MoveSuccess(Vector2.Right, "West"),
-				new Quest.InteractionRequired("Collect", "Key 1"),
-				new Quest.InteractionRequired("Open", "Door 3")
-			);
-			
-			TurnManager.OnPlayerMove += Quest.Moved;
-			TurnManager.OnInteractionSuccess += Quest.InteractionSuccess;
-			TurnManager.OnTurnStart += Interface.UpdateCurrentTurn;
+			QuestLoader.Load(this);
+			TurnLoader.Load(this);
 			
 			Interface.UpdateQuest(Quest);
 			
