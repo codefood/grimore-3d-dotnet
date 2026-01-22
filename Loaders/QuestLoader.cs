@@ -1,9 +1,9 @@
 using static Godot.Vector2;
 using static Grimore.Quest;
 
-namespace Grimore;
+namespace Grimore.Loaders;
 
-public class QuestLoader 
+public abstract class QuestLoader 
 {
     public static void Load(World world) =>
         world.Quest = new Quest(

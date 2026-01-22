@@ -1,6 +1,6 @@
-namespace Grimore;
+namespace Grimore.Loaders;
 
-public class TurnLoader
+public static class TurnLoader
 {
     public static void Load(World world)
     {

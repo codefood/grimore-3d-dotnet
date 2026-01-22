@@ -15,14 +15,14 @@ public partial class Camera : Node
 	
 	public enum Mode 
 	{
-		isometric,
-		thirdPerson,
+		Isometric,
+		ThirdPerson,
 	}
 	
 	public void SetMode(Mode mode)
 	{
 		CurrentMode = mode;
-		if (mode == Mode.isometric)
+		if (mode == Mode.Isometric)
 		{
 			_isometricCameraPivot.Visible = true;
 			_thirdPersonCameraPivot.Visible = false;
@@ -52,7 +52,7 @@ public partial class Camera : Node
 		//nicked from https://docs.godotengine.org/en/stable/tutorials/3d/spring_arm.html
 		base._UnhandledInput(ev);
 
-		if (CurrentMode == Mode.isometric) return;
+		if (CurrentMode == Mode.Isometric) return;
 		
 		if (ev is not InputEventMouseMotion mouseMotion) return;
 		

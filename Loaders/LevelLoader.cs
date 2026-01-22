@@ -4,7 +4,7 @@ using Godot;
 using Grimore.Entities;
 using static Godot.ResourceLoader;
 
-namespace Grimore;
+namespace Grimore.Loaders;
 
 public static class LevelLoader
 {

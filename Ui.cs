@@ -1,21 +1,23 @@
-using Godot;
 using System.Linq;
-using Grimore;
+using Godot;
 using Grimore.Entities;
+
+namespace Grimore;
 
 public partial class Ui : Node2D
 {
-    private Label fpsControl;
+    private Label _fpsControl;
 
     public void UpdateCurrentTurn(IActor actor) =>
         GetNode<Label>("CurrentTurn")
-            .Text = $"Current Turn: {actor.Name}";
+                .Text = $"Current Turn: {actor.Name}";
 
     public void UpdateQuest(Quest quest) =>
         GetNode<Label>("CurrentQuest")
-            .Text = "Current Quest:\n" + 
-                    string.Join('\n', 
-                    quest.Requirements.Select((x => x.DisplayText)));
+                .Text = "Current Quest:\n" + 
+                        string.Join('\n', 
+                            quest.Requirements.Select(x => x.DisplayText)) + "\n" + 
+                        (quest.Complete ? "COMPLETE" : "");
 
     public void UpdateHealth(int health)
     {
@@ -43,13 +45,13 @@ public partial class Ui : Node2D
         States.Ended.OnEnter += () => GetNode<Control>("GameOver").Show();
         States.Playing.OnEnter += () => GetNode<Control>("GameOver").Hide();
 
-        fpsControl = GetNode<Label>("FPS");
+        _fpsControl = GetNode<Label>("FPS");
     }
 
     public override void _Process(double delta)
     {
         base._Process(delta);
-        fpsControl.Text = Mathf.RoundToInt(Engine.GetFramesPerSecond()).ToString();
+        _fpsControl.Text = Mathf.RoundToInt(Engine.GetFramesPerSecond()).ToString();
     }
 
     private static void CloseSpellEditor(BoxContainer spellEditor, Button openSpellEditorButton)
@@ -57,5 +59,4 @@ public partial class Ui : Node2D
         spellEditor.Visible = !spellEditor.Visible;
         openSpellEditorButton.ReleaseFocus();
     }
-
 }

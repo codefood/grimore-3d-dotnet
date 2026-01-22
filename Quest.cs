@@ -30,6 +30,9 @@ public class Quest(params Quest.Requirement[] requirements)
 		
         OnUpdate?.Invoke();
     }
+
+    public bool Complete => 
+        Requirements.All(x => x.Met);
 	
     public class MoveSuccess(Vector2 direction, string directionName) : Requirement("Move", directionName), ICheckable<Move>
     {

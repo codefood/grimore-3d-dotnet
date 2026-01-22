@@ -11,7 +11,7 @@ public static class States
 }
 public static class GameState
 {
-    private static State previous;
+    private static State _previous;
 
     public class TurnState : State
     {
@@ -33,10 +33,10 @@ public static class GameState
 
     public static void Pause()
     {
-        previous = Current;
+        _previous = Current;
         Current = States.Paused.Enter();
     }
 
-    public static void Start() => Current = previous ?? States.Playing.Enter();
+    public static void Start() => Current = _previous ?? States.Playing.Enter();
     public static void GameOver() => Current = States.Ended.Enter();
 }

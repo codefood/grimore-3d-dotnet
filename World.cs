@@ -1,6 +1,7 @@
 using System.Linq;
 using Godot;
 using Grimore.Entities;
+using Grimore.Loaders;
 using static Grimore.Quest;
 
 namespace Grimore;
@@ -35,9 +36,9 @@ public partial class World : Node3D
 		
 		Interface.ToggleCamera += () =>
 		{
-			Camera.SetMode(Camera.CurrentMode == Camera.Mode.isometric
-				? Camera.Mode.thirdPerson
-				: Camera.Mode.isometric);
+			Camera.SetMode(Camera.CurrentMode == Camera.Mode.Isometric
+				? Camera.Mode.ThirdPerson
+				: Camera.Mode.Isometric);
 		};
 
 		OnUpdate += () => Interface.UpdateQuest(Quest);
@@ -57,7 +58,7 @@ public partial class World : Node3D
 			Turner.StartNextTurn();
 		};
 		
-		Camera.SetMode(Camera.Mode.isometric);
+		Camera.SetMode(Camera.Mode.Isometric);
 		GameState.Start();
 	}
 
