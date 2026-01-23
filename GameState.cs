@@ -1,14 +1,16 @@
 ﻿using System;
 using Grimore.Entities;
+using static Grimore.GameState;
 
 namespace Grimore;
 
 public static class States
 {
-    public static readonly GameState.TurnState Playing = new();
-    public static readonly GameState.State Paused = new();
-    public static readonly GameState.State Ended = new();
+    public static readonly TurnState Playing = new();
+    public static readonly State Paused = new();
+    public static readonly State Ended = new();
 }
+
 public static class GameState
 {
     private static State _previous;
@@ -18,6 +20,7 @@ public static class GameState
         public IActor Actor { get; set; }
         public Command Command { get; set; }
     }
+    
     public class State
     {
         internal State Enter()

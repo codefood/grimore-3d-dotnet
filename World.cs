@@ -1,8 +1,9 @@
 using System.Linq;
 using Godot;
 using Grimore.Entities;
+using Grimore.Entities.Quests;
 using Grimore.Loaders;
-using static Grimore.Quest;
+using static Grimore.Entities.Quests.Quest;
 
 namespace Grimore;
 
@@ -56,9 +57,9 @@ public partial class World : Node3D
 			
 			Interface.UpdateHealth(Player.Health);
 			Turner.StartNextTurn();
+			Camera.SetMode(Camera.Mode.Isometric);
 		};
 		
-		Camera.SetMode(Camera.Mode.Isometric);
 		GameState.Start();
 	}
 

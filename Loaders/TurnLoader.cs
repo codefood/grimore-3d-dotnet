@@ -4,8 +4,9 @@ public static class TurnLoader
 {
     public static void Load(World world)
     {
-        TurnManager.OnPlayerMove += world.Quest.Moved;
-        TurnManager.OnInteractionSuccess += world.Quest.InteractionSuccess;
+        TurnManager.OnTurnStart += world.Quest.Check;
+        TurnManager.OnPlayerMove += world.Quest.Check;
+        TurnManager.OnInteractionSuccess += world.Quest.Check;
         TurnManager.OnTurnStart += world.Interface.UpdateCurrentTurn;
     }
 }

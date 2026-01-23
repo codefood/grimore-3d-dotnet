@@ -1,5 +1,7 @@
+using Grimore.Entities;
+using Grimore.Entities.Quests;
 using static Godot.Vector2;
-using static Grimore.Quest;
+using static Grimore.Entities.Quests.Quest;
 
 namespace Grimore.Loaders;
 
@@ -11,7 +13,7 @@ public abstract class QuestLoader
             new MoveSuccess(Down, "South"),
             new MoveSuccess(Left, "East"),
             new MoveSuccess(Right, "West"),
-            new InteractionRequired("Collect", "Key 1"),
+            new InteractionCountRequired<Key>("Collect", "Key", 2),
             new InteractionRequired("Open", "Door 3")
         );
 }

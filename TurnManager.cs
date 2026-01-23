@@ -189,7 +189,6 @@ public partial class TurnManager : Node
         StartNextTurn();
     }
 
-
     private void Reset()
     {
         if (_resetTimer != null)

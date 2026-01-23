@@ -1,6 +1,7 @@
 using System.Linq;
 using Godot;
 using Grimore.Entities;
+using Grimore.Entities.Quests;
 
 namespace Grimore;
 
@@ -39,8 +40,7 @@ public partial class Ui : Node2D
     
     public override void _Ready()
     {
-        var changeCameraButton = GetNode<Button>("ChangeCamera");
-        changeCameraButton.Pressed += () => ToggleCamera?.Invoke();
+        GetNode<Button>("ChangeCamera").Pressed += () => ToggleCamera?.Invoke();
         
         States.Ended.OnEnter += () => GetNode<Control>("GameOver").Show();
         States.Playing.OnEnter += () => GetNode<Control>("GameOver").Hide();

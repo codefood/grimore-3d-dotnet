@@ -29,7 +29,7 @@ public static class LevelLoader
             """
             WWWWW1WWWWW
             W   k        
-            W       e    
+            W       e     
             W            
             """
         },
@@ -39,6 +39,9 @@ public static class LevelLoader
             WW2WW
             W k W
             w   W
+            W   W
+            W   W
+            W N W
             W   W
             W k W
             WW0WW
