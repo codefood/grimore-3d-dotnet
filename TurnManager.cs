@@ -13,7 +13,6 @@ public partial class TurnManager : Node
     private Timer _timer;
     private readonly List<GodotObject> _processed = new();
     private Vector3? _initial;
-    private Timer _resetTimer;
     private const int Speed = 2;
     public static event Action<Move> OnPlayerMove;
     public static event Action<IActor> OnTurnStart;
@@ -42,6 +41,7 @@ public partial class TurnManager : Node
         IActor.Acting += PerformAction;
         IActor.Dying += DieAndFree;
     }
+    
     public void Enrol(IActor actor) =>
         _actors.Enqueue(actor);
 
@@ -68,6 +68,7 @@ public partial class TurnManager : Node
     {
         if (GameState.Current is not GameState.TurnState) return;
         if (States.Playing.Actor != action.Actor) return;
+        if (States.Playing.Command != null) return;
 		
         switch (action)
         {
@@ -105,64 +106,47 @@ public partial class TurnManager : Node
 
         EnumerateCollisions(collisions)
             .Except(_processed)
-            .ForEach(collision => Interact(collision, actor));
+            .ForEach(collision => NewInteract(collision, actor));
     }
 
-    private void Interact(GodotObject collision, PhysicsBody3D actor)
+    private void NewInteract(GodotObject collision, PhysicsBody3D actor)
     {
+        _processed.Add(collision);
         switch (collision)
         {
-            case IInteractable interactor when actor is Player p:
-                GD.Print($"{((Node)interactor).Name} collided with {actor.Name}");
-                if (!interactor.Interact(p))
-                {
-                    States.Playing.Command!.Cancel();
-                    GoBackwards();
-                }
-                else
-                {
-                    OnInteractionSuccess!.Invoke(interactor);
-                }
+            case IInteractable interactable when actor is Player player:
+            {
+                InteractWith(collision, interactable, player);
                 break;
-            case Player p when actor is IInteractable interactor:
-                GD.Print($"{actor} collided with player");
-                if (!interactor.Interact(p))
-                {
-                    States.Playing.Command!.Cancel();
-                    GoBackwards();
-                }
-
+            }
+            case Player player when actor is IInteractable interactable:
+            {
+                InteractWith(collision, interactable, player);
                 break;
-            case IInteractable when actor is IInteractable thing:
-                GD.Print($"{actor.Name} hit a thing and is being moved back to {_initial}");
-                thing.Interact(null);
-                States.Playing.Command!.Cancel();
-                GoBackwards();
-                break;
+            }
             default:
-                States.Playing.Command!.Cancel();
-                GoBackwards();
-                break;
+            {
+                //this is the case where an enemy has hit a wall or a key or a door or something
+                InteractWith(collision, actor as IInteractable, null);
+                //GoBackwards();
+                return;
+            }
         }
-
-        _processed.Add(collision);
     }
 
-    private void GoBackwards()
+    private void InteractWith(GodotObject collision, IInteractable interactable, Player player)
     {
-        var elapsed = Mathf.Max(_timer.WaitTime - _timer.TimeLeft, 0.01f);
-        GD.Print($"resetting timer, WaitTime: {_timer.WaitTime}, TImeLeft: {_timer.TimeLeft} == {elapsed}");
-        _timer.Stop();
-        
-        _resetTimer = new Timer()
+        GD.Print($"player interacted with {collision.GetType().Name}");
+        if (interactable.Interact(player))
         {
-            Autostart = true,
-            WaitTime = elapsed,
-            OneShot = true,
-            Name = $"reset timer",
-        };
-        _resetTimer.Timeout += TurnTimer;
-        AddChild(_resetTimer);
+            OnInteractionSuccess!.Invoke(interactable);
+        }
+        else
+        {
+            var actorNode = States.Playing.Actor as Node3D;
+            actorNode!.Position = _initial!.Value;
+            TurnTimer();
+        }
     }
 
     static IEnumerable<GodotObject> EnumerateCollisions(KinematicCollision3D collisions)
@@ -191,12 +175,6 @@ public partial class TurnManager : Node
 
     private void Reset()
     {
-        if (_resetTimer != null)
-        {
-            _resetTimer.Timeout -= TurnTimer;
-            _resetTimer.QueueFree();
-            _resetTimer = null;
-        }
         _timer.Stop();
         _processed.Clear();
         States.Playing.Command = null;
