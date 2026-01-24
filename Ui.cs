@@ -14,7 +14,9 @@ public partial class Ui : Node2D
 				.Text = $"Current Turn: {actor.Name}";
 
 	public void UpdateQuest(Quest quest) =>
-		GetNode<Label>("CurrentQuest")
+		FindChildren("CurrentQuest")
+				.OfType<Label>()
+				.First()
 				.Text = "Current Quest:\n" + 
 						string.Join('\n', 
 							quest.Requirements.Select(x => x.DisplayText)) + "\n" + 
@@ -41,7 +43,7 @@ public partial class Ui : Node2D
 	public override void _Ready()
 	{
 		GetNode<Button>("ChangeCamera").Pressed += () => ToggleCamera?.Invoke();
-		GetNode<Button>("Menu").Pressed += () =>
+		GetNode<Button>("MenuButton").Pressed += () =>
 		{
 			var menu = GetNode<TabContainer>("Menu");
 			ToggleVisibility(menu);
