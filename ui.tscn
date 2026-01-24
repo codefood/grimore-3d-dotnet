@@ -17,38 +17,11 @@ offset_right = 397.0
 offset_bottom = 107.0
 text = "Current Turn:"
 
-[node name="CurrentQuest" type="Label" parent="."]
-offset_left = 22.0
-offset_top = 126.0
-offset_right = 399.0
-offset_bottom = 209.0
-text = "Current Quest
-:"
-
-[node name="SpellEditor" type="BoxContainer" parent="."]
-visible = false
-offset_left = 188.0
-offset_top = 114.0
-offset_right = 995.0
-offset_bottom = 551.0
-vertical = true
-
-[node name="OptionButton" type="OptionButton" parent="SpellEditor"]
-layout_mode = 2
-selected = 0
-item_count = 3
-popup/item_0/text = "Red"
-popup/item_0/id = 0
-popup/item_1/text = "Blue"
-popup/item_1/id = 1
-popup/item_2/text = "Green"
-popup/item_2/id = 2
-
 [node name="ChangeCamera" type="Button" parent="."]
-offset_left = 46.0
-offset_top = 586.0
-offset_right = 115.0
-offset_bottom = 617.0
+offset_left = 1040.0
+offset_top = 49.0
+offset_right = 1109.0
+offset_bottom = 80.0
 text = "Camera
 "
 
@@ -90,3 +63,55 @@ offset_left = 1082.0
 offset_top = 30.0
 offset_right = 1122.0
 offset_bottom = 53.0
+
+[node name="MenuButton" type="Button" parent="."]
+offset_left = 40.0
+offset_top = 581.0
+offset_right = 93.0
+offset_bottom = 612.0
+text = "Menu
+"
+
+[node name="Menu" type="TabContainer" parent="."]
+offset_left = 150.0
+offset_top = 90.0
+offset_right = 1000.0
+offset_bottom = 570.0
+current_tab = 1
+
+[node name="Quest Details" type="Panel" parent="Menu"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="CurrentQuest" type="Label" parent="Menu/Quest Details"]
+layout_mode = 0
+offset_left = 41.0
+offset_top = 33.0
+offset_right = 418.0
+offset_bottom = 116.0
+text = "Current Quest
+:"
+
+[node name="Player Stats" type="Panel" parent="Menu"]
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="SpellEditor" type="BoxContainer" parent="Menu/Player Stats"]
+layout_mode = 0
+offset_left = 38.0
+offset_top = 24.0
+offset_right = 226.0
+offset_bottom = 197.0
+vertical = true
+
+[node name="OptionButton" type="OptionButton" parent="Menu/Player Stats/SpellEditor"]
+layout_mode = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "Red"
+popup/item_0/id = 0
+popup/item_1/text = "Blue"
+popup/item_1/id = 1
+popup/item_2/text = "Green"
+popup/item_2/id = 2

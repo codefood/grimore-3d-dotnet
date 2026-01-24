@@ -8,6 +8,7 @@ public static class States
 {
     public static readonly TurnState Playing = new();
     public static readonly State Paused = new();
+    public static readonly State Menu = new();
     public static readonly State Ended = new();
 }
 
@@ -38,6 +39,12 @@ public static class GameState
     {
         _previous = Current;
         Current = States.Paused.Enter();
+    }
+
+    public static void Toggle()
+    {
+        if (Current == States.Paused) Start();
+        else Pause();
     }
 
     public static void Start() => Current = _previous ?? States.Playing.Enter();
