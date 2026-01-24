@@ -18,7 +18,8 @@ public static class LevelLoader
         { Load<PackedScene>(Paths.Entities.Enemy), ['E', 'e'] },
         { Load<PackedScene>(Paths.Entities.Wall), ['W', 'w'] },
         { Load<PackedScene>(Paths.Entities.Npc), ['N', 'n'] },
-        { Load<PackedScene>(Paths.Entities.Key), ['K', 'k'] }
+        { Load<PackedScene>(Paths.Entities.Key), ['K', 'k'] },
+        { Load<PackedScene>(Paths.Entities.Stairs), ['s', 'S'] }
     };
     
     // ReSharper disable once StringLiteralTypo
@@ -39,7 +40,7 @@ public static class LevelLoader
             WW2WW
             W k W
             w   W
-            W   W
+            S   W
             W   W
             W N W
             W   W

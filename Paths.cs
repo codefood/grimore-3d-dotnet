@@ -11,6 +11,7 @@ public static class Paths
         public const string Door = "res://Entities/Scenes/door.tscn";
         public const string Enemy = "res://Entities/Scenes/enemy.tscn";
         public const string Spell = "res://Entities/Scenes/spell.tscn";
+        public const string Stairs = "res://Entities/Scenes/Stairs.tscn";
     }
 
     public static class Shaders
