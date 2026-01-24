@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://kcagoqjmljpt"]
 
 [ext_resource type="PackedScene" uid="uid://cucwvqkt1t5nc" path="res://blender/player.glb" id="1_ewfxs"]
-[ext_resource type="Shader" uid="uid://xyryaxwwsiba" path="res://damage.gdshader" id="2_t2uwp"]
+[ext_resource type="Shader" uid="uid://xyryaxwwsiba" path="res://Shaders/damage.gdshader" id="2_t2uwp"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ewfxs"]
 render_priority = 0

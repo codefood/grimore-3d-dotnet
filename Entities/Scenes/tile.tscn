@@ -1,9 +1,56 @@
-[gd_scene load_steps=3 format=3 uid="uid://ciulncpj4aa2k"]
+[gd_scene load_steps=7 format=4 uid="uid://ciulncpj4aa2k"]
 
 [ext_resource type="Script" uid="uid://cn4vdc7bg3iqo" path="res://Entities/Tile.cs" id="1_acylh"]
 [ext_resource type="PackedScene" uid="uid://dr5cwkp25o4an" path="res://floortile.tscn" id="3_a2t34"]
+[ext_resource type="Material" uid="uid://jr82pykkxfw0" path="res://assets/materials/floortile.001.tres" id="3_mfj8t"]
 
-[node name="Tile" type="Node3D"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_400t8"]
+_surfaces = [{
+"aabb": AABB(-1, -1, -1, 2, 2, 2),
+"format": 34896613377,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAACAAEAAwAEAAEABQAAAAIAAwAAAAUABAAGAAIABQACAAYAAwAHAAQAAwAFAAcABwAGAAQABwAFAAYA"),
+"name": "Material.001",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray("AAAAAP//AAAAAP//AAAAAAAA/////wAAAAAAAAAAAAD/////AAAAAP//AAD//wAA////////AAD//wAAAAAAAA==")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_843ye"]
+resource_name = "floortile_Cube_001"
+_surfaces = [{
+"aabb": AABB(-1, -1, -1, 2, 2, 2),
+"attribute_data": PackedByteArray("/1////+f/7//n////1//v/9f/7//n/9//5//v/9f/3//X/9//5//P/+f/3//X/8//1//P/+fAAD/n/8//18AAP8f/3//X/8//1//f/8f/z//n/9//9//P//f/3//n/8/"),
+"format": 34896613399,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUACAAJAAoACAALAAkADAANAA4ADAAPAA0AEAARABIAEAATABEAFAAVABYAFAAXABUA"),
+"material": ExtResource("3_mfj8t"),
+"name": "Material.001",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray("AAAAAP//VNUAAP//AABU1QAA/////1TVAAAAAAAAVNUAAAAAAAD///////8AAP//AAD//wAA/////wAAAAD/////AAAAAFTV////////VNX/////AABU1f//AAD//1TV//8AAP///78AAP//////v/////////+/AAAAAP///78AAAAAAAD/v///AAD///+///8AAAAA/78AAAAA////v/////8AAP//AAD///////8AAP//AAD/////////////VNVU1VTVVNVU1VTVVNVU1f+//7//v/+//7//v/+//7+qKqoqqiqqKqoqqiqqKqoq/////////////////////wAA/38AAP9/AAD/fwAA/3//f/+//3//v/9//7//f/+/")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_400t8")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tx8kb"]
+size = Vector3(2, 0.12, 2)
+
+[node name="Tile" type="StaticBody3D"]
 script = ExtResource("1_acylh")
 
 [node name="floortile2" parent="." instance=ExtResource("3_a2t34")]
+visible = false
+
+[node name="Cube" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.06, 0, 0, 0, 1, 0, -0.06, 0)
+mesh = SubResource("ArrayMesh_843ye")
+skeleton = NodePath("")
+surface_material_override/0 = ExtResource("3_mfj8t")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.06, 0)
+shape = SubResource("BoxShape3D_tx8kb")
