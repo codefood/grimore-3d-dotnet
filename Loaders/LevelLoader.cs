@@ -8,17 +8,17 @@ namespace Grimore.Loaders;
 
 public static class LevelLoader
 {
-    private static readonly PackedScene TileScene = Load<PackedScene>("res://tile.tscn");
-    private static readonly PackedScene DoorScene = Load<PackedScene>("res://door.tscn");
+    private static readonly PackedScene TileScene = Load<PackedScene>(Paths.Entities.Tile);
+    private static readonly PackedScene DoorScene = Load<PackedScene>(Paths.Entities.Door);
 
     private static readonly Dictionary<PackedScene, char[]> Things = new()
     {
         { TileScene, [' '] },
         { DoorScene , ['D', 'd'] },
-        { Load<PackedScene>("res://enemy.tscn"), ['E', 'e'] },
-        { Load<PackedScene>("res://wall.tscn"), ['W', 'w'] },
-        { Load<PackedScene>("res://npc.tscn"), ['N', 'n'] },
-        { Load<PackedScene>("res://Key.tscn"), ['K', 'k'] }
+        { Load<PackedScene>(Paths.Entities.Enemy), ['E', 'e'] },
+        { Load<PackedScene>(Paths.Entities.Wall), ['W', 'w'] },
+        { Load<PackedScene>(Paths.Entities.Npc), ['N', 'n'] },
+        { Load<PackedScene>(Paths.Entities.Key), ['K', 'k'] }
     };
     
     // ReSharper disable once StringLiteralTypo

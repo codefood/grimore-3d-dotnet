@@ -8,7 +8,7 @@ namespace Grimore.Entities;
 [GlobalClass]
 public partial class Player : CharacterBody3D, IActor
 {
-	private PackedScene _spellScene = ResourceLoader.Load<PackedScene>("res://spell.tscn");
+	private PackedScene _spellScene = ResourceLoader.Load<PackedScene>(Paths.Entities.Spell);
 
 	public Vector2? CurrentDirection;
 	private Timer _timer;
@@ -17,7 +17,7 @@ public partial class Player : CharacterBody3D, IActor
 	public int Health = 3;
 	ShaderMaterial damageMaterial = new()
 	{
-		Shader = ResourceLoader.Load<Shader>("res://damage.gdshader"),
+		Shader = ResourceLoader.Load<Shader>(Paths.Shaders.Damage),
 	};
 
 	private Node3D PlayerEntity => GetNode<Node3D>("player");
