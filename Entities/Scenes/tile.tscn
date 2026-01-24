@@ -1,7 +1,6 @@
-[gd_scene load_steps=7 format=4 uid="uid://ciulncpj4aa2k"]
+[gd_scene load_steps=6 format=4 uid="uid://ciulncpj4aa2k"]
 
 [ext_resource type="Script" uid="uid://cn4vdc7bg3iqo" path="res://Entities/Tile.cs" id="1_acylh"]
-[ext_resource type="PackedScene" uid="uid://dr5cwkp25o4an" path="res://floortile.tscn" id="3_a2t34"]
 [ext_resource type="Material" uid="uid://jr82pykkxfw0" path="res://assets/materials/floortile.001.tres" id="3_mfj8t"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_400t8"]
@@ -41,9 +40,6 @@ size = Vector3(2, 0.12, 2)
 
 [node name="Tile" type="StaticBody3D"]
 script = ExtResource("1_acylh")
-
-[node name="floortile2" parent="." instance=ExtResource("3_a2t34")]
-visible = false
 
 [node name="Cube" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.06, 0, 0, 0, 1, 0, -0.06, 0)

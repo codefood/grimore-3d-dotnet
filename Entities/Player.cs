@@ -15,7 +15,7 @@ public partial class Player : CharacterBody3D, IActor
 	private string SpellColor { get; set; } = "white";
 	public event Action<int> HealthChanged;
 	public int Health = 3;
-	ShaderMaterial damageMaterial = new()
+	ShaderMaterial _damageMaterial = new()
 	{
 		Shader = ResourceLoader.Load<Shader>(Paths.Shaders.Damage),
 	};
@@ -36,7 +36,7 @@ public partial class Player : CharacterBody3D, IActor
 	public override void _Ready()
 	{
 		base._Ready();
-		SetShaderTo(damageMaterial);
+		SetShaderTo(_damageMaterial);
 	}
 
 	private void SetShaderTo(Material material)
@@ -59,7 +59,7 @@ public partial class Player : CharacterBody3D, IActor
 			return;
 		}
 		
-		damageMaterial.SetShaderParameter("active", true);
+		_damageMaterial.SetShaderParameter("active", true);
 		
 		_timer = new Timer()
 		{
@@ -74,7 +74,7 @@ public partial class Player : CharacterBody3D, IActor
 
 	private void ResetDamageCallback()
 	{
-		damageMaterial.SetShaderParameter("active", false);
+		_damageMaterial.SetShaderParameter("active", false);
 		_timer.QueueFree();
 		_timer = null;
 	}
