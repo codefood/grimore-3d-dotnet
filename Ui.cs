@@ -50,7 +50,13 @@ public partial class Ui : Node2D
 			GameState.Toggle();
 		};
 		
-		States.Ended.OnEnter += () => GetNode<Control>("GameOver").Show();
+		States.Ended.OnEnter += () =>
+		{
+			var control = GetNode<Control>("GameOver");
+			control.Show();
+			control.GetChildren().OfType<Label>().First(x => x.Name == "Label").Text =
+				$"GAME OVER\n{(States.Ended.HasWon ? "YOU ARE A WINNER" : "")}\nPress any key to explore the Dungeon of Despair once more...";
+		};
 		States.Playing.OnEnter += () => GetNode<Control>("GameOver").Hide();
 
 		_fpsControl = GetNode<Label>("FPS");

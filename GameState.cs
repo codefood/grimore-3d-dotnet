@@ -9,7 +9,7 @@ public static class States
     public static readonly TurnState Playing = new();
     public static readonly State Paused = new();
     public static readonly State Menu = new();
-    public static readonly State Ended = new();
+    public static readonly EndState Ended = new();
 }
 
 public static class GameState
@@ -32,6 +32,17 @@ public static class GameState
 
         public event Action OnEnter;
     }
+
+    public class EndState : State
+    {
+        internal State Won()
+        {
+            HasWon = true;
+            return Enter();
+        }
+
+        public bool HasWon { get; set; }
+    }
 		
     public static State Current = States.Playing;
 
@@ -47,6 +58,11 @@ public static class GameState
         else Pause();
     }
 
-    public static void Start() => Current = _previous ?? States.Playing.Enter();
-    public static void GameOver() => Current = States.Ended.Enter();
+    public static void Start() => 
+        Current = _previous ?? States.Playing.Enter();
+    
+    public static void GameOver(bool won) => 
+        Current = won 
+            ? States.Ended.Won() 
+            : States.Ended.Enter();
 }

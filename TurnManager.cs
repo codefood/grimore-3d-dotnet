@@ -53,7 +53,7 @@ public partial class TurnManager : Node
         _actors = new Queue<IActor>(_actors.ToList().Except([toDelete]));
         if (toDelete is Player)
         {
-            GameState.GameOver();
+            GameState.GameOver(false);
             return;
         }
         if (toDelete == States.Playing.Actor)

@@ -42,7 +42,14 @@ public partial class World : Node3D
 				: Camera.Mode.Isometric);
 		};
 
-		OnUpdate += () => Interface.UpdateQuest(Quest);
+		OnUpdate += () =>
+		{
+			Interface.UpdateQuest(Quest);
+			if (Quest.Complete)
+			{
+				GameState.GameOver(true);
+			}
+		};
 		
 		States.Playing.OnEnter += () =>
 		{
