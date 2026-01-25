@@ -1,54 +1,54 @@
 using System;
 using System.Collections.Generic;
 using Godot;
+using Grimore.Entities;
 
 namespace Grimore.FSM;
 
 public class State<T>
 {
     private Action<T> onEnterFunction;
+    private Action<T> onExitFunction;
+
     public State<T> OnEnter(Action<T> func)
     {
         onEnterFunction = func;
         return this;
     }
 
-    public State<T> AddChild<TChild>(StateMachine<TChild> machine, Func<T, TChild> resolver) =>
-        AddChild(machine, resolver, null);
-    
-    public State<T> AddChild<TChild>(StateMachine<TChild> machine, Func<T, TChild> resolver, Action<T, TChild> registrations)
+    public State<T> AddChild<TChild>(StateMachine<TChild> machine, TChild node) where TChild : Node
     {
-        Children.Add(new Reg()
+        Children.Add(new Reg<Node>
         {
-            Machine = machine as StateMachine<object>,
-            Resolver = resolver as Func<object, object>,
-            Registrations = registrations as Action<object, object>
+            Machine = machine,
+            Entity = node
         });
         return this;
     }
 
-    public List<Reg> Children { get; set; } = new();
+    public List<Reg<Node>> Children { get; set; } = new();
 
     public void Enter(T entity)
     {
+        Entity = entity;
         onEnterFunction.Invoke(entity);
         foreach (var childTuple in Children)
         {
-            Node childEntity = childTuple.Resolver.Invoke(entity) as Node;
-            childTuple.Registrations.Invoke(entity, childEntity);
-            childTuple.Machine.Start(childEntity);
+            childTuple.Machine.Start(childTuple.Entity);
         }
     }
 
-    public State<T> Attach<TOther>(Func<T> func, Func<TOther> func1)
+    public T Entity { get; set; }
+
+    public State<T> OnExit(Action<T> func)
     {
-        throw new NotImplementedException();
+        onExitFunction = func;
+        return this;
     }
 }
 
-public class Reg
+public class Reg<T>
 {
-    public StateMachine<object> Machine { get; set; }
-    public Func<object, object> Resolver { get; set; }
-    public Action<object, object> Registrations { get; set; }
+    public StateMachine Machine { get; set; }
+    public T Entity { get; set; }
 }

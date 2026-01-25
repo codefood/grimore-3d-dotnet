@@ -147,5 +147,4 @@ public partial class Player : CharacterBody3D, IActor
 			return -(Mathf.Pi / 2);
 		return 0;
 	}
-
 }

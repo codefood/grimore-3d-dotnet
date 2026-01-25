@@ -8,7 +8,7 @@ public partial class Door : Node3D, IInteractable
 {
     private MeshInstance3D _doorMesh;
     private CollisionShape3D _collision;
-    public event Action<int> LoadLevel;
+    public event Action<int> Transited;
     private bool IsOpen { get; set; }
     public int DoorIndex { get; set; }
 
@@ -42,7 +42,7 @@ public partial class Door : Node3D, IInteractable
         }
         if (IsOpen)
         {
-            LoadLevel!.Invoke(DoorIndex);
+            Transited!.Invoke(DoorIndex);
         }
 
         return true;

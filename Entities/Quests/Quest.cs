@@ -4,7 +4,7 @@ using Godot;
 
 namespace Grimore.Entities.Quests;
 
-public class Quest(params Requirement[] requirements)
+public partial class Quest(params Requirement[] requirements) : Node
 {
     public readonly Requirement[] Requirements = requirements;
 

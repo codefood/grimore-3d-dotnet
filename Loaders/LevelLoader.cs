@@ -140,7 +140,7 @@ public static class LevelLoader
                 d.DoorIndex = doorIndex;
                 if(col == 0 || col == width -1) d.RotateMe();
 
-                d.LoadLevel += transitionTo =>
+                d.Transited += transitionTo =>
                 {
                     if (level != transitionTo) Load(world, transitionTo, level);
                 };
