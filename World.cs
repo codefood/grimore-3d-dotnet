@@ -21,18 +21,13 @@ public partial class World : Node3D
 		GetNode<Ui>("UI");
 	public Player Player => 
 		GetChildren().OfType<Player>().First();
-	private Camera Camera => 
+
+	public Camera Camera => 
 		FindChildren("Camera").OfType<Camera>().First();
 	public Quest Quest { get; set; }
 
 	public override void _Ready()
 	{
-		if (Turner == null)
-		{
-			GD.Print("No turnmanager in scene");
-			return;
-		}
-
 		Player.HealthChanged += Interface.UpdateHealth;
 		
 		Interface.ToggleCamera += () =>
@@ -51,23 +46,6 @@ public partial class World : Node3D
 			}
 		};
 		
-		States.Playing.OnEnter += () =>
-		{
-			LevelLoader.Load(this, 1);
-			QuestLoader.Load(this);
-			TurnLoader.Load(this);
-			
-			Interface.UpdateQuest(Quest);
-			
-			Player.Keys = 0;
-			Player.Health = 3;
-			
-			Interface.UpdateHealth(Player.Health);
-			Turner.StartNextTurn();
-			Camera.SetMode(Camera.Mode.Isometric);
-		};
-		
-		GameState.Start();
 	}
 
 }
