@@ -54,9 +54,9 @@ public partial class Game : Node3D
                     //set/reset player variables
                     p.Keys = 0;
                     p.Health = 3;
-                    p.HealthChanged += userInterface.Current.Entity.UpdateHealth;
+                    p.HealthChanged += World.Interface.UpdateHealth;
                 })
-                .OnExit(p => p.HealthChanged -= userInterface.Current.Entity.UpdateHealth)
+                .OnExit(p => p.HealthChanged -= World.Interface.UpdateHealth)
             );
 
         var quest = new StateMachine<Quest>()
@@ -69,6 +69,7 @@ public partial class Game : Node3D
                 LevelLoader.Load(w, 1);
 
                 w.Camera.SetMode(Camera.Mode.Isometric);
+                
             })
             //player is a child state, and it resolves its instance from the parent (world)
             .AddChild(userInterface, World.Interface)
