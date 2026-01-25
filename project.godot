@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="grimore-3d-dotnet"
-run/main_scene="res://world.tscn"
+run/main_scene="uid://dbclx01rd0w1t"
 config/features=PackedStringArray("4.5", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 
