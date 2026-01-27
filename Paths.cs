@@ -2,6 +2,8 @@ namespace Grimore;
 
 public static class Paths
 {
+    public static string MainMenu = "res://MainMenu.tscn";
+    
     public static class Entities
     {
         public const string Key = "res://Entities/Scenes/Key.tscn";
